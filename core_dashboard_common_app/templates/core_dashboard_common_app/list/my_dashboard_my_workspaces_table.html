@@ -48,10 +48,11 @@
                             <a class="btn btn-default delete-document-btn">
                                 <i class="fa fa-trash"></i> Delete
                             </a>
-
-                            <a class="btn btn-default public-{{data.document}}-btn">
-                                <i class="fa fa-users"></i> Set public
-                            </a>
+                            {% if data.can_set_public %}
+                                <a class="btn btn-default public-{{data.document}}-btn">
+                                    <i class="fa fa-users"></i> Set public
+                                </a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </td>

@@ -15,6 +15,7 @@ from core_main_app.components.user import api as user_api
 from core_main_app.utils.access_control.exceptions import AccessControlError
 from core_main_app.utils.rendering import admin_render
 from core_main_app.views.user.forms import WorkspaceForm
+from core_dashboard_common_app import settings
 
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
@@ -108,13 +109,13 @@ def dashboard_workspaces(request):
     user_workspaces = workspace_api.get_all()
     detailed_user_workspaces = []
     for user_workspace in user_workspaces:
-        detailed_user_workspaces.append({'user': user_api.get_user_by_id(user_workspace.owner).username,
+        detailed_user_workspaces.append({'user': user_api.get_user_by_id(user_workspace.owner).username if not workspace_api.is_workspace_global(user_workspace) else "GLOBAL",
                                          'is_owner': True,
                                          'name': user_workspace.title,
                                          'workspace': user_workspace,
                                          'can_read': True,
                                          'can_write': True,
-                                         'is_public': workspace_api.is_workspace_public(user_workspace)
+                                         'is_public': workspace_api.is_workspace_public(user_workspace),
                                          })
 
     context = {
@@ -123,7 +124,8 @@ def dashboard_workspaces(request):
         'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE,
         'template': dashboard_constants.DASHBOARD_WORKSPACES_TEMPLATE_TABLE,
         'number_columns': 6,
-        'create_workspace': False
+        'create_workspace': False,
+        'can_set_public': settings.CAN_SET_WORKSPACE_PUBLIC
     }
 
     modals = ["core_main_app/user/workspaces/list/create_workspace.html",
@@ -132,11 +134,14 @@ def dashboard_workspaces(request):
     assets = {
         "css": copy.deepcopy(dashboard_constants.CSS_COMMON),
 
-        "js": [{
-                    "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
-                    "is_raw": False
-               }]
+        "js": []
     }
+
+    if settings.CAN_SET_WORKSPACE_PUBLIC:
+        assets['js'].append({
+                                "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
+                                "is_raw": False
+                            })
 
     _handle_asset_modals(assets,
                          modals,
