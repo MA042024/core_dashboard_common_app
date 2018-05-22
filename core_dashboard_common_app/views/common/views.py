@@ -203,6 +203,7 @@ class DashboardRecords(CommonView):
     """
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
+    document = dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD
 
     def get(self, request, *args, **kwargs):
 
@@ -235,7 +236,7 @@ class DashboardRecords(CommonView):
         context = {
             'other_users_data': results_paginator,
             'user_form': user_form,
-            'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD,
+            'document': self.document,
             'template': dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION,
             'action_form': ActionForm([('1', 'Delete selected records'),
                                        ('2', 'Change owner of selected records')]),
@@ -435,6 +436,7 @@ class DashboardForms(CommonView):
     """
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
+    document = dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FORM
 
     def get(self, request, *args, **kwargs):
         """ Method GET
@@ -458,7 +460,7 @@ class DashboardForms(CommonView):
 
         context = {'user_data': detailed_forms,
                    'user_form': UserForm(request.user),
-                   'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FORM,
+                   'document': self.document,
                    'template': dashboard_constants.DASHBOARD_FORMS_TEMPLATE_TABLE,
                    'menu': self.administration
                    }
