@@ -14,6 +14,10 @@ openEditRecord = function() {
         },
         success: function(data){
             window.location = data.url;
+        },
+        error:function(data){
+            var myArr = JSON.parse(data.responseText);
+            $.notify(myArr.message, {style: myArr.tags });
         }
     });
 };

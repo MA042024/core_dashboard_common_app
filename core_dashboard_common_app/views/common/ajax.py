@@ -3,6 +3,7 @@
 import json
 
 from django.contrib import messages
+from django.contrib.messages.storage.base import Message
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 
@@ -366,7 +367,9 @@ def edit_record(request):
     try:
         data = data_api.get_by_id(request.POST['id'], request.user)
     except DoesNotExist:
-        return HttpResponseServerError({"It seems a record is missing."}, status=404)
+        message = Message(messages.ERROR, "It seems a record is missing. Please refresh the page.")
+        return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
+                                        content_type='application/json')
 
     try:
         # Check if a curate data structure already exists
@@ -380,7 +383,9 @@ def edit_record(request):
                                                     data=data)
         curate_data_structure = curate_data_structure_api.upsert(curate_data_structure)
     except Exception, e:
-        return HttpResponseServerError({"A problem occurred while editing."}, status=500)
+        message = Message(messages.ERROR, "A problem occurred while editing.")
+        return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
+                                      content_type='application/json')
 
     return HttpResponse(json.dumps({'url': reverse("core_curate_enter_data",
                                                    args=(curate_data_structure.id,))}),
