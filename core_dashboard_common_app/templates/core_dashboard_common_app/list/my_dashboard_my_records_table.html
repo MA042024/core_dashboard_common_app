@@ -58,10 +58,11 @@
                     <a class="btn btn-default edit-record-btn">
                         <i class="fa fa-edit"></i> Edit
                     </a>
-
-                    <a class="btn btn-default assign-workspace-record-btn">
-                        <i class="fa fa-folder"></i> Change workspace
-                    </a>
+                    {% if data_loaded.can_change_workspace %}
+                        <a class="btn btn-default assign-workspace-record-btn">
+                            <i class="fa fa-folder"></i> Change workspace
+                        </a>
+                    {% endif %}
                 {% endif %}
                 {% if data_loaded.is_owner %}
                     <a class="btn btn-default delete-document-btn">

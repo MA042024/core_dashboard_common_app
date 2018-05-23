@@ -28,6 +28,7 @@ from core_main_app.utils.rendering import render
 from core_main_app.views.admin.forms import EditProfileForm
 from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
+from core_main_app.components.workspace import api as workspace_api
 
 if 'core_curate_app' in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -204,6 +205,20 @@ class DashboardRecords(CommonView):
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
     document = dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD
+    allow_change_workspace_if_public = True
+
+    def can_change_workspace(self, data):
+        """ Check if you can change the workspace.
+
+        Args:
+
+        Returns:
+        """
+
+        workspace = data.workspace
+        if workspace is not None and workspace_api.is_workspace_public(workspace) and not self.allow_change_workspace_if_public:
+            return False
+        return True
 
     def get(self, request, *args, **kwargs):
 
@@ -227,7 +242,8 @@ class DashboardRecords(CommonView):
             detailed_loaded_data.append({'data': data,
                                          'can_read': True,
                                          'can_write': True,
-                                         'is_owner': True})
+                                         'is_owner': True,
+                                         'can_change_workspace': self.can_change_workspace(data)})
 
         results_paginator.object_list = detailed_loaded_data
 
