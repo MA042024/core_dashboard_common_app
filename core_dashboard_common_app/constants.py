@@ -2,6 +2,7 @@
     User Dashboard constants
 """
 from utils.enum import enum
+import core_dashboard_common_app.settings as settings
 
 
 # Templates
@@ -59,10 +60,10 @@ JS_ADMIN_ACTION_DASHBOARD = 'core_dashboard_common_app/admin/js/action_dashboard
 JS_ADMIN_TABLE = 'core_dashboard_common_app/admin/js/admin_table.js'
 ADMIN_VIEW_RECORD_RAW = 'core_dashboard_common_app/admin/js/list/view_record.raw.js'
 
-
-FUNCTIONAL_OBJECT_ENUM = enum(RECORD='record',
-                              FORM='form',
+# FIXME: rename record and form to Data and Draft
+FUNCTIONAL_OBJECT_ENUM = enum(RECORD=settings.DATA_DISPLAY_NAME,
+                              FORM=settings.DRAFT_DISPLAY_NAME,
                               TEMPLATE='template',
                               TYPE='type',
                               FILE='file',
-                              WORKSPACE='workspace')
+                              WORKSPACE=settings.WORKSPACE_DISPLAY_NAME)
