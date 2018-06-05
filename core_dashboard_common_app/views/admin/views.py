@@ -97,65 +97,6 @@ def dashboard_workspace_records(request, workspace_id):
                         modals=modals)
 
 
-@login_required(login_url=reverse_lazy("core_main_app_login"))
-def dashboard_workspaces(request):
-    """ List the workspaces.
-
-    Args:
-        request:
-    Return:
-    """
-
-    user_workspaces = workspace_api.get_all()
-    detailed_user_workspaces = []
-    for user_workspace in user_workspaces:
-        detailed_user_workspaces.append({'user': user_api.get_user_by_id(user_workspace.owner).username if not workspace_api.is_workspace_global(user_workspace) else "GLOBAL",
-                                         'is_owner': True,
-                                         'name': user_workspace.title,
-                                         'workspace': user_workspace,
-                                         'can_read': True,
-                                         'can_write': True,
-                                         'is_public': workspace_api.is_workspace_public(user_workspace),
-                                         })
-
-    context = {
-        'workspace_form': WorkspaceForm(),
-        'other_users_data': detailed_user_workspaces,
-        'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE,
-        'template': dashboard_constants.DASHBOARD_WORKSPACES_TEMPLATE_TABLE,
-        'number_columns': 6,
-        'create_workspace': False,
-        'can_set_public': settings.CAN_SET_WORKSPACE_PUBLIC
-    }
-
-    modals = ["core_main_app/user/workspaces/list/create_workspace.html",
-              "core_main_app/user/workspaces/list/modals/set_public.html"]
-
-    assets = {
-        "css": copy.deepcopy(dashboard_constants.CSS_COMMON),
-
-        "js": []
-    }
-
-    if settings.CAN_SET_WORKSPACE_PUBLIC:
-        assets['js'].append({
-                                "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
-                                "is_raw": False
-                            })
-
-    _handle_asset_modals(assets,
-                         modals,
-                         delete=True,
-                         change_owner=False,
-                         menu=False)
-
-    return admin_render(request,
-                        dashboard_constants.ADMIN_DASHBOARD_TEMPLATE,
-                        context=context,
-                        assets=assets,
-                        modals=modals)
-
-
 def _handle_asset_modals(assets, modal, delete=False, change_owner=False, menu=False, workspace=False):
     """ Add needed assets.
 

@@ -29,6 +29,7 @@ from core_main_app.views.admin.forms import EditProfileForm
 from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
 from core_main_app.components.workspace import api as workspace_api
+from core_main_app.views.user.forms import WorkspaceForm
 
 if 'core_curate_app' in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -679,6 +680,89 @@ class DashboardTypes(CommonView):
                 },
                 EditTemplateVersionManagerView.get_modal_js_path()]
         }
+
+        return self.common_render(request, self.template,
+                                  context=context,
+                                  assets=assets,
+                                  modals=modals)
+
+
+class DashboardWorkspaces(CommonView):
+    """ List the workspaces.
+    """
+
+    template = dashboard_constants.DASHBOARD_TEMPLATE
+
+    def get(self, request, *args, **kwargs):
+        """ Method GET
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+        """
+
+        if self.administration:
+            user_workspaces = workspace_api.get_all()
+        else:
+            # Get the workspace the user can read
+            user_workspace_read = list(workspace_api.get_all_workspaces_with_read_access_by_user(request.user))
+            # Get the workspace the user can write
+            user_workspace_write = list(workspace_api.get_all_workspaces_with_write_access_by_user(request.user))
+            # Get the merged list without doublons
+            user_workspaces = user_workspace_read + list(set(user_workspace_write) - set(user_workspace_read))
+
+        detailed_user_workspaces = []
+        for user_workspace in user_workspaces:
+            detailed_user_workspaces.append({'user': user_api.get_user_by_id(user_workspace.owner).username if not workspace_api.is_workspace_global(user_workspace) else "GLOBAL",
+                                             'is_owner': user_workspace.owner == str(request.user.id),
+                                             'name': user_workspace.title,
+                                             'workspace': user_workspace,
+                                             'can_read': self.administration or user_workspace in user_workspace_read,
+                                             'can_write': self.administration or user_workspace in user_workspace_write,
+                                             'is_public': workspace_api.is_workspace_public(user_workspace)
+                                             })
+
+        context = {
+            'workspace_form': WorkspaceForm(),
+            'user_data': detailed_user_workspaces,
+            'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE,
+            'template': dashboard_constants.DASHBOARD_WORKSPACES_TEMPLATE_TABLE,
+            'create_workspace': not self.administration,
+            'can_set_public': settings.CAN_SET_WORKSPACE_PUBLIC
+        }
+
+        modals = [dashboard_constants.MODALS_COMMON_DELETE]
+
+        assets = {
+            "css": copy.deepcopy(dashboard_constants.CSS_COMMON),
+
+            "js": [{
+                       "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                       "is_raw": True
+                   },
+                   {
+                       "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
+                       "is_raw": False
+                   }
+            ]
+        }
+
+        if not self.administration:
+            modals.append("core_main_app/user/workspaces/list/create_workspace.html")
+            assets['js'].append({
+                                    "path": 'core_main_app/user/js/workspaces/create_workspace.js',
+                                    "is_raw": False
+                                })
+
+        if settings.CAN_SET_WORKSPACE_PUBLIC:
+            modals.append("core_main_app/user/workspaces/list/modals/set_public.html")
+            assets['js'].append({
+                                    "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
+                                    "is_raw": False
+                                })
 
         return self.common_render(request, self.template,
                                   context=context,
