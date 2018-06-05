@@ -3,7 +3,7 @@
  * Open the modal before deleting the document
  */
 openDeleteDocument = function () {
-    var $recordRow = $(this).parent().parent();
+    var $recordRow = $(this).closest('tr');
     $('.'+functional_object+'-id').val($recordRow.attr("objectid"));
     $("#delete_banner_errors").hide();
     $("#delete-result-modal").modal("show");

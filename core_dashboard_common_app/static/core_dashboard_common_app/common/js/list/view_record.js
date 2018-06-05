@@ -3,9 +3,8 @@
  */
 
 openViewRecord = function() {
-    var $registryRow = $(this).parent().parent();
+    var $registryRow = $(this).closest('tr');
     var objectID = $registryRow.attr("objectid");
-
     window.location = viewRecordUrl + '?id=' + objectID;
 };
 

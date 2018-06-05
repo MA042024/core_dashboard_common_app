@@ -1,28 +1,28 @@
 {% extends 'core_main_app/_render/admin/theme/tools/box.html' %}
 
 {% block box_title %}
-{% if not come_from_admin %}
-    {% if data.title %}
-        <h1>{{data.title}}</h1>
-    {% else %}
-        <h1>My {{data.document}}s</h1>
+    {% if not come_from_admin %}
+        {% if data.title %}
+            <h1>{{data.title}}</h1>
+        {% else %}
+            <h1>My {{data.document}}s</h1>
+        {% endif %}
     {% endif %}
-{% endif %}
 {% endblock %}
 
 
 {% block box_tools %}
-{% if data.create_workspace %}
-<a class="btn btn-default create-workspace-btn">
-    <i class="fa fa-file-text-o"></i> Create workspace
-</a>
-{% endif %}
-
-{% if data.title %}
-    <a href="#" class="btn btn-default back-to-previous">
-         <i class="fa fa-arrow-left"></i> Previous page
+    {% if data.create_workspace %}
+    <a class="btn btn-default create-workspace-btn">
+        <i class="fa fa-file-text-o"></i> Create workspace
     </a>
-{% endif %}
+    {% endif %}
+
+    {% if data.title %}
+        <a href="#" class="btn btn-default back-to-previous">
+             <i class="fa fa-arrow-left"></i> Previous page
+        </a>
+    {% endif %}
 {% endblock %}
 
 
@@ -54,4 +54,5 @@
             {% endif %}
     </div>
 {% endblock %}
+
 

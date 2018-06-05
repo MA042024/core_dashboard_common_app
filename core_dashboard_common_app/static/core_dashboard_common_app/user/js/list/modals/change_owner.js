@@ -2,7 +2,7 @@
  * Change document owner
  */
 changeOwnerDocument = function() {
-    var $recordRow = $(this).parent().parent();
+    var $recordRow = $(this).closest('tr');;
     $('.'+functional_object+'-id').val($recordRow.attr("objectid"));
     $("#banner_change_owner_errors").hide();
     $("#change-owner-modal").modal("show");

@@ -2,7 +2,7 @@
  * Get the URL to go to the edit page
  */
 openEditRecord = function() {
-    var $registryRow = $(this).parent().parent();
+    var $registryRow = $(this).closest('tr');
     var objectID = $registryRow.attr("objectid");
 
     $.ajax({
