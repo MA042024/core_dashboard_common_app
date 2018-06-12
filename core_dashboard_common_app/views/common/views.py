@@ -747,14 +747,19 @@ class DashboardWorkspaces(CommonView):
         assets = {
             "css": copy.deepcopy(dashboard_constants.CSS_COMMON),
 
-            "js": [{
-                       "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
-                       "is_raw": True
-                   },
-                   {
-                       "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
-                       "is_raw": False
-                   }
+            "js": [
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
+                    "is_raw": False
+                },
+                {
+                    "path": 'core_dashboard_common_app/user/js/init.raw.js',
+                    "is_raw": True
+                },
             ]
         }
 
