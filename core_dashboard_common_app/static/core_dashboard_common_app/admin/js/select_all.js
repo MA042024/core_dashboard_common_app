@@ -3,7 +3,7 @@
  */
 function selectAll(source, id) {
     var isChecked = source.checked;
-    $('input[name='+id+']').each(function() {
+    $('*[id^="actionCheckbox"] input[type=checkbox]').each(function() {
             $(this).prop("checked", isChecked);
         }
     );

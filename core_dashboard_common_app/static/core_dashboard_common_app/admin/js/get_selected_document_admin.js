@@ -8,7 +8,7 @@ getSelectedDocument = function () {
     if (val != "" ) {
         selected.push(val);
     } else {
-        $('#actionCheckbox input:checked').each(function() {
+        $('*[id^="actionCheckbox"] input:checked').each(function() {
             selected.push($(this).attr('id'));
         });
     }

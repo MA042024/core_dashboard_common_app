@@ -5,5 +5,5 @@ function initMenu() {
     resetCheckbox();
     $('.paginate_button ').on('click', resetCheckbox);
     countChecked();
-    $( "input[type=checkbox]" ).on( "change", countChecked );
+    $('*[id^="actionCheckbox"] input[type=checkbox]').on( "change", countChecked );
 }

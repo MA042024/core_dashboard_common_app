@@ -17,7 +17,7 @@
             {% cycle 'even' '' as rowcolors silent %}
             <tr class="{{ rowcolors }}" objectid="{{data_loaded.form.id}}">
                 {% if data.menu %}
-                <td id="actionCheckbox">
+                <td id="actionCheckbox_{{forloop.counter}}">
                     <input type="checkbox" id={{data_loaded.form.id}} name={{group}}>
                 </td>
                 {% endif %}

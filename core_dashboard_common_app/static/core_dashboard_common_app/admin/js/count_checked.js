@@ -3,7 +3,7 @@
 */
 
 function countChecked() {
-      var numberChecked = $( "input:checked" ).length;
+      var numberChecked = $('*[id^="actionCheckbox"] input:checked').length;
       if (numberChecked == 0) {
         $("#id_actions").fadeTo(200, 0);
         document.getElementById("dropdownMenu1").disabled=true;

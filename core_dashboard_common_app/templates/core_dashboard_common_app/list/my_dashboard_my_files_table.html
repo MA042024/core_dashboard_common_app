@@ -16,7 +16,7 @@
         {% for object in objects %}
             <tr class="{{ rowcolors }}" objectid="{{object.file.id}}">
                 {% if data.menu %}
-                <td id="actionCheckbox">
+                <td id="actionCheckbox_{{forloop.counter}}">
                     <input type="checkbox" id={{object.file.id}} name={{group}}>
                 </td>
                 {% endif %}
