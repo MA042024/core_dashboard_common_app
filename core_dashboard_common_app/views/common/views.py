@@ -473,15 +473,13 @@ class DashboardForms(CommonView):
 
         Returns:
         """
+
         # Get the forms
         if self.administration:
             forms = curate_data_structure_api.get_all_with_no_data()
         else:
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(request.user.id)
-
-        detailed_forms = []
-        for form in forms:
-            detailed_forms.append({'form': form})
+        detailed_forms = self._get_detailed_forms(forms)
 
         context = {'user_data': detailed_forms,
                    'user_form': UserForm(request.user),
@@ -558,6 +556,13 @@ class DashboardForms(CommonView):
                                   context=context,
                                   assets=assets,
                                   modals=modals)
+
+    def _get_detailed_forms(self, forms):
+
+        detailed_forms = []
+        for form in forms:
+            detailed_forms.append({'form': form})
+        return detailed_forms
 
 
 class DashboardTemplates(CommonView):
