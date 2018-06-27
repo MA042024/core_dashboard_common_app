@@ -725,7 +725,7 @@ class DashboardWorkspaces(CommonView):
         detailed_user_workspaces = []
         for user_workspace in user_workspaces:
             detailed_user_workspaces.append({'user': user_api.get_user_by_id(user_workspace.owner).username if not workspace_api.is_workspace_global(user_workspace) else "GLOBAL",
-                                             'is_owner': user_workspace.owner == str(request.user.id),
+                                             'is_owner': self.administration or user_workspace.owner == str(request.user.id),
                                              'name': user_workspace.title,
                                              'workspace': user_workspace,
                                              'can_read': self.administration or user_workspace in user_workspace_read,
