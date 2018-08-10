@@ -67,6 +67,7 @@ class DashboardWorkspaceRecords(CommonView):
                                        'can_read': user_can_read or is_owner,
                                        'can_write': user_can_write or is_owner,
                                        'is_owner': is_owner})
+        return detailed_user_data
 
     def _get_assets(self):
         assets = {
