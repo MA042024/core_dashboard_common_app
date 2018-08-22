@@ -11,9 +11,9 @@
 </div>
 <input type="hidden" class="{{data.document}}-id"/>
 <p>
-    The {{data.document}}(s) will be erased.
+    The {{data.document}}{% if data.administration %}(s){% endif %} will be erased.
 </p>
-<p>Are you sure you want to delete the {{data.document}}(s)?</p>
+<p>Are you sure you want to delete the {{data.document}}{% if data.administration %}(s){% endif %}?</p>
 {% endblock %}
 
 {% block modal_footer %}
