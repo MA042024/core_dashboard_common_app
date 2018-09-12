@@ -1,9 +1,8 @@
 """
     User Dashboard constants
 """
+from core_main_app.utils.labels import get_form_label, get_data_label
 from utils.enum import enum
-import core_dashboard_common_app.settings as settings
-
 
 # Templates
 DASHBOARD_HOME_TEMPLATE = 'core_dashboard_common_app/home.html'
@@ -61,9 +60,9 @@ JS_ADMIN_TABLE = 'core_dashboard_common_app/admin/js/admin_table.js'
 ADMIN_VIEW_RECORD_RAW = 'core_dashboard_common_app/admin/js/list/view_record.raw.js'
 
 # FIXME: rename record and form to Data and Draft
-FUNCTIONAL_OBJECT_ENUM = enum(RECORD=settings.DATA_DISPLAY_NAME,
-                              FORM=settings.DRAFT_DISPLAY_NAME,
+FUNCTIONAL_OBJECT_ENUM = enum(RECORD=get_data_label(),
+                              FORM=get_form_label(),
                               TEMPLATE='template',
                               TYPE='type',
                               FILE='file',
-                              WORKSPACE=settings.WORKSPACE_DISPLAY_NAME)
+                              WORKSPACE='workspace')
