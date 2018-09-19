@@ -6,11 +6,13 @@ import copy
 
 import core_main_app.components.data.api as workspace_data_api
 import core_main_app.components.workspace.api as workspace_api
-from core_dashboard_common_app import constants as dashboard_constants
-from core_dashboard_common_app.views.common.forms import UserForm
 from core_main_app.components.user import api as user_api
 from core_main_app.utils.access_control.exceptions import AccessControlError
+from core_main_app.utils.labels import get_data_label
 from core_main_app.views.common.views import CommonView
+
+from core_dashboard_common_app import constants as dashboard_constants
+from core_dashboard_common_app.views.common.forms import UserForm
 
 
 class DashboardWorkspaceRecords(CommonView):
@@ -46,7 +48,7 @@ class DashboardWorkspaceRecords(CommonView):
         # Get all username and corresponding ids
         user_names = dict((str(x.id), x.username) for x in user_api.get_all_users())
         context.update({'usernames': user_names})
-        context.update({'title': 'List of records of workspace: ' + workspace.title})
+        context.update({'title': 'List of ' + get_data_label() + 's of workspace: ' + workspace.title})
 
         modals = ["core_main_app/user/workspaces/list/modals/assign_workspace.html"]
 
