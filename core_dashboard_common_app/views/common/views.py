@@ -231,8 +231,6 @@ class DashboardRecords(CommonView):
                 loaded_data = data_api.get_all(request.user, '-last_modification_date')
             except AccessControlError, ace:
                 loaded_data = []
-            # Get all username and corresponding ids
-            user_names = dict((str(x.id), x.username) for x in user_api.get_all_users())
         else:
             loaded_data = data_api.get_all_by_user(request.user, '-last_modification_date')
 
