@@ -15,6 +15,7 @@ from core_main_app.components.blob import api as blob_api
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.access_control.exceptions import AccessControlError
 from core_main_app.components.workspace import api as workspace_api
+from core_main_app.utils.labels import get_data_label, get_form_label
 if 'core_curate_app' in INSTALLED_APPS:
     from core_curate_app.components.curate_data_structure.models import CurateDataStructure
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -114,7 +115,7 @@ def _get_forms(form_ids, request_user_is_superuser, request_user_id):
 
             list_form.append(form)
     except DoesNotExist:
-        raise Exception('It seems a record is missing. Please refresh the page.')
+        raise Exception('It seems a ' + get_form_label() + ' is missing. Please refresh the page.')
     except Exception, e:
         raise Exception(e.message)
 
@@ -144,7 +145,7 @@ def _get_data(data_ids, user):
 
             data_table.append(data)
     except DoesNotExist:
-        raise Exception('It seems a record is missing. Please refresh the page.')
+        raise Exception('It seems a ' + get_data_label() + ' is missing. Please refresh the page.')
     except Exception, e:
         raise Exception(e.message)
 
@@ -245,7 +246,7 @@ def _delete_form(request, form_ids):
     try:
         for form in list_form:
             curate_data_structure_api.delete(form)
-        messages.add_message(request, messages.INFO, 'Form deleted with success.')
+        messages.add_message(request, messages.INFO, get_form_label().capitalize() + ' deleted with success.')
     except:
         messages.add_message(request, messages.INFO, 'A problem occurred while deleting.')
 
@@ -271,7 +272,7 @@ def _delete_record(request, data_ids):
     try:
         for data in list_data:
             data_api.delete(data, request.user)
-        messages.add_message(request, messages.INFO, 'Record deleted with success.')
+        messages.add_message(request, messages.INFO, get_data_label().capitalize() + ' deleted with success.')
     except:
         messages.add_message(request, messages.INFO, 'A problem occurred while deleting.')
 
@@ -367,7 +368,7 @@ def edit_record(request):
     try:
         data = data_api.get_by_id(request.POST['id'], request.user)
     except DoesNotExist:
-        message = Message(messages.ERROR, "It seems a record is missing. Please refresh the page.")
+        message = Message(messages.ERROR, "It seems a " + get_data_label() + " is missing. Please refresh the page.")
         return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
                                         content_type='application/json')
 
