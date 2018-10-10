@@ -733,7 +733,8 @@ class DashboardWorkspaces(CommonView):
                                              'workspace': user_workspace,
                                              'can_read': self.administration or user_workspace in user_workspace_read,
                                              'can_write': self.administration or user_workspace in user_workspace_write,
-                                             'is_public': workspace_api.is_workspace_public(user_workspace)
+                                             'is_public': workspace_api.is_workspace_public(user_workspace),
+                                             'is_global': workspace_api.is_workspace_global(user_workspace)
                                              })
 
         context = {
@@ -777,6 +778,11 @@ class DashboardWorkspaces(CommonView):
             modals.append("core_main_app/user/workspaces/list/modals/set_public.html")
             assets['js'].append({
                                     "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
+                                    "is_raw": False
+                                })
+            modals.append("core_main_app/user/workspaces/list/modals/set_private.html")
+            assets['js'].append({
+                                    "path": 'core_main_app/user/js/workspaces/list/modals/set_private.js',
                                     "is_raw": False
                                 })
 

@@ -48,12 +48,19 @@
                             <a class="btn btn-default delete-document-btn">
                                 <i class="fa fa-trash"></i> Delete
                             </a>
-                            {% if data.can_set_public %}
+                        {% endif %}
+                        {% if not object.is_global %}
+                            {% if object.is_public %}
+                                <a class="btn btn-default private-{{data.document}}-btn">
+                                    <i class="fa fa-users"></i> Set private
+                                </a>
+                            {% elif data.can_set_public %}
                                 <a class="btn btn-default public-{{data.document}}-btn">
                                     <i class="fa fa-users"></i> Set public
                                 </a>
                             {% endif %}
                         {% endif %}
+
                     {% endif %}
                 </td>
             </tr>
