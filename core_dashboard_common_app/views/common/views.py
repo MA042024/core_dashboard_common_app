@@ -244,7 +244,8 @@ class DashboardRecords(CommonView):
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
-            'other_users_data': results_paginator,
+            'number_total': len(loaded_data),
+            'user_data': results_paginator,
             'user_form': user_form,
             'document': self.document,
             'template': self.data_template,
@@ -386,6 +387,7 @@ class DashboardFiles(CommonView):
                                   })
 
         context = {
+            'number_total': len(files),
             'user_data': detailed_file,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE,
             'template': dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
@@ -479,7 +481,8 @@ class DashboardForms(CommonView):
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(request.user.id)
         detailed_forms = self._get_detailed_forms(forms)
 
-        context = {'user_data': detailed_forms,
+        context = {'number_total': len(forms),
+                   'user_data': detailed_forms,
                    'user_form': UserForm(request.user),
                    'document': self.document,
                    'template': dashboard_constants.DASHBOARD_FORMS_TEMPLATE_TABLE,
@@ -596,6 +599,7 @@ class DashboardTemplates(CommonView):
                                            })
 
         context = {
+            'number_total': len(detailed_templates),
             'user_data': detailed_templates,
             'user_form': UserForm(request.user),
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TEMPLATE,
@@ -664,6 +668,7 @@ class DashboardTypes(CommonView):
                                        'title': type_version.title})
 
         context = {
+            'number_total': len(type_versions),
             'user_form': UserForm(request.user),
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE,
             'object_name': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE,
@@ -738,6 +743,7 @@ class DashboardWorkspaces(CommonView):
                                              })
 
         context = {
+            'number_total': len(user_workspaces),
             'workspace_form': WorkspaceForm(),
             'user_data': detailed_user_workspaces,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE,

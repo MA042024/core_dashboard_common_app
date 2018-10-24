@@ -37,11 +37,12 @@ class DashboardWorkspaceRecords(CommonView):
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
+            'number_total': len(workspace_data),
             'user_data': detailed_user_data,
             'user_form': user_form,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD,
             'template': self.data_template,
-            'number_columns': 5,
+            'number_columns': 4,
             'administration': False
         }
 
