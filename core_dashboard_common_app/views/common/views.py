@@ -387,6 +387,7 @@ class DashboardFiles(CommonView):
                                   })
 
         context = {
+            'administration': self.administration,
             'number_total': len(files),
             'user_data': detailed_file,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE,
@@ -481,7 +482,8 @@ class DashboardForms(CommonView):
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(request.user.id)
         detailed_forms = self._get_detailed_forms(forms)
 
-        context = {'number_total': len(forms),
+        context = {'administration': self.administration,
+                   'number_total': len(forms),
                    'user_data': detailed_forms,
                    'user_form': UserForm(request.user),
                    'document': self.document,
