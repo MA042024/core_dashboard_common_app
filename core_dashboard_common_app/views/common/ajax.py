@@ -16,6 +16,7 @@ from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.access_control.exceptions import AccessControlError
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.utils.labels import get_data_label, get_form_label
+from core_main_app.components.lock import api as lock_api
 if 'core_curate_app' in INSTALLED_APPS:
     from core_curate_app.components.curate_data_structure.models import CurateDataStructure
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -271,6 +272,12 @@ def _delete_record(request, data_ids):
 
     try:
         for data in list_data:
+            # Check if the data is locked
+            if lock_api.is_object_locked(data.id, request.user):
+                messages.add_message(request, messages.ERROR, get_data_label().capitalize() + " locked. "
+                                                                                              "You can't delete it.")
+                return HttpResponse(json.dumps({}), content_type='application/javascript')
+
             data_api.delete(data, request.user)
         messages.add_message(request, messages.INFO, get_data_label().capitalize() + ' deleted with success.')
     except:
@@ -371,6 +378,12 @@ def edit_record(request):
         message = Message(messages.ERROR, "It seems a " + get_data_label() + " is missing. Please refresh the page.")
         return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
                                         content_type='application/json')
+
+    # Check if the data is locked
+    if lock_api.is_object_locked(data.id, request.user):
+        message = Message(messages.ERROR, "The " + get_data_label() + " is locked. You can't edit it.")
+        return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
+                                      content_type='application/json')
 
     try:
         # Check if a curate data structure already exists
