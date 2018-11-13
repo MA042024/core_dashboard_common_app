@@ -1,4 +1,5 @@
 {% load dict_key_extras %}
+{% load i18n %}
 
 <table class="table table-bordered table-striped table-hover">
     <thead>
@@ -22,12 +23,12 @@
                     {% if come_from_admin %}
                         <a class="btn btn-default view-data-{{data.document}}-btn" objectid="{{ object.workspace.id }}"
                            href="{% url 'admin:core_dashboard_workspace_list_data' object.workspace.id %}">
-                            <i class="fa fa-list"></i> View data
+                            <i class="fa fa-list"></i> View {% trans "record_label" %}
                         </a>
                     {% else %}
                         <a class="btn btn-default view-data-{{data.document}}-btn" objectid="{{ object.workspace.id }}"
                            href="{% url 'core_dashboard_workspace_list_data' object.workspace.id %}">
-                            <i class="fa fa-list"></i> View data
+                            <i class="fa fa-list"></i> View {% trans "record_label" %}
                         </a>
                     {% endif %}
 
