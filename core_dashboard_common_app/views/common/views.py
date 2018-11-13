@@ -565,7 +565,7 @@ class DashboardForms(CommonView):
         detailed_forms = []
         for form in forms:
             detailed_forms.append({'form': form})
-        return detailed_forms
+        return list(reversed(detailed_forms))
 
 
 class DashboardTemplates(CommonView):
