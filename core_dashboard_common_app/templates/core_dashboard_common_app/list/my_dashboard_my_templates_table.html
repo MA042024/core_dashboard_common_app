@@ -38,7 +38,7 @@
                             {% url 'core_dashboard_app_edit_template' object.template_version.id as edit_url %}
                             {% include 'core_main_app/common/buttons/edit.html' %}
                         {% endif %}
-                        <a class="btn btn-default disable-{{data.document}}-btn" objectid="{{ object.template_version.id }}">
+                        <a class="btn btn-danger disable-{{data.document}}-btn" objectid="{{ object.template_version.id }}">
                             <i class="fa fa-trash"></i> Disable
                         </a>
                     {% endif %}
