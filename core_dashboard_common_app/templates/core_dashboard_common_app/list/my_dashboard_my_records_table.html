@@ -9,7 +9,7 @@
     <th>Name</th>
     <th>Template</th>
     <th>Last Modification date</th>
-    {% if data.username_list and data.administration %}
+    {% if data.username_list %}
         <th>User</th>
     {% endif %}
     {% if not data.title%}
@@ -34,7 +34,7 @@
             <td>
                 {{ data_loaded.data.last_modification_date|print_datetime_utc_unaware }}
             </td>
-            {% if data.username_list and data.administration %}
+            {% if data.username_list %}
             <td>
                 {% with key=data_loaded.data.user_id %}
                   {{ data.username_list|get:key }}
