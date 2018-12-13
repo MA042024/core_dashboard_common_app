@@ -246,7 +246,7 @@ class DashboardRecords(CommonView):
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
-            'number_total': len(loaded_data),
+            'number_total': loaded_data.count,
             'user_data': results_paginator,
             'user_form': user_form,
             'document': self.document,
@@ -391,7 +391,7 @@ class DashboardFiles(CommonView):
 
         context = {
             'administration': self.administration,
-            'number_total': len(files),
+            'number_total': files.count,
             'user_data': detailed_file,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE,
             'template': dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
@@ -486,7 +486,7 @@ class DashboardForms(CommonView):
         detailed_forms = self._get_detailed_forms(forms)
 
         context = {'administration': self.administration,
-                   'number_total': len(forms),
+                   'number_total': forms.count,
                    'user_data': detailed_forms,
                    'user_form': UserForm(request.user),
                    'document': self.document,
@@ -664,7 +664,6 @@ class DashboardTypes(CommonView):
 
         detailed_types = []
         for type_version in type_versions:
-
             # If the version manager doesn't have a user, the type is global.
             if type_version.user is not None:
                 detailed_types.append({'type_version': type_version,
@@ -673,7 +672,7 @@ class DashboardTypes(CommonView):
                                        'title': type_version.title})
 
         context = {
-            'number_total': len(type_versions),
+            'number_total': type_versions.count,
             'user_form': UserForm(request.user),
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE,
             'object_name': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE,
@@ -832,7 +831,7 @@ class DashboardWorkspaceRecords(CommonView):
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
-            'number_total': len(workspace_data),
+            'number_total': workspace_data.count,
             'user_data': results_paginator,
             'user_form': user_form,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD,
