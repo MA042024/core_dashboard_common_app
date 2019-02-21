@@ -672,7 +672,7 @@ class DashboardTypes(CommonView):
                                        'title': type_version.title})
 
         context = {
-            'number_total': type_versions.count,
+            'number_total': len(detailed_types),
             'user_form': UserForm(request.user),
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE,
             'object_name': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE,
