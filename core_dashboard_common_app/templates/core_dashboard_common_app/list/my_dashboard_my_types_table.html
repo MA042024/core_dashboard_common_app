@@ -1,6 +1,7 @@
 {% load dict_key_extras %}
 
-<table class="table table-bordered table-striped table-hover">
+<table class="table table-bordered table-striped table-hover
+        {% if come_from_admin %}table-col-4{% else %}table-col-3{% endif %}">
     <thead>
         <th>Type name</th>
         <th>Filename</th>

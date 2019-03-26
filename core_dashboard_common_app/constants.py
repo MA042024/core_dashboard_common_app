@@ -28,7 +28,8 @@ MODALS_COMMON_CHANGE_OWNER = "core_dashboard_common_app/list/modals/change_owner
 # TODO: replace with the constants in core main app once they are done
 CSS_COMMON = [
                 'core_main_app/common/css/XMLTree.css',
-                'core_main_app/libs/datatables/1.10.13/css/jquery.dataTables.css'
+                'core_main_app/libs/datatables/1.10.13/css/jquery.dataTables.css',
+                'core_main_app/common/css/table.css'
              ]
 JS_COMMON = [{
                 "path": 'core_main_app/libs/datatables/1.10.13/js/jquery.dataTables.js',
