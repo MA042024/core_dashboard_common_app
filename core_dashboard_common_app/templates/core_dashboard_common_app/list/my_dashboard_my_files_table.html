@@ -20,7 +20,11 @@
                     <input type="checkbox" id={{object.file.id}} name={{group}}>
                 </td>
                 {% endif %}
-                <td>{{ object.file.filename }}</td>
+                <td>
+                    <span class="blob-link" data-blob-url="{{ object.url }}">
+                        {{ object.file.filename }}
+                    </span>
+                </td>
                 <td>{{ object.date }}</td>
                 {% if come_from_admin %}
                     <td>
