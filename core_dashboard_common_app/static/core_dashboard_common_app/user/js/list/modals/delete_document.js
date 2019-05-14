@@ -26,8 +26,8 @@ delete_document = function(){
 		        location.reload(true);
 	    },
         error:function(data){
-            $("#delete_document_errors").html(data.responseText);
-            $("#delete_banner_errors").show(500)
+            var error_message = JSON.parse(data.responseText);
+            $.notify(error_message.message);
         }
     });
 };

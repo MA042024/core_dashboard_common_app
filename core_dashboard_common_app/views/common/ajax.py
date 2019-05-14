@@ -274,9 +274,8 @@ def _delete_record(request, data_ids):
         for data in list_data:
             # Check if the data is locked
             if lock_api.is_object_locked(data.id, request.user):
-                messages.add_message(request, messages.ERROR, get_data_label().capitalize() + " locked. "
-                                                                                              "You can't delete it.")
-                return HttpResponse(json.dumps({}), content_type='application/javascript')
+                message = Message(messages.ERROR, "The " + get_data_label() + " is locked. You can't edit it.")
+                return HttpResponseBadRequest(json.dumps({"message": message.message}), content_type='application/javascript')
 
             data_api.delete(data, request.user)
         messages.add_message(request, messages.INFO, get_data_label().capitalize() + ' deleted with success.')
