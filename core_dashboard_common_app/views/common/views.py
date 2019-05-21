@@ -90,7 +90,7 @@ def my_profile_edit(request):
                                   context={'form': form, 'action_result': message})
                 else:
                     _error_while_saving(request, form)
-            except Exception, e:
+            except Exception as e:
                 _error_while_saving(request, form)
 
             messages.add_message(request, messages.INFO, 'Profile information edited with success.')
@@ -231,7 +231,7 @@ class DashboardRecords(CommonView):
         if self.administration:
             try:
                 loaded_data = data_api.get_all(request.user, '-last_modification_date')
-            except AccessControlError, ace:
+            except AccessControlError as ace:
                 loaded_data = []
         else:
             loaded_data = data_api.get_all_by_user(request.user, '-last_modification_date')
@@ -824,7 +824,7 @@ class DashboardWorkspaceRecords(CommonView):
 
         try:
             workspace_data = workspace_data_api.get_all_by_workspace(workspace, request.user)
-        except AccessControlError, ace:
+        except AccessControlError as ace:
             workspace_data = []
 
         user_can_read = workspace_api.can_user_read_workspace(workspace, request.user)

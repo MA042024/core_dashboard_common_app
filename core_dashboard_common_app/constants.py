@@ -2,7 +2,7 @@
     User Dashboard constants
 """
 from core_main_app.utils.labels import get_form_label, get_data_label
-from utils.enum import enum
+from core_dashboard_common_app.utils.enum import enum
 
 # Templates
 DASHBOARD_HOME_TEMPLATE = 'core_dashboard_common_app/home.html'
