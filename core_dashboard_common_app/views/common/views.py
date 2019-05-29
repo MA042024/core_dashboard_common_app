@@ -1,6 +1,7 @@
 """
     Common views
 """
+from builtins import str
 import copy
 import json
 
@@ -84,7 +85,7 @@ def my_profile_edit(request):
             try:
                 user_api.upsert(user)
             except IntegrityError as e:
-                if 'unique constraint' in e.message:
+                if 'unique constraint' in str(e):
                     message = "A user with the same username already exists."
                     return render(request, dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
                                   context={'form': form, 'action_result': message})

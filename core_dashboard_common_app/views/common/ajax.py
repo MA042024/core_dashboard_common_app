@@ -1,5 +1,6 @@
 """ Ajax API
 """
+from builtins import str
 import json
 
 from django.contrib import messages
@@ -58,7 +59,7 @@ def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
     except DoesNotExist:
         raise Exception('It seems a workspace is missing. Please refresh the page.')
     except Exception as e:
-        raise Exception(e.message)
+        raise Exception(str(e))
 
     return list_workspaces
 
@@ -88,7 +89,7 @@ def _get_blobs(blob_ids, request_user_is_superuser, request_user_id):
     except DoesNotExist:
         raise Exception('It seems a blob is missing. Please refresh the page.')
     except Exception as e:
-        raise Exception(e.message)
+        raise Exception(str(e))
 
     return list_blobs
 
@@ -118,7 +119,7 @@ def _get_forms(form_ids, request_user_is_superuser, request_user_id):
     except DoesNotExist:
         raise Exception('It seems a ' + get_form_label() + ' is missing. Please refresh the page.')
     except Exception as e:
-        raise Exception(e.message)
+        raise Exception(str(e))
 
     return list_form
 
@@ -148,7 +149,7 @@ def _get_data(data_ids, user):
     except DoesNotExist:
         raise Exception('It seems a ' + get_data_label() + ' is missing. Please refresh the page.')
     except Exception as e:
-        raise Exception(e.message)
+        raise Exception(str(e))
 
     return data_table
 
@@ -192,14 +193,14 @@ def _delete_workspace(request, workspace_ids):
     try:
         list_workspaces = _get_workspaces(workspace_ids, request.user.is_superuser, request.user.id)
     except Exception as e:
-        messages.add_message(request, messages.INFO, e.message)
+        messages.add_message(request, messages.INFO, str(e))
         return HttpResponse(json.dumps({}), content_type='application/javascript')
 
     try:
         for workspace in list_workspaces:
             workspace_api.delete(workspace, request.user)
     except AccessControlError as ace:
-        return HttpResponseBadRequest(ace.message)
+        return HttpResponseBadRequest(str(ace))
 
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
@@ -216,7 +217,7 @@ def _delete_file(request, blob_ids):
     try:
         list_blob = _get_blobs(blob_ids, request.user.is_superuser, request.user.id)
     except Exception as e:
-        messages.add_message(request, messages.INFO, e.message)
+        messages.add_message(request, messages.INFO, str(e))
         return HttpResponse(json.dumps({}), content_type='application/javascript')
 
     try:
@@ -241,7 +242,7 @@ def _delete_form(request, form_ids):
     try:
         list_form = _get_forms(form_ids, request.user.is_superuser, request.user.id)
     except Exception as e:
-        messages.add_message(request, messages.INFO, e.message)
+        messages.add_message(request, messages.INFO, str(e))
         return HttpResponse(json.dumps({}), content_type='application/javascript')
 
     try:
@@ -267,7 +268,7 @@ def _delete_record(request, data_ids):
     try:
         list_data = _get_data(data_ids, request.user)
     except Exception as e:
-        messages.add_message(request, messages.INFO, e.message)
+        messages.add_message(request, messages.INFO, str(e))
         return HttpResponse(json.dumps({}), content_type='application/javascript')
 
     try:
@@ -326,14 +327,14 @@ def _change_owner_form(request, form_ids, user_id):
     try:
         list_form = _get_forms(form_ids, request.user.is_superuser, request.user.id)
     except Exception as e:
-        return HttpResponseBadRequest(e.message)
+        return HttpResponseBadRequest(str(e))
 
     try:
         for form in list_form:
             form.user = user_id
             curate_data_structure_api.upsert(form)
     except Exception as e:
-        return HttpResponseBadRequest(e.message)
+        return HttpResponseBadRequest(str(e))
 
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
@@ -352,13 +353,13 @@ def _change_owner_record(request, data_ids, user_id):
     try:
         list_data = _get_data(data_ids, request.user)
     except Exception as e:
-        return HttpResponseBadRequest(e.message)
+        return HttpResponseBadRequest(str(e))
     try:
         new_user = user_api.get_user_by_id(user_id)
         for data in list_data:
             data_api.change_owner(data, new_user, request.user)
     except Exception as e:
-        return HttpResponseBadRequest(e.message)
+        return HttpResponseBadRequest(str(e))
 
     return HttpResponse(json.dumps({}), content_type='application/javascript')
 
