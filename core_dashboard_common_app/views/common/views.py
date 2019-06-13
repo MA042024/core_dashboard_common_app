@@ -1,7 +1,6 @@
 """
     Common views
 """
-from builtins import str
 import copy
 import json
 
