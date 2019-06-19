@@ -12,6 +12,7 @@ from django.http.response import HttpResponseRedirect
 from django.utils import timezone
 from password_policies.views import PasswordChangeFormView
 
+import core_main_app.components.data.api as workspace_data_api
 from core_dashboard_common_app import constants as dashboard_constants
 from core_dashboard_common_app import settings
 from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
@@ -25,14 +26,13 @@ from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.access_control.exceptions import AccessControlError
 from core_main_app.utils.datetime_tools.date_time_encoder import DateTimeEncoder
+from core_main_app.utils.labels import get_data_label
 from core_main_app.utils.pagination.django_paginator.results_paginator import ResultsPaginator
 from core_main_app.utils.rendering import render
 from core_main_app.views.admin.forms import EditProfileForm
 from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
 from core_main_app.views.user.forms import WorkspaceForm
-import core_main_app.components.data.api as workspace_data_api
-from core_main_app.utils.labels import get_data_label
 
 if 'core_curate_app' in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api

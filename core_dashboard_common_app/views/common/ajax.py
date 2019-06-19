@@ -12,11 +12,12 @@ import core_main_app.components.user.api as user_api
 from core_dashboard_common_app import constants
 from core_main_app.commons.exceptions import DoesNotExist
 from core_main_app.components.blob import api as blob_api
+from core_main_app.components.lock import api as lock_api
+from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.access_control.exceptions import AccessControlError
-from core_main_app.components.workspace import api as workspace_api
 from core_main_app.utils.labels import get_data_label, get_form_label
-from core_main_app.components.lock import api as lock_api
+
 if 'core_curate_app' in INSTALLED_APPS:
     from core_curate_app.components.curate_data_structure.models import CurateDataStructure
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
