@@ -15,7 +15,7 @@ from core_main_app.components.blob import api as blob_api
 from core_main_app.components.lock import api as lock_api
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
-from core_main_app.utils.access_control.exceptions import AccessControlError
+from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.utils.labels import get_data_label, get_form_label
 
 if 'core_curate_app' in INSTALLED_APPS:

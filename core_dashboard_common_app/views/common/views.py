@@ -24,7 +24,7 @@ from core_main_app.components.user import api as user_api
 from core_main_app.components.user.api import get_id_username_dict
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
-from core_main_app.utils.access_control.exceptions import AccessControlError
+from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.utils.datetime_tools.date_time_encoder import DateTimeEncoder
 from core_main_app.utils.labels import get_data_label
 from core_main_app.utils.pagination.django_paginator.results_paginator import ResultsPaginator
@@ -379,7 +379,7 @@ class DashboardFiles(CommonView):
         if self.administration:
             files = blob_api.get_all()
         else:
-            files = blob_api.get_all_by_user_id(request.user.id)
+            files = blob_api.get_all_by_user(request.user)
 
         detailed_file = []
         for file in files:
