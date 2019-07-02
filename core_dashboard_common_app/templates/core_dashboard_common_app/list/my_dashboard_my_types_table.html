@@ -1,5 +1,5 @@
 {% load dict_key_extras %}
-
+{% load get_attribute %}
 <table class="table table-bordered table-striped table-hover
         {% if come_from_admin %}table-col-4{% else %}table-col-3{% endif %}">
     <thead>
@@ -21,7 +21,7 @@
                     </td>
                 {% endif %}
                 <td>
-                    {% if object.type_version.is_disabled %}
+                    {% if object.type_version|get_attribute:'is_disabled' %}
                     <a class="btn btn-default restore-template-btn" objectid="{{ object.type_version.id }}">
                         <i class="fa fa-undo"></i> Restore
                     </a>
