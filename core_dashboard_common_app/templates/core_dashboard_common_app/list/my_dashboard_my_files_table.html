@@ -10,6 +10,9 @@
         {% if come_from_admin %}
             <th>User</th>
         {% endif %}
+        {% if not data.title%}
+            <th>Workspace</th>
+        {% endif %}
         <th>Actions</th>
     </thead>
     <tbody>
@@ -31,6 +34,15 @@
                         {{object.user}}
                     </td>
                 {% endif %}
+                {% if not data.title%}
+                    <td>
+                        {% if object.file.workspace %}
+                            {{ object.file.workspace.title }}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </td>
+                {% endif %}
                 <td>
                     <a class="btn btn-default download-{{data.document}}-btn" href="{{ object.url }}">
                         <i class="fa fa-list"></i> Download
@@ -39,7 +51,11 @@
                     <a class="btn btn-default delete-document-btn" objectid="{{ object.file.id }}">
                         <i class="fa fa-trash"></i> Delete
                     </a>
-
+                    {% if object.can_change_workspace %}
+                        <a class="btn btn-default assign-workspace-record-btn">
+                            <i class="fa fa-folder"></i> Change workspace
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

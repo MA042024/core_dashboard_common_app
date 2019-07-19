@@ -64,7 +64,7 @@ def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
     return list_workspaces
 
 
-def _get_blobs(blob_ids, request_user_is_superuser, request_user_id):
+def _get_blobs(blob_ids, user):
     """ Get all the blobs from the list of ids.
 
     Args:
@@ -80,10 +80,10 @@ def _get_blobs(blob_ids, request_user_is_superuser, request_user_id):
     try:
         for blob_id in blob_ids:
             # Get the blob
-            blob = blob_api.get_by_id(blob_id)
+            blob = blob_api.get_by_id(blob_id, user)
 
             # Check the rights
-            _check_rights_document(request_user_is_superuser, request_user_id, blob.user_id)
+            _check_rights_document(user.is_superuser, user.id, blob.user_id)
 
             list_blobs.append(blob)
     except DoesNotExist:
@@ -215,14 +215,14 @@ def _delete_file(request, blob_ids):
         Returns:
         """
     try:
-        list_blob = _get_blobs(blob_ids, request.user.is_superuser, request.user.id)
+        list_blob = _get_blobs(blob_ids, request.user)
     except Exception as e:
         messages.add_message(request, messages.INFO, str(e))
         return HttpResponse(json.dumps({}), content_type='application/javascript')
 
     try:
         for blob in list_blob:
-            blob_api.delete(blob)
+            blob_api.delete(blob, request.user)
         messages.add_message(request, messages.INFO, 'File deleted with success.')
     except:
         messages.add_message(request, messages.INFO, 'A problem occurred while deleting.')

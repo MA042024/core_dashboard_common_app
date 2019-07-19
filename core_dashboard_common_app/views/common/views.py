@@ -16,6 +16,7 @@ import core_main_app.components.data.api as workspace_data_api
 from core_dashboard_common_app import constants as dashboard_constants
 from core_dashboard_common_app import settings
 from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
+from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.components.blob import api as blob_api, utils as blob_utils
 from core_main_app.components.data import api as data_api
 from core_main_app.components.template import api as template_api
@@ -23,8 +24,8 @@ from core_main_app.components.template_version_manager import api as template_ve
 from core_main_app.components.user import api as user_api
 from core_main_app.components.user.api import get_id_username_dict
 from core_main_app.components.workspace import api as workspace_api
+from core_main_app.components.workspace.api import check_if_workspace_can_be_changed
 from core_main_app.settings import INSTALLED_APPS
-from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.utils.datetime_tools.date_time_encoder import DateTimeEncoder
 from core_main_app.utils.labels import get_data_label
 from core_main_app.utils.pagination.django_paginator.results_paginator import ResultsPaginator
@@ -212,19 +213,6 @@ class DashboardRecords(CommonView):
     document = dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD
     allow_change_workspace_if_public = True
 
-    def can_change_workspace(self, data):
-        """ Check if you can change the workspace.
-
-        Args:
-
-        Returns:
-        """
-
-        workspace = data.workspace
-        if workspace is not None and workspace_api.is_workspace_public(workspace) and not self.allow_change_workspace_if_public:
-            return False
-        return True
-
     def get(self, request, *args, **kwargs):
 
         # Get records
@@ -259,10 +247,11 @@ class DashboardRecords(CommonView):
         if self.administration:
             context.update({'username_list': get_id_username_dict(user_api.get_all_users())})
 
-        modals = ["core_main_app/user/workspaces/list/modals/assign_workspace.html",
-                  dashboard_constants.MODALS_COMMON_DELETE,
-                  dashboard_constants.MODALS_COMMON_CHANGE_OWNER
-                  ]
+        modals = [
+            "core_main_app/user/workspaces/list/modals/assign_workspace.html",
+            dashboard_constants.MODALS_COMMON_DELETE,
+            dashboard_constants.MODALS_COMMON_CHANGE_OWNER
+        ]
 
         assets = self._get_assets()
 
@@ -278,7 +267,7 @@ class DashboardRecords(CommonView):
                                       'can_read': True,
                                       'can_write': True,
                                       'is_owner': True,
-                                      'can_change_workspace': self.can_change_workspace(data)})
+                                      'can_change_workspace': check_if_workspace_can_be_changed(data)})
         return data_context_list
 
     def _get_assets(self):
@@ -289,6 +278,10 @@ class DashboardRecords(CommonView):
                 {
                     "path": 'core_main_app/user/js/workspaces/list/modals/assign_workspace.js',
                     "is_raw": False
+                },
+                {
+                    "path": 'core_main_app/user/js/workspaces/list/modals/assign_data_workspace.raw.js',
+                    "is_raw": True
                 },
                 {
                     "path": 'core_dashboard_common_app/common/js/init_pagination.js',
@@ -365,6 +358,7 @@ class DashboardFiles(CommonView):
     """
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
+    allow_change_workspace_if_public = True
 
     def get(self, request, *args, **kwargs):
         """ Method GET
@@ -377,17 +371,19 @@ class DashboardFiles(CommonView):
         Returns:
         """
         if self.administration:
-            files = blob_api.get_all()
+            files = blob_api.get_all(request.user)
         else:
             files = blob_api.get_all_by_user(request.user)
 
         detailed_file = []
         for file in files:
-            detailed_file.append({'user': user_api.get_user_by_id(file.user_id).username,
-                                  'date': file.id.generation_time,
-                                  'file': file,
-                                  'url': blob_utils.get_blob_download_uri(file, request)
-                                  })
+            detailed_file.append({
+                'user': user_api.get_user_by_id(file.user_id).username,
+                'date': file.id.generation_time,
+                'file': file,
+                'url': blob_utils.get_blob_download_uri(file, request),
+                'can_change_workspace': check_if_workspace_can_be_changed(file)
+            })
 
         context = {
             'administration': self.administration,
@@ -402,7 +398,10 @@ class DashboardFiles(CommonView):
             context.update({'action_form': ActionForm([('1', 'Delete selected files')])
                             })
 
-        modals = [dashboard_constants.MODALS_COMMON_DELETE]
+        modals = [
+            "core_main_app/user/workspaces/list/modals/assign_workspace.html",
+            dashboard_constants.MODALS_COMMON_DELETE
+        ]
 
         assets = {
             "css": dashboard_constants.CSS_COMMON,
@@ -419,7 +418,15 @@ class DashboardFiles(CommonView):
                     {
                         "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
                         "is_raw": True
-                    }
+                    },
+                    {
+                        "path": 'core_main_app/user/js/workspaces/list/modals/assign_workspace.js',
+                        "is_raw": False
+                    },
+                    {
+                        "path": 'core_main_app/user/js/workspaces/list/modals/assign_blob_workspace.raw.js',
+                        "is_raw": True
+                    },
             ]
         }
 
@@ -495,18 +502,21 @@ class DashboardForms(CommonView):
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(request.user.id)
         detailed_forms = self._get_detailed_forms(forms)
 
-        context = {'administration': self.administration,
-                   'number_total': forms.count,
-                   'user_data': detailed_forms,
-                   'user_form': UserForm(request.user),
-                   'document': self.document,
-                   'template': dashboard_constants.DASHBOARD_FORMS_TEMPLATE_TABLE,
-                   'menu': self.administration
-                   }
+        context = {
+            'administration': self.administration,
+            'number_total': forms.count,
+            'user_data': detailed_forms,
+            'user_form': UserForm(request.user),
+            'document': self.document,
+            'template': dashboard_constants.DASHBOARD_FORMS_TEMPLATE_TABLE,
+            'menu': self.administration
+        }
 
-        modals = [dashboard_constants.MODALS_COMMON_DELETE,
-                  dashboard_constants.MODALS_COMMON_CHANGE_OWNER
-                  ]
+        modals = [
+            "core_main_app/user/workspaces/list/modals/assign_workspace.html",
+            dashboard_constants.MODALS_COMMON_DELETE,
+            dashboard_constants.MODALS_COMMON_CHANGE_OWNER
+        ]
 
         assets = {
             "css": dashboard_constants.CSS_COMMON,
