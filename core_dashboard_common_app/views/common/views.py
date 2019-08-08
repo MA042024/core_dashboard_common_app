@@ -218,11 +218,11 @@ class DashboardRecords(CommonView):
         # Get records
         if self.administration:
             try:
-                loaded_data = data_api.get_all(request.user, '-last_modification_date')
+                loaded_data = data_api.get_all(request.user)
             except AccessControlError as ace:
                 loaded_data = []
         else:
-            loaded_data = data_api.get_all_by_user(request.user, '-last_modification_date')
+            loaded_data = data_api.get_all_by_user(request.user)
 
         # Paginator
         page = request.GET.get('page', 1)
