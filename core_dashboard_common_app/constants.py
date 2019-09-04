@@ -1,7 +1,8 @@
 """
     User Dashboard constants
 """
-from core_main_app.utils.enum import enum
+from enum import Enum
+
 from core_main_app.utils.labels import get_form_label, get_data_label
 
 # Templates
@@ -60,9 +61,11 @@ JS_ADMIN_ACTION_DASHBOARD = 'core_dashboard_common_app/admin/js/action_dashboard
 JS_ADMIN_TABLE = 'core_dashboard_common_app/admin/js/admin_table.js'
 ADMIN_VIEW_RECORD_RAW = 'core_dashboard_common_app/admin/js/list/view_record.raw.js'
 
-FUNCTIONAL_OBJECT_ENUM = enum(RECORD=get_data_label(),
-                              FORM=get_form_label(),
-                              TEMPLATE='template',
-                              TYPE='type',
-                              FILE='file',
-                              WORKSPACE='workspace')
+FUNCTIONAL_OBJECT_ENUM = Enum('FUNCTIONAL_OBJECT_ENUM',
+                              {'RECORD': get_data_label(),
+                               'FORM': get_form_label(),
+                               'TEMPLATE': 'template',
+                               'TYPE': 'type',
+                               'FILE': 'file',
+                               'WORKSPACE': 'workspace',
+                               })

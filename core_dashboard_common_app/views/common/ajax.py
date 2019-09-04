@@ -169,13 +169,13 @@ def delete_document(request):
     if len(document_ids) > 1 and not request.user.is_superuser:
         return HttpResponseServerError({"You don't have the rights to perform this action."}, status=403)
 
-    if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD:
+    if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
         return _delete_record(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM:
+    elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
         return _delete_form(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.FILE:
+    elif document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
         return _delete_file(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE:
+    elif document == constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE.value:
         return _delete_workspace(request, document_ids)
 
     return HttpResponseBadRequest({"Bad entries. Please check the parameters."})
@@ -303,9 +303,9 @@ def change_owner_document(request):
         if len(document_ids) > 1 and not request.user.is_superuser:
             return HttpResponseServerError({"You don't have the rights to perform this action."}, status=403)
 
-        if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD:
+        if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
             return _change_owner_record(request, document_ids, user_id)
-        elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM:
+        elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
             return _change_owner_form(request, document_ids, user_id)
 
     else:
