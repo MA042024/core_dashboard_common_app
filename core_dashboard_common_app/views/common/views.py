@@ -215,7 +215,7 @@ class DashboardRecords(CommonView):
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
-            'number_total': loaded_data.count,
+            'number_total': loaded_data.count(),
             'user_data': results_paginator,
             'user_form': user_form,
             'document': self.document,
@@ -368,7 +368,7 @@ class DashboardFiles(CommonView):
 
         context = {
             'administration': self.administration,
-            'number_total': files.count,
+            'number_total': files.count(),
             'user_data': detailed_file,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE.value,
             'template': dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
@@ -485,7 +485,7 @@ class DashboardForms(CommonView):
 
         context = {
             'administration': self.administration,
-            'number_total': forms.count,
+            'number_total': forms.count(),
             'user_data': detailed_forms,
             'user_form': UserForm(request.user),
             'document': self.document,
@@ -832,7 +832,7 @@ class DashboardWorkspaceRecords(CommonView):
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
-            'number_total': workspace_data.count,
+            'number_total': workspace_data.count(),
             'user_data': results_paginator,
             'user_form': user_form,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value,
