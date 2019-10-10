@@ -2,15 +2,15 @@
     Common views
 """
 import copy
-import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
-from django.utils import timezone
-from password_policies.views import PasswordChangeFormView
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import redirect
 
 import core_main_app.components.data.api as workspace_data_api
 from core_dashboard_common_app import constants as dashboard_constants
@@ -26,7 +26,6 @@ from core_main_app.components.user.api import get_id_username_dict
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.components.workspace.api import check_if_workspace_can_be_changed
 from core_main_app.settings import INSTALLED_APPS
-from core_main_app.utils.datetime_tools.date_time_encoder import DateTimeEncoder
 from core_main_app.utils.labels import get_data_label
 from core_main_app.utils.pagination.django_paginator.results_paginator import ResultsPaginator
 from core_main_app.utils.rendering import render
@@ -140,68 +139,31 @@ def _error_while_saving(request, form):
                   context={'form': form, 'action_result': message})
 
 
-class UserDashboardPasswordChangeFormView(PasswordChangeFormView):
+class UserDashboardPasswordChangeFormView(CommonView):
+
+    success_url = 'core_main_app_homepage'
+    template_name = 'core_dashboard_common_app/my_profile_change_password.html'
 
     def get(self, request, *args, **kwargs):
-        """
+        form = PasswordChangeForm(request.user)
+        return render(request, self.template_name, context={
+            'form': form
+        }, assets=self._get_assets())
 
-        Args: request:
-        Args: args:
-        Args: kwargs:
-        Returns:
-        """
-        return render(request, self.template_name, context={'form': self.get_form()})
-
-    def get_form(self):
-        """ Return the form.
-
-        Returns: The form.
-        """
-
-        return super(UserDashboardPasswordChangeFormView, self).get_form(self.form_class)
-
-    def form_valid(self, form):
-        """
-
-        Args: form
-        Returns:
-        """
-        messages.success(self.request, "Password changed with success.")
-        return super(UserDashboardPasswordChangeFormView, self).form_valid(form)
-
-    def form_invalid(self, form):
-        """
-        If the form is invalid, re-render the context data with the
-        data-filled form and errors.
-
-        Args: form
-        Returns:
-        """
-        return render(self.request, self.template_name, context={'form': form})
-
-    def get_success_url(self):
-        """
-        Returns a query string field with a previous URL if available (Mimicing
-        the login view. Used on forced password changes, to know which URL the
-        user was requesting before the password change.)
-        If not returns the :attr:`~PasswordChangeFormView.success_url` attribute
-        if set, otherwise the URL to the :class:`PasswordChangeDoneView`.
-        """
-        checked = '_password_policies_last_checked'
-        last = '_password_policies_last_changed'
-        required = '_password_policies_change_required'
-        now = json.dumps(timezone.now(), cls=DateTimeEncoder)
-        self.request.session[checked] = now
-        self.request.session[last] = now
-        self.request.session[required] = False
-        redirect_to = self.request.POST.get(self.redirect_field_name, '')
-        if redirect_to:
-            url = redirect_to
-        elif self.success_url:
-            url = self.success_url
+    def post(self, request, *args, **kwargs):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect(self.success_url)
         else:
-            url = reverse('password_change_done')
-        return url
+            messages.error(request, 'Please correct the error below.')
+
+    def _get_assets(self):
+        return {
+            "css": ['core_dashboard_common_app/common/css/password_form.css']
+        }
 
 
 class DashboardRecords(CommonView):
