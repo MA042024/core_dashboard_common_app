@@ -158,7 +158,11 @@ class UserDashboardPasswordChangeFormView(CommonView):
             messages.success(request, 'Your password was successfully updated!')
             return redirect(self.success_url)
         else:
-            messages.error(request, 'Please correct the error below.')
+            messages.error(request, 'There are errors on the form.')
+            return render(request, self.template_name, context={
+                'form': form
+            }, assets=self._get_assets())
+
 
     def _get_assets(self):
         return {
