@@ -5,7 +5,7 @@ import copy
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse, reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth import update_session_auth_hash

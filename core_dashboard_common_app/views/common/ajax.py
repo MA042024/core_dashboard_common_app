@@ -4,7 +4,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.messages.storage.base import Message
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 
 import core_main_app.components.data.api as data_api
