@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 
 import core_main_app.components.data.api as workspace_data_api
 from core_main_app.commons.validators import validate_password
