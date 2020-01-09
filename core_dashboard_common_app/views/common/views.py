@@ -210,7 +210,10 @@ class DashboardRecords(CommonView):
         results_paginator = ResultsPaginator.get_results(loaded_data, page, settings.RECORD_PER_PAGE_PAGINATION)
 
         # Data context
-        results_paginator.object_list = self._format_data_context(results_paginator.object_list)
+        try:
+            results_paginator.object_list = self._format_data_context(results_paginator.object_list)
+        except:
+            results_paginator.object_list = []
 
         # Add user_form for change owner
         user_form = UserForm(request.user)
@@ -481,7 +484,11 @@ class DashboardForms(CommonView):
             forms = curate_data_structure_api.get_all_with_no_data()
         else:
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(request.user.id)
-        detailed_forms = self._get_detailed_forms(forms)
+
+        try:
+            detailed_forms = self._get_detailed_forms(forms)
+        except:
+            detailed_forms = []
 
         context = {
             'administration': self.administration,
@@ -826,8 +833,11 @@ class DashboardWorkspaceRecords(CommonView):
         results_paginator = ResultsPaginator.get_results(workspace_data, page, settings.RECORD_PER_PAGE_PAGINATION)
 
         # Data context
-        results_paginator.object_list = self._format_data_context(results_paginator.object_list, request.user,
-                                                                  user_can_read, user_can_write)
+        try:
+            results_paginator.object_list = self._format_data_context(results_paginator.object_list, request.user,
+                                                                      user_can_read, user_can_write)
+        except:
+            results_paginator.object_list = []
 
         # Add user_form for change owner
         user_form = UserForm(request.user)
