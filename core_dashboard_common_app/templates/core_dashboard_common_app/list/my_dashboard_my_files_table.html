@@ -56,6 +56,11 @@
                             <i class="fa fa-folder"></i> Change workspace
                         </a>
                     {% endif %}
+                    {% if object.is_owner %}
+                        <a class="btn btn-default change-owner-btn">
+                            <i class="fa fa-folder"></i> Change Owner
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

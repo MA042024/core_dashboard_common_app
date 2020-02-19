@@ -307,6 +307,8 @@ def change_owner_document(request):
             return _change_owner_record(request, document_ids, user_id)
         elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
             return _change_owner_form(request, document_ids, user_id)
+        elif document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
+            return _change_owner_file(request, document_ids, user_id)
 
     else:
         return HttpResponseBadRequest({"Bad entries. Please check the parameters."})
@@ -358,6 +360,30 @@ def _change_owner_record(request, data_ids, user_id):
         new_user = user_api.get_user_by_id(user_id)
         for data in list_data:
             data_api.change_owner(data, new_user, request.user)
+    except Exception as e:
+        return HttpResponseBadRequest(str(e))
+
+    return HttpResponse(json.dumps({}), content_type='application/javascript')
+
+
+def _change_owner_file(request, blob_ids, user_id):
+    """ Change the owner of a record.
+
+    Args:
+        request:
+        blob_ids:
+        user_id:
+
+    Returns:
+    """
+    try:
+        list_blob = _get_blobs(blob_ids, request.user)
+    except Exception as e:
+        return HttpResponseBadRequest(str(e))
+    try:
+        new_user = user_api.get_user_by_id(user_id)
+        for blob in list_blob:
+            blob_api.change_owner(blob, new_user, request.user)
     except Exception as e:
         return HttpResponseBadRequest(str(e))
 

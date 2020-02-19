@@ -361,30 +361,37 @@ class DashboardFiles(CommonView):
 
         detailed_file = []
         for file in files:
+
             detailed_file.append({
                 'user': user_api.get_user_by_id(file.user_id).username,
                 'date': file.id.generation_time,
                 'file': file,
                 'url': blob_utils.get_blob_download_uri(file, request),
-                'can_change_workspace': check_if_workspace_can_be_changed(file)
-            })
+                'can_change_workspace': check_if_workspace_can_be_changed(file),
+                'is_owner': True
 
+            })
+        # Add user_form for change owner
+        user_form = UserForm(request.user)
         context = {
             'administration': self.administration,
             'number_total': files.count(),
             'user_data': detailed_file,
+            'user_form': user_form,
             'document': dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE.value,
             'template': dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
             'menu': self.administration,
         }
 
         if self.administration:
-            context.update({'action_form': ActionForm([('1', 'Delete selected files')])
+            context.update({'action_form': ActionForm([('1', 'Delete selected files'),
+                                                       ('2', 'Change owner of selected files')])
                             })
 
         modals = [
             "core_main_app/user/workspaces/list/modals/assign_workspace.html",
-            dashboard_constants.MODALS_COMMON_DELETE
+            dashboard_constants.MODALS_COMMON_DELETE,
+            dashboard_constants.MODALS_COMMON_CHANGE_OWNER
         ]
 
         assets = {
@@ -410,6 +417,10 @@ class DashboardFiles(CommonView):
                     {
                         "path": 'core_main_app/user/js/workspaces/list/modals/assign_blob_workspace.raw.js',
                         "is_raw": True
+                    },
+                    {
+                        "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
+                        "is_raw": False
                     },
             ]
         }
