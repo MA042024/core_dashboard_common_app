@@ -44,20 +44,20 @@
                     </td>
                 {% endif %}
                 <td>
-                    <a class="btn btn-default download-{{data.document}}-btn" href="{{ object.url }}">
+                    <a class="btn btn-secondary download-{{data.document}}-btn" href="{{ object.url }}">
                         <i class="fa fa-list"></i> Download
                     </a>
 
-                    <a class="btn btn-default delete-document-btn" objectid="{{ object.file.id }}">
+                    <a class="btn btn-secondary delete-document-btn" objectid="{{ object.file.id }}">
                         <i class="fa fa-trash"></i> Delete
                     </a>
                     {% if object.can_change_workspace %}
-                        <a class="btn btn-default assign-workspace-record-btn">
+                        <a class="btn btn-secondary assign-workspace-record-btn">
                             <i class="fa fa-folder"></i> Change workspace
                         </a>
                     {% endif %}
                     {% if object.is_owner %}
-                        <a class="btn btn-default change-owner-btn">
+                        <a class="btn btn-secondary change-owner-btn">
                             <i class="fa fa-folder"></i> Change Owner
                         </a>
                     {% endif %}

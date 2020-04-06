@@ -22,26 +22,26 @@
                 {% endif %}
                 <td>
                     {% if object.type_version|get_attribute:'is_disabled' %}
-                    <a class="btn btn-default restore-template-btn" objectid="{{ object.type_version.id }}">
+                    <a class="btn btn-secondary restore-template-btn" objectid="{{ object.type_version.id }}">
                         <i class="fa fa-undo"></i> Restore
                     </a>
                     {% else %}
                         {% if come_from_admin %}
-                            <a class="btn btn-default view-{{data.document}}-btn" href="{% url 'admin:core_composer_app_manage_type_versions' object.type_version.id %}">
+                            <a class="btn btn-secondary view-{{data.document}}-btn" href="{% url 'admin:core_composer_app_manage_type_versions' object.type_version.id %}">
                                 <i class="fa fa-list"></i> Versions
                             </a>
                             {% url 'admin:core_dashboard_app_edit_type' object.type_version.id as edit_url %}
                             {% include 'core_main_app/common/buttons/edit.html' %}
                         {% else %}
-                            <a class="btn btn-default view-{{data.document}}-btn" href="{% url 'core_composer_app_manage_type_versions' object.type_version.id %}">
+                            <a class="btn btn-secondary view-{{data.document}}-btn" href="{% url 'core_composer_app_manage_type_versions' object.type_version.id %}">
                                 <i class="fa fa-list"></i> Versions
                             </a>
                             {% url 'core_dashboard_app_edit_type' object.type_version.id as edit_url %}
                             {% include 'core_main_app/common/buttons/edit.html' %}
                         {% endif %}
-                        <a class="btn btn-danger disable-template-btn" objectid="{{ object.type_version.id }}">
+                        <button class="btn btn-danger disable-template-btn" objectid="{{ object.type_version.id }}">
                             <i class="fa fa-trash"></i> Disable
-                        </a>
+                        </button>
                     {% endif %}
                 </td>
             </tr>
