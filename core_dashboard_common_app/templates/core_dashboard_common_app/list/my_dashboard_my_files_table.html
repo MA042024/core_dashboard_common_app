@@ -48,9 +48,6 @@
                         <i class="fa fa-list"></i> Download
                     </a>
 
-                    <a class="btn btn-secondary delete-document-btn" objectid="{{ object.file.id }}">
-                        <i class="fa fa-trash"></i> Delete
-                    </a>
                     {% if object.can_change_workspace %}
                         <a class="btn btn-secondary assign-workspace-record-btn">
                             <i class="fa fa-folder"></i> Change workspace
@@ -61,6 +58,9 @@
                             <i class="fa fa-folder"></i> Change Owner
                         </a>
                     {% endif %}
+                    <button class="btn btn-danger delete-document-btn" objectid="{{ object.file.id }}">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
                 </td>
             </tr>
         {% endfor %}

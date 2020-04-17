@@ -43,12 +43,6 @@
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         {% endif %}
-
-                        {% if not object.is_public %}
-                            <a class="btn btn-secondary delete-document-btn">
-                                <i class="fa fa-trash"></i> Delete
-                            </a>
-                        {% endif %}
                         {% if not object.is_global %}
                             {% if object.is_public %}
                                 <a class="btn btn-secondary private-{{data.document}}-btn">
@@ -60,7 +54,11 @@
                                 </a>
                             {% endif %}
                         {% endif %}
-
+                        {% if not object.is_public %}
+                            <button class="btn btn-danger delete-document-btn">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

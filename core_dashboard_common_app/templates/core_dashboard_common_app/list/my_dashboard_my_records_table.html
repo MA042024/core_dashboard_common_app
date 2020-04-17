@@ -54,7 +54,7 @@
                 <td>
                     {% if data_loaded.can_read %}
                         <a class="btn btn-secondary view-record-btn">
-                            <i class="fa fa-file-text-o"></i> View
+                            <i class="far fa-file-alt"></i> View
                         </a>
                     {% endif %}
                     {% if data_loaded.can_write %}
@@ -68,13 +68,12 @@
                         {% endif %}
                     {% endif %}
                     {% if data_loaded.is_owner %}
-                        <a class="btn btn-secondary delete-document-btn">
-                            <i class="fa fa-trash"></i> Delete
-                        </a>
-
                         <a class="btn btn-secondary change-owner-btn">
-                            <i class="fa fa-user-circle-o"></i> Change Owner
+                            <i class="fa fa-user-circle"></i> Change Owner
                         </a>
+                        <button class="btn btn-danger delete-document-btn">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
                     {% endif %}
                 </td>
             </tr>
