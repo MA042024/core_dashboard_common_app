@@ -3,7 +3,7 @@ Common Forms
 """
 from django import forms
 
-from core_main_app.components.user.api import get_all_users
+from core_main_app.components.user.api import get_active_users
 
 
 class ActionForm(forms.Form):
@@ -24,18 +24,18 @@ class UserForm(forms.Form):
     users = forms.ChoiceField(label='', required=True)
     USERS_OPTIONS = []
 
-    def __init__(self, currentUser):
+    def __init__(self, current_user):
         self.USERS_OPTIONS = []
         self.USERS_OPTIONS.append(('', '-----------'))
 
         # We retrieve all users
-        sort_users = get_all_users()
+        sort_users = get_active_users()
         # We sort by username, case insensitive
         sort_users = sorted(sort_users, key=lambda s: s.username.lower())
 
         # We add them
         for user in sort_users:
-            if user.id != currentUser.id or currentUser.is_superuser:
+            if user.id != current_user.id or current_user.is_superuser:
                 self.USERS_OPTIONS.append((user.id, user.username))
 
         super(UserForm, self).__init__()
