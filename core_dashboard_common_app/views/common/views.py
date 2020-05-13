@@ -142,7 +142,6 @@ def _error_while_saving(request, form):
 
 
 class UserDashboardPasswordChangeFormView(CommonView):
-
     success_url = 'core_main_app_homepage'
     template_name = 'core_dashboard_common_app/my_profile_change_password.html'
 
@@ -361,7 +360,6 @@ class DashboardFiles(CommonView):
 
         detailed_file = []
         for file in files:
-
             detailed_file.append({
                 'user': user_api.get_user_by_id(file.user_id).username,
                 'date': file.id.generation_time,
@@ -398,30 +396,30 @@ class DashboardFiles(CommonView):
             "css": dashboard_constants.CSS_COMMON,
 
             "js": [
-                    {
-                        "path": 'core_dashboard_common_app/user/js/init.raw.js',
-                        "is_raw": True
-                    },
-                    {
-                        "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
-                        "is_raw": False
-                    },
-                    {
-                        "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
-                        "is_raw": True
-                    },
-                    {
-                        "path": 'core_main_app/user/js/workspaces/list/modals/assign_workspace.js',
-                        "is_raw": False
-                    },
-                    {
-                        "path": 'core_main_app/user/js/workspaces/list/modals/assign_blob_workspace.raw.js',
-                        "is_raw": True
-                    },
-                    {
-                        "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
-                        "is_raw": False
-                    },
+                {
+                    "path": 'core_dashboard_common_app/user/js/init.raw.js',
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
+                    "is_raw": False
+                },
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True
+                },
+                {
+                    "path": 'core_main_app/user/js/workspaces/list/modals/assign_workspace.js',
+                    "is_raw": False
+                },
+                {
+                    "path": 'core_main_app/user/js/workspaces/list/modals/assign_blob_workspace.raw.js',
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
+                    "is_raw": False
+                },
             ]
         }
 
@@ -521,17 +519,17 @@ class DashboardForms(CommonView):
             "css": dashboard_constants.CSS_COMMON,
 
             "js": [{
-                        "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
-                        "is_raw": False
-                    },
-                    {
-                        "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
-                        "is_raw": False
-                    },
-                    {
-                        "path": 'core_dashboard_common_app/user/js/init.raw.js',
-                        "is_raw": True
-                    },
+                "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
+                "is_raw": False
+            },
+                {
+                    "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
+                    "is_raw": False
+                },
+                {
+                    "path": 'core_dashboard_common_app/user/js/init.raw.js',
+                    "is_raw": True
+                },
             ]
         }
 
@@ -544,33 +542,33 @@ class DashboardForms(CommonView):
                             })
 
             assets['js'].extend([{
-                                    "path": 'core_dashboard_common_app/common/js/init_pagination.js',
-                                    "is_raw": False
-                                },
-                                {
-                                    "path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD,
-                                    "is_raw": True
-                                },
-                                {
-                                    "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
-                                    "is_raw": True
-                                },
-                                {
-                                    "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
-                                    "is_raw": True
-                                },
-                                {
-                                    "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
-                                    "is_raw": True
-                                },
-                                {
-                                    "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
-                                    "is_raw": False
-                                },
-                                {
-                                    "path": dashboard_constants.JS_ADMIN_INIT_MENU,
-                                    "is_raw": False
-                                }])
+                "path": 'core_dashboard_common_app/common/js/init_pagination.js',
+                "is_raw": False
+            },
+                {
+                    "path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD,
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
+                    "is_raw": True
+                },
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
+                    "is_raw": False
+                },
+                {
+                    "path": dashboard_constants.JS_ADMIN_INIT_MENU,
+                    "is_raw": False
+                }])
         else:
             assets['js'].append({
                 "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
@@ -633,9 +631,9 @@ class DashboardTemplates(CommonView):
         }
 
         modals = [
-                    "core_main_app/admin/templates/list/modals/disable.html",
-                    EditTemplateVersionManagerView.get_modal_html_path()
-                ]
+            "core_main_app/admin/templates/list/modals/disable.html",
+            EditTemplateVersionManagerView.get_modal_html_path()
+        ]
 
         assets = {
             "css": dashboard_constants.CSS_COMMON,
@@ -755,8 +753,10 @@ class DashboardWorkspaces(CommonView):
 
         detailed_user_workspaces = []
         for user_workspace in user_workspaces:
-            detailed_user_workspaces.append({'user': user_api.get_user_by_id(user_workspace.owner).username if not workspace_api.is_workspace_global(user_workspace) else "GLOBAL",
-                                             'is_owner': self.administration or user_workspace.owner == str(request.user.id),
+            detailed_user_workspaces.append({'user': user_api.get_user_by_id(
+                user_workspace.owner).username if not workspace_api.is_workspace_global(user_workspace) else "GLOBAL",
+                                             'is_owner': self.administration or user_workspace.owner == str(
+                                                 request.user.id),
                                              'name': user_workspace.title,
                                              'workspace': user_workspace,
                                              'can_read': self.administration or user_workspace in user_workspace_read,
@@ -799,21 +799,21 @@ class DashboardWorkspaces(CommonView):
         if not self.administration:
             modals.append("core_main_app/user/workspaces/list/create_workspace.html")
             assets['js'].append({
-                                    "path": 'core_main_app/user/js/workspaces/create_workspace.js',
-                                    "is_raw": False
-                                })
+                "path": 'core_main_app/user/js/workspaces/create_workspace.js',
+                "is_raw": False
+            })
 
         if settings.CAN_SET_WORKSPACE_PUBLIC:
             modals.append("core_main_app/user/workspaces/list/modals/set_public.html")
             assets['js'].append({
-                                    "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
-                                    "is_raw": False
-                                })
+                "path": 'core_main_app/user/js/workspaces/list/modals/set_public.js',
+                "is_raw": False
+            })
             modals.append("core_main_app/user/workspaces/list/modals/set_private.html")
             assets['js'].append({
-                                    "path": 'core_main_app/user/js/workspaces/list/modals/set_private.js',
-                                    "is_raw": False
-                                })
+                "path": 'core_main_app/user/js/workspaces/list/modals/set_private.js',
+                "is_raw": False
+            })
 
         return self.common_render(request, self.template,
                                   context=context,
@@ -867,9 +867,7 @@ class DashboardWorkspaceRecords(CommonView):
         context.update({'usernames': user_names})
         context.update({'title': 'List of ' + get_data_label() + 's of workspace: ' + workspace.title})
 
-        modals = ["core_main_app/user/workspaces/list/modals/assign_workspace.html",
-                  dashboard_constants.MODALS_COMMON_CHANGE_OWNER,
-                  dashboard_constants.MODALS_COMMON_DELETE]
+        modals = self._get_modals()
 
         assets = self._get_assets()
 
@@ -887,6 +885,13 @@ class DashboardWorkspaceRecords(CommonView):
                                        'can_write': user_can_write or is_owner,
                                        'is_owner': is_owner})
         return detailed_user_data
+
+    def _get_modals(self):
+        return [
+            "core_main_app/user/workspaces/list/modals/assign_workspace.html",
+            dashboard_constants.MODALS_COMMON_CHANGE_OWNER,
+            dashboard_constants.MODALS_COMMON_DELETE
+        ]
 
     def _get_assets(self):
         assets = {
