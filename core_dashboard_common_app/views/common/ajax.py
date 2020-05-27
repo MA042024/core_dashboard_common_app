@@ -18,8 +18,10 @@ from core_main_app.settings import INSTALLED_APPS
 from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.utils.labels import get_data_label, get_form_label
 
-if 'core_curate_app' in INSTALLED_APPS:
-    from core_curate_app.components.curate_data_structure.models import CurateDataStructure
+if "core_curate_app" in INSTALLED_APPS:
+    from core_curate_app.components.curate_data_structure.models import (
+        CurateDataStructure,
+    )
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
 
 
@@ -57,7 +59,7 @@ def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
 
             list_workspaces.append(workspace)
     except DoesNotExist:
-        raise Exception('It seems a workspace is missing. Please refresh the page.')
+        raise Exception("It seems a workspace is missing. Please refresh the page.")
     except Exception as e:
         raise Exception(str(e))
 
@@ -87,7 +89,7 @@ def _get_blobs(blob_ids, user):
 
             list_blobs.append(blob)
     except DoesNotExist:
-        raise Exception('It seems a blob is missing. Please refresh the page.')
+        raise Exception("It seems a blob is missing. Please refresh the page.")
     except Exception as e:
         raise Exception(str(e))
 
@@ -113,11 +115,15 @@ def _get_forms(form_ids, request_user_is_superuser, request_user_id):
             form = curate_data_structure_api.get_by_id(form_id)
 
             # Check the rights
-            _check_rights_document(request_user_is_superuser, request_user_id, form.user)
+            _check_rights_document(
+                request_user_is_superuser, request_user_id, form.user
+            )
 
             list_form.append(form)
     except DoesNotExist:
-        raise Exception('It seems a ' + get_form_label() + ' is missing. Please refresh the page.')
+        raise Exception(
+            "It seems a " + get_form_label() + " is missing. Please refresh the page."
+        )
     except Exception as e:
         raise Exception(str(e))
 
@@ -147,7 +153,9 @@ def _get_data(data_ids, user):
 
             data_table.append(data)
     except DoesNotExist:
-        raise Exception('It seems a ' + get_data_label() + ' is missing. Please refresh the page.')
+        raise Exception(
+            "It seems a " + get_data_label() + " is missing. Please refresh the page."
+        )
     except Exception as e:
         raise Exception(str(e))
 
@@ -163,11 +171,13 @@ def delete_document(request):
 
     Returns:
     """
-    document = request.POST['functional_object']
+    document = request.POST["functional_object"]
 
-    document_ids = request.POST.getlist('document_id[]', [])
+    document_ids = request.POST.getlist("document_id[]", [])
     if len(document_ids) > 1 and not request.user.is_superuser:
-        return HttpResponseServerError({"You don't have the rights to perform this action."}, status=403)
+        return HttpResponseServerError(
+            {"You don't have the rights to perform this action."}, status=403
+        )
 
     if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
         return _delete_record(request, document_ids)
@@ -191,10 +201,12 @@ def _delete_workspace(request, workspace_ids):
         Returns:
         """
     try:
-        list_workspaces = _get_workspaces(workspace_ids, request.user.is_superuser, request.user.id)
+        list_workspaces = _get_workspaces(
+            workspace_ids, request.user.is_superuser, request.user.id
+        )
     except Exception as e:
         messages.add_message(request, messages.INFO, str(e))
-        return HttpResponse(json.dumps({}), content_type='application/javascript')
+        return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
         for workspace in list_workspaces:
@@ -202,7 +214,7 @@ def _delete_workspace(request, workspace_ids):
     except AccessControlError as ace:
         return HttpResponseBadRequest(str(ace))
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def _delete_file(request, blob_ids):
@@ -218,16 +230,18 @@ def _delete_file(request, blob_ids):
         list_blob = _get_blobs(blob_ids, request.user)
     except Exception as e:
         messages.add_message(request, messages.INFO, str(e))
-        return HttpResponse(json.dumps({}), content_type='application/javascript')
+        return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
         for blob in list_blob:
             blob_api.delete(blob, request.user)
-        messages.add_message(request, messages.INFO, 'File deleted with success.')
+        messages.add_message(request, messages.INFO, "File deleted with success.")
     except:
-        messages.add_message(request, messages.INFO, 'A problem occurred while deleting.')
+        messages.add_message(
+            request, messages.INFO, "A problem occurred while deleting."
+        )
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def _delete_form(request, form_ids):
@@ -243,16 +257,22 @@ def _delete_form(request, form_ids):
         list_form = _get_forms(form_ids, request.user.is_superuser, request.user.id)
     except Exception as e:
         messages.add_message(request, messages.INFO, str(e))
-        return HttpResponse(json.dumps({}), content_type='application/javascript')
+        return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
         for form in list_form:
             curate_data_structure_api.delete(form)
-        messages.add_message(request, messages.INFO, get_form_label().capitalize() + ' deleted with success.')
+        messages.add_message(
+            request,
+            messages.INFO,
+            get_form_label().capitalize() + " deleted with success.",
+        )
     except:
-        messages.add_message(request, messages.INFO, 'A problem occurred while deleting.')
+        messages.add_message(
+            request, messages.INFO, "A problem occurred while deleting."
+        )
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def _delete_record(request, data_ids):
@@ -269,21 +289,33 @@ def _delete_record(request, data_ids):
         list_data = _get_data(data_ids, request.user)
     except Exception as e:
         messages.add_message(request, messages.INFO, str(e))
-        return HttpResponse(json.dumps({}), content_type='application/javascript')
+        return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
         for data in list_data:
             # Check if the data is locked
             if lock_api.is_object_locked(data.id, request.user):
-                message = Message(messages.ERROR, "The " + get_data_label() + " is locked. You can't edit it.")
-                return HttpResponseBadRequest(json.dumps({"message": message.message}), content_type='application/javascript')
+                message = Message(
+                    messages.ERROR,
+                    "The " + get_data_label() + " is locked. You can't edit it.",
+                )
+                return HttpResponseBadRequest(
+                    json.dumps({"message": message.message}),
+                    content_type="application/javascript",
+                )
 
             data_api.delete(data, request.user)
-        messages.add_message(request, messages.INFO, get_data_label().capitalize() + ' deleted with success.')
+        messages.add_message(
+            request,
+            messages.INFO,
+            get_data_label().capitalize() + " deleted with success.",
+        )
     except:
-        messages.add_message(request, messages.INFO, 'A problem occurred while deleting.')
+        messages.add_message(
+            request, messages.INFO, "A problem occurred while deleting."
+        )
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def change_owner_document(request):
@@ -295,13 +327,19 @@ def change_owner_document(request):
     Returns:
     """
 
-    if 'document_id[]' in request.POST and 'user_id' in request.POST and 'functional_object' in request.POST:
-        document = request.POST['functional_object']
-        user_id = request.POST['user_id']
+    if (
+        "document_id[]" in request.POST
+        and "user_id" in request.POST
+        and "functional_object" in request.POST
+    ):
+        document = request.POST["functional_object"]
+        user_id = request.POST["user_id"]
 
-        document_ids = request.POST.getlist('document_id[]', [])
+        document_ids = request.POST.getlist("document_id[]", [])
         if len(document_ids) > 1 and not request.user.is_superuser:
-            return HttpResponseServerError({"You don't have the rights to perform this action."}, status=403)
+            return HttpResponseServerError(
+                {"You don't have the rights to perform this action."}, status=403
+            )
 
         if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
             return _change_owner_record(request, document_ids, user_id)
@@ -313,7 +351,7 @@ def change_owner_document(request):
     else:
         return HttpResponseBadRequest({"Bad entries. Please check the parameters."})
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def _change_owner_form(request, form_ids, user_id):
@@ -338,7 +376,7 @@ def _change_owner_form(request, form_ids, user_id):
     except Exception as e:
         return HttpResponseBadRequest(str(e))
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 # FIXME: fix error message
@@ -363,7 +401,7 @@ def _change_owner_record(request, data_ids, user_id):
     except Exception as e:
         return HttpResponseBadRequest(str(e))
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def _change_owner_file(request, blob_ids, user_id):
@@ -387,7 +425,7 @@ def _change_owner_file(request, blob_ids, user_id):
     except Exception as e:
         return HttpResponseBadRequest(str(e))
 
-    return HttpResponse(json.dumps({}), content_type='application/javascript')
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
 def edit_record(request):
@@ -399,34 +437,50 @@ def edit_record(request):
     Returns:
     """
     try:
-        data = data_api.get_by_id(request.POST['id'], request.user)
+        data = data_api.get_by_id(request.POST["id"], request.user)
     except DoesNotExist:
-        message = Message(messages.ERROR, "It seems a " + get_data_label() + " is missing. Please refresh the page.")
-        return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
-                                        content_type='application/json')
+        message = Message(
+            messages.ERROR,
+            "It seems a " + get_data_label() + " is missing. Please refresh the page.",
+        )
+        return HttpResponseBadRequest(
+            json.dumps({"message": message.message, "tags": message.tags}),
+            content_type="application/json",
+        )
 
     # Check if the data is locked
     if lock_api.is_object_locked(data.id, request.user):
-        message = Message(messages.ERROR, "The " + get_data_label() + " is locked. You can't edit it.")
-        return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
-                                      content_type='application/json')
+        message = Message(
+            messages.ERROR, "The " + get_data_label() + " is locked. You can't edit it."
+        )
+        return HttpResponseBadRequest(
+            json.dumps({"message": message.message, "tags": message.tags}),
+            content_type="application/json",
+        )
 
     try:
         # Check if a curate data structure already exists
         curate_data_structure = curate_data_structure_api.get_by_data_id(data.id)
     except DoesNotExist:
         # Create a new curate data structure
-        curate_data_structure = CurateDataStructure(user=str(request.user.id),
-                                                    template=str(data.template.id),
-                                                    name=data.title,
-                                                    form_string=data.xml_content,
-                                                    data=data)
+        curate_data_structure = CurateDataStructure(
+            user=str(request.user.id),
+            template=str(data.template.id),
+            name=data.title,
+            form_string=data.xml_content,
+            data=data,
+        )
         curate_data_structure = curate_data_structure_api.upsert(curate_data_structure)
     except Exception as e:
         message = Message(messages.ERROR, "A problem occurred while editing.")
-        return HttpResponseBadRequest(json.dumps({'message': message.message, 'tags': message.tags}),
-                                      content_type='application/json')
+        return HttpResponseBadRequest(
+            json.dumps({"message": message.message, "tags": message.tags}),
+            content_type="application/json",
+        )
 
-    return HttpResponse(json.dumps({'url': reverse("core_curate_enter_data",
-                                                   args=(curate_data_structure.id,))}),
-                        content_type='application/javascript')
+    return HttpResponse(
+        json.dumps(
+            {"url": reverse("core_curate_enter_data", args=(curate_data_structure.id,))}
+        ),
+        content_type="application/javascript",
+    )

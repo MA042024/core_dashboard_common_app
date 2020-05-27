@@ -10,23 +10,25 @@ class ActionForm(forms.Form):
     """
     Form to select the action in the user dashboard.
     """
-    actions = forms.ChoiceField(label='', required=True, choices=[])
+
+    actions = forms.ChoiceField(label="", required=True, choices=[])
 
     def __init__(self, list_actions):
         super(ActionForm, self).__init__()
-        self.fields['actions'].choices = list_actions
+        self.fields["actions"].choices = list_actions
 
 
 class UserForm(forms.Form):
     """
     Form to select a user.
     """
-    users = forms.ChoiceField(label='', required=True)
+
+    users = forms.ChoiceField(label="", required=True)
     USERS_OPTIONS = []
 
     def __init__(self, current_user):
         self.USERS_OPTIONS = []
-        self.USERS_OPTIONS.append(('', '-----------'))
+        self.USERS_OPTIONS.append(("", "-----------"))
 
         # We retrieve all users
         sort_users = get_active_users()
@@ -39,5 +41,5 @@ class UserForm(forms.Form):
                 self.USERS_OPTIONS.append((user.id, user.username))
 
         super(UserForm, self).__init__()
-        self.fields['users'].choices = []
-        self.fields['users'].choices = self.USERS_OPTIONS
+        self.fields["users"].choices = []
+        self.fields["users"].choices = self.USERS_OPTIONS
