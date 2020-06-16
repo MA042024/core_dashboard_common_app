@@ -525,7 +525,7 @@ class DashboardForms(CommonView):
 
         # Get the forms
         if self.administration:
-            forms = curate_data_structure_api.get_all_with_no_data()
+            forms = curate_data_structure_api.get_all_with_no_data(request.user)
         else:
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(
                 request.user.id

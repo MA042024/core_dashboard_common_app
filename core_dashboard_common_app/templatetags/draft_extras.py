@@ -12,11 +12,12 @@ register = template.Library()
 
 
 @register.filter(name="has_draft")
-def has_draft(data):
+def has_draft(data, user):
     """Check if if a record is in edition mode.
 
     Args:
         data:
+        user:
 
     Returns:
         Boolean: Is in edition mode
@@ -24,7 +25,9 @@ def has_draft(data):
     """
     try:
         # Check if a curate data structure already exists
-        curate_data_structure = curate_data_structure_api.get_by_data_id(data["id"])
+        curate_data_structure = curate_data_structure_api.get_by_data_id(
+            data["id"], user
+        )
     except:
         curate_data_structure = None
 

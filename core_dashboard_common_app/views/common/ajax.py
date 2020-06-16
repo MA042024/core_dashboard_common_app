@@ -98,13 +98,12 @@ def _get_blobs(blob_ids, user):
     return list_blobs
 
 
-def _get_forms(form_ids, request_user_is_superuser, request_user_id):
+def _get_forms(form_ids, user):
     """ Get all the forms from the list of ids.
 
     Args:
         form_ids:
-        request_user_is_superuser:
-        request_user_id:
+        user:
 
     Returns:
         list form
@@ -114,12 +113,7 @@ def _get_forms(form_ids, request_user_is_superuser, request_user_id):
     try:
         for form_id in form_ids:
             # Get the form
-            form = curate_data_structure_api.get_by_id(form_id)
-
-            # Check the rights
-            _check_rights_document(
-                request_user_is_superuser, request_user_id, form.user
-            )
+            form = curate_data_structure_api.get_by_id(form_id, user)
 
             list_form.append(form)
     except DoesNotExist:
@@ -257,14 +251,14 @@ def _delete_form(request, form_ids):
         Returns:
         """
     try:
-        list_form = _get_forms(form_ids, request.user.is_superuser, request.user.id)
+        list_form = _get_forms(form_ids, request.user)
     except Exception as e:
         messages.add_message(request, messages.INFO, str(e))
         return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
         for form in list_form:
-            curate_data_structure_api.delete(form)
+            curate_data_structure_api.delete(form, request.user)
         messages.add_message(
             request,
             messages.INFO,
@@ -369,14 +363,14 @@ def _change_owner_form(request, form_ids, user_id):
     Returns:
     """
     try:
-        list_form = _get_forms(form_ids, request.user.is_superuser, request.user.id)
+        list_form = _get_forms(form_ids, request.user)
     except Exception as e:
         return HttpResponseBadRequest(escape(str(e)))
 
     try:
         for form in list_form:
             form.user = user_id
-            curate_data_structure_api.upsert(form)
+            curate_data_structure_api.upsert(form, request.user)
     except Exception as e:
         return HttpResponseBadRequest(escape(str(e)))
 
@@ -465,7 +459,9 @@ def edit_record(request):
 
     try:
         # Check if a curate data structure already exists
-        curate_data_structure = curate_data_structure_api.get_by_data_id(data.id)
+        curate_data_structure = curate_data_structure_api.get_by_data_id(
+            data.id, request.user
+        )
     except DoesNotExist:
         # Create a new curate data structure
         curate_data_structure = CurateDataStructure(
@@ -475,7 +471,9 @@ def edit_record(request):
             form_string=data.xml_content,
             data=data,
         )
-        curate_data_structure = curate_data_structure_api.upsert(curate_data_structure)
+        curate_data_structure = curate_data_structure_api.upsert(
+            curate_data_structure, request.user
+        )
     except Exception as e:
         message = Message(messages.ERROR, "A problem occurred while editing.")
         return HttpResponseBadRequest(
