@@ -4,18 +4,19 @@ import json
 
 from django.contrib import messages
 from django.contrib.messages.storage.base import Message
-from django.urls import reverse
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.urls import reverse
+from django.utils.html import escape
 
 import core_main_app.components.data.api as data_api
 import core_main_app.components.user.api as user_api
 from core_dashboard_common_app import constants
+from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.commons.exceptions import DoesNotExist
 from core_main_app.components.blob import api as blob_api
 from core_main_app.components.lock import api as lock_api
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
-from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.utils.labels import get_data_label, get_form_label
 
 if "core_curate_app" in INSTALLED_APPS:
@@ -212,7 +213,7 @@ def _delete_workspace(request, workspace_ids):
         for workspace in list_workspaces:
             workspace_api.delete(workspace, request.user)
     except AccessControlError as ace:
-        return HttpResponseBadRequest(str(ace))
+        return HttpResponseBadRequest(escape(str(ace)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -367,14 +368,14 @@ def _change_owner_form(request, form_ids, user_id):
     try:
         list_form = _get_forms(form_ids, request.user.is_superuser, request.user.id)
     except Exception as e:
-        return HttpResponseBadRequest(str(e))
+        return HttpResponseBadRequest(escape(str(e)))
 
     try:
         for form in list_form:
             form.user = user_id
             curate_data_structure_api.upsert(form)
     except Exception as e:
-        return HttpResponseBadRequest(str(e))
+        return HttpResponseBadRequest(escape(str(e)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -393,13 +394,13 @@ def _change_owner_record(request, data_ids, user_id):
     try:
         list_data = _get_data(data_ids, request.user)
     except Exception as e:
-        return HttpResponseBadRequest(str(e))
+        return HttpResponseBadRequest(escape(str(e)))
     try:
         new_user = user_api.get_user_by_id(user_id)
         for data in list_data:
             data_api.change_owner(data, new_user, request.user)
     except Exception as e:
-        return HttpResponseBadRequest(str(e))
+        return HttpResponseBadRequest(escape(str(e)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -417,13 +418,13 @@ def _change_owner_file(request, blob_ids, user_id):
     try:
         list_blob = _get_blobs(blob_ids, request.user)
     except Exception as e:
-        return HttpResponseBadRequest(str(e))
+        return HttpResponseBadRequest(escape(str(e)))
     try:
         new_user = user_api.get_user_by_id(user_id)
         for blob in list_blob:
             blob_api.change_owner(blob, new_user, request.user)
     except Exception as e:
-        return HttpResponseBadRequest(str(e))
+        return HttpResponseBadRequest(escape(str(e)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
