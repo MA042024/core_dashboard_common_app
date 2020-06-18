@@ -3,6 +3,7 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages.storage.base import Message
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.urls import reverse
@@ -164,6 +165,7 @@ def _get_data(data_ids, user):
 
 
 # FIXME: fix error message
+@login_required
 def delete_document(request):
     """ Delete a document (record or form).
 
@@ -319,6 +321,7 @@ def _delete_record(request, data_ids):
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
+@login_required
 def change_owner_document(request):
     """ Change owner of a document (record or form).
 
@@ -429,6 +432,7 @@ def _change_owner_file(request, blob_ids, user_id):
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
 
+@login_required
 def edit_record(request):
     """ Edit a record.
 
