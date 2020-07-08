@@ -233,8 +233,10 @@ class DashboardRecords(CommonView):
         if self.administration:
             try:
                 loaded_data = data_api.get_all(request.user)
+
             except AccessControlError as ace:
-                loaded_data = []
+                loaded_data = data_api.get_none()
+
         else:
             loaded_data = data_api.get_all_by_user(request.user)
 
@@ -388,7 +390,11 @@ class DashboardFiles(CommonView):
         Returns:
         """
         if self.administration:
-            files = blob_api.get_all(request.user)
+            try:
+                files = blob_api.get_all(request.user)
+
+            except AccessControlError as ace:
+                files = blob_api.get_none()
         else:
             files = blob_api.get_all_by_user(request.user)
 
@@ -525,7 +531,10 @@ class DashboardForms(CommonView):
 
         # Get the forms
         if self.administration:
-            forms = curate_data_structure_api.get_all_with_no_data(request.user)
+            try:
+                forms = curate_data_structure_api.get_all_with_no_data(request.user)
+            except AccessControlError as ace:
+                forms = curate_data_structure_api.get_none()
         else:
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(
                 request.user.id
@@ -789,6 +798,7 @@ class DashboardWorkspaces(CommonView):
 
         if self.administration:
             user_workspaces = workspace_api.get_all()
+            user_workspaces_count = user_workspaces.count()
         else:
             # Get the workspace the user can read
             user_workspace_read = list(
@@ -802,6 +812,7 @@ class DashboardWorkspaces(CommonView):
             user_workspaces = user_workspace_read + list(
                 set(user_workspace_write) - set(user_workspace_read)
             )
+            user_workspaces_count = len(user_workspaces)
 
         detailed_user_workspaces = []
         for user_workspace in user_workspaces:
@@ -824,7 +835,7 @@ class DashboardWorkspaces(CommonView):
             )
 
         context = {
-            "number_total": len(user_workspaces),
+            "number_total": user_workspaces_count,
             "workspace_form": WorkspaceForm(),
             "user_data": detailed_user_workspaces,
             "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE.value,
