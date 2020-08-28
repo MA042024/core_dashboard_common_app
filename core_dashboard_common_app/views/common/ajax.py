@@ -28,7 +28,7 @@ if "core_curate_app" in INSTALLED_APPS:
 
 
 def _check_rights_document(request_user_is_superuser, request_user_id, document_user):
-    """ Check if the user is superuser or if the document belongs to the user.
+    """Check if the user is superuser or if the document belongs to the user.
 
     Args:
         request_user_is_superuser:
@@ -42,7 +42,7 @@ def _check_rights_document(request_user_is_superuser, request_user_id, document_
 
 
 def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
-    """ Get all the workspaces from the list of ids.
+    """Get all the workspaces from the list of ids.
 
     Args:
         workspace_ids:
@@ -69,7 +69,7 @@ def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
 
 
 def _get_blobs(blob_ids, user):
-    """ Get all the blobs from the list of ids.
+    """Get all the blobs from the list of ids.
 
     Args:
         blob_ids:
@@ -99,7 +99,7 @@ def _get_blobs(blob_ids, user):
 
 
 def _get_forms(form_ids, user):
-    """ Get all the forms from the list of ids.
+    """Get all the forms from the list of ids.
 
     Args:
         form_ids:
@@ -127,7 +127,7 @@ def _get_forms(form_ids, user):
 
 
 def _get_data(data_ids, user):
-    """ Get all the data from the list of ids.
+    """Get all the data from the list of ids.
 
     Args:
         data_ids:
@@ -161,7 +161,7 @@ def _get_data(data_ids, user):
 # FIXME: fix error message
 @login_required
 def delete_document(request):
-    """ Delete a document (record or form).
+    """Delete a document (record or form).
 
     Args:
         request:
@@ -189,14 +189,14 @@ def delete_document(request):
 
 
 def _delete_workspace(request, workspace_ids):
-    """ Delete workspace.
+    """Delete workspace.
 
-        Args:
-            request:
-            workspace_ids:
+    Args:
+        request:
+        workspace_ids:
 
-        Returns:
-        """
+    Returns:
+    """
     try:
         list_workspaces = _get_workspaces(
             workspace_ids, request.user.is_superuser, request.user.id
@@ -215,14 +215,14 @@ def _delete_workspace(request, workspace_ids):
 
 
 def _delete_file(request, blob_ids):
-    """ Delete blobs.
+    """Delete blobs.
 
-        Args:
-            request:
-            blob_ids:
+    Args:
+        request:
+        blob_ids:
 
-        Returns:
-        """
+    Returns:
+    """
     try:
         list_blob = _get_blobs(blob_ids, request.user)
     except Exception as e:
@@ -242,14 +242,14 @@ def _delete_file(request, blob_ids):
 
 
 def _delete_form(request, form_ids):
-    """ Delete forms.
+    """Delete forms.
 
-        Args:
-            request:
-            form_ids:
+    Args:
+        request:
+        form_ids:
 
-        Returns:
-        """
+    Returns:
+    """
     try:
         list_form = _get_forms(form_ids, request.user)
     except Exception as e:
@@ -273,7 +273,7 @@ def _delete_form(request, form_ids):
 
 
 def _delete_record(request, data_ids):
-    """ Delete records.
+    """Delete records.
 
     Args:
         request:
@@ -317,7 +317,7 @@ def _delete_record(request, data_ids):
 
 @login_required
 def change_owner_document(request):
-    """ Change owner of a document (record or form).
+    """Change owner of a document (record or form).
 
     Args:
         request:
@@ -353,7 +353,7 @@ def change_owner_document(request):
 
 
 def _change_owner_form(request, form_ids, user_id):
-    """ Change the owner of a form.
+    """Change the owner of a form.
 
     Args:
         request:
@@ -379,7 +379,7 @@ def _change_owner_form(request, form_ids, user_id):
 
 # FIXME: fix error message
 def _change_owner_record(request, data_ids, user_id):
-    """ Change the owner of a record.
+    """Change the owner of a record.
 
     Args:
         request:
@@ -403,7 +403,7 @@ def _change_owner_record(request, data_ids, user_id):
 
 
 def _change_owner_file(request, blob_ids, user_id):
-    """ Change the owner of a record.
+    """Change the owner of a record.
 
     Args:
         request:
@@ -428,7 +428,7 @@ def _change_owner_file(request, blob_ids, user_id):
 
 @login_required
 def edit_record(request):
-    """ Edit a record.
+    """Edit a record.
 
     Args:
         request:

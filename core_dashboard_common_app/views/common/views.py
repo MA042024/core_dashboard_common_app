@@ -51,7 +51,7 @@ if "core_composer_app" in INSTALLED_APPS:
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
 def home(request):
-    """ Home page.
+    """Home page.
 
     Args:
         request:
@@ -63,7 +63,7 @@ def home(request):
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
 def my_profile(request):
-    """ User's profile information page.
+    """User's profile information page.
 
     Args:
         request:
@@ -75,7 +75,7 @@ def my_profile(request):
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
 def my_profile_edit(request):
-    """ Edit the profile.
+    """Edit the profile.
 
     Args:
         request:
@@ -130,7 +130,7 @@ def my_profile_edit(request):
 
 
 def _get_edit_profile_form(request, url, data=None):
-    """ Edit the profile.
+    """Edit the profile.
 
     Args:
         request
@@ -148,7 +148,7 @@ def _get_edit_profile_form(request, url, data=None):
 
 
 def _error_while_saving(request, form):
-    """ Raise exception if uncatched problems occurred while saving.
+    """Raise exception if uncatched problems occurred while saving.
 
     Args:
         request
@@ -219,8 +219,7 @@ class UserDashboardPasswordChangeFormView(CommonView):
 
 
 class DashboardRecords(CommonView):
-    """ List the records.
-    """
+    """List the records."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
     data_template = dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION
@@ -373,14 +372,13 @@ class DashboardRecords(CommonView):
 
 
 class DashboardFiles(CommonView):
-    """ List the files.
-    """
+    """List the files."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
     allow_change_workspace_if_public = True
 
     def get(self, request, *args, **kwargs):
-        """ Method GET
+        """Method GET
 
         Args:
             request:
@@ -512,14 +510,13 @@ class DashboardFiles(CommonView):
 
 
 class DashboardForms(CommonView):
-    """ List the forms.
-    """
+    """List the forms."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
     document = dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FORM.value
 
     def get(self, request, *args, **kwargs):
-        """ Method GET
+        """Method GET
 
         Args:
             request:
@@ -635,13 +632,12 @@ class DashboardForms(CommonView):
 
 
 class DashboardTemplates(CommonView):
-    """ List the templates.
-    """
+    """List the templates."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
 
     def get(self, request, *args, **kwargs):
-        """ Method GET
+        """Method GET
 
         Args:
             request:
@@ -707,13 +703,12 @@ class DashboardTemplates(CommonView):
 
 
 class DashboardTypes(CommonView):
-    """ List the types.
-    """
+    """List the types."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
 
     def get(self, request, *args, **kwargs):
-        """ Method GET
+        """Method GET
 
         Args:
             request:
@@ -780,13 +775,12 @@ class DashboardTypes(CommonView):
 
 
 class DashboardWorkspaces(CommonView):
-    """ List the workspaces.
-    """
+    """List the workspaces."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
 
     def get(self, request, *args, **kwargs):
-        """ Method GET
+        """Method GET
 
         Args:
             request:
@@ -892,8 +886,7 @@ class DashboardWorkspaces(CommonView):
 
 
 class DashboardWorkspaceRecords(CommonView):
-    """ List the records of a workspace.
-    """
+    """List the records of a workspace."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
     data_template = dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION
