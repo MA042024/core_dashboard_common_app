@@ -11,6 +11,7 @@ from django.utils.html import escape
 
 import core_main_app.components.data.api as data_api
 import core_main_app.components.user.api as user_api
+import core_main_app.components.template.api as template_api
 from core_dashboard_common_app import constants
 from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.commons.exceptions import DoesNotExist
@@ -463,10 +464,11 @@ def edit_record(request):
             data.id, request.user
         )
     except DoesNotExist:
+        template = template_api.get(str(data.template.id), request=request)
         # Create a new curate data structure
         curate_data_structure = CurateDataStructure(
             user=str(request.user.id),
-            template=str(data.template.id),
+            template=str(template.id),
             name=data.title,
             form_string=data.xml_content,
             data=data,

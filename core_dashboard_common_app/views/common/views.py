@@ -646,60 +646,73 @@ class DashboardTemplates(CommonView):
 
         Returns:
         """
-        # Get templates
-        if self.administration:
-            template_versions = template_version_manager_api.get_all()
-        else:
-            template_versions = template_version_manager_api.get_all_by_user_id(
-                request.user.id
-            )
-
-        detailed_templates = []
-        for template_version in template_versions:
-            # If the version manager doesn't have a user, the template is global.
-            if template_version.user is not None:
-                detailed_templates.append(
-                    {
-                        "template_version": template_version,
-                        "template": template_api.get(template_version.current),
-                        "user": user_api.get_user_by_id(template_version.user).username,
-                        "title": template_version.title,
-                    }
+        try:
+            # Get templates
+            if self.administration:
+                template_versions = template_version_manager_api.get_all(
+                    request=request
+                )
+            else:
+                template_versions = template_version_manager_api.get_all_by_user_id(
+                    request=request
                 )
 
-        context = {
-            "number_total": len(detailed_templates),
-            "user_data": detailed_templates,
-            "user_form": UserForm(request.user),
-            "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TEMPLATE.value,
-            "object_name": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TEMPLATE.value,
-            "template": dashboard_constants.DASHBOARD_TEMPLATES_TEMPLATE_TABLE,
-            "menu": False,
-        }
+            detailed_templates = []
+            for template_version in template_versions:
+                # If the version manager doesn't have a user, the template is global.
+                if template_version.user is not None:
+                    detailed_templates.append(
+                        {
+                            "template_version": template_version,
+                            "template": template_api.get(
+                                template_version.current, request=request
+                            ),
+                            "user": user_api.get_user_by_id(
+                                template_version.user
+                            ).username,
+                            "title": template_version.title,
+                        }
+                    )
 
-        modals = [
-            "core_main_app/admin/templates/list/modals/disable.html",
-            EditTemplateVersionManagerView.get_modal_html_path(),
-        ]
+            context = {
+                "number_total": len(detailed_templates),
+                "user_data": detailed_templates,
+                "user_form": UserForm(request.user),
+                "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TEMPLATE.value,
+                "object_name": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TEMPLATE.value,
+                "template": dashboard_constants.DASHBOARD_TEMPLATES_TEMPLATE_TABLE,
+                "menu": False,
+            }
 
-        assets = {
-            "css": dashboard_constants.CSS_COMMON,
-            "js": [
-                {
-                    "path": "core_main_app/common/js/templates/list/restore.js",
-                    "is_raw": False,
-                },
-                {
-                    "path": "core_main_app/common/js/templates/list/modals/disable.js",
-                    "is_raw": False,
-                },
-                EditTemplateVersionManagerView.get_modal_js_path(),
-            ],
-        }
+            modals = [
+                "core_main_app/admin/templates/list/modals/disable.html",
+                EditTemplateVersionManagerView.get_modal_html_path(),
+            ]
 
-        return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
-        )
+            assets = {
+                "css": dashboard_constants.CSS_COMMON,
+                "js": [
+                    {
+                        "path": "core_main_app/common/js/templates/list/restore.js",
+                        "is_raw": False,
+                    },
+                    {
+                        "path": "core_main_app/common/js/templates/list/modals/disable.js",
+                        "is_raw": False,
+                    },
+                    EditTemplateVersionManagerView.get_modal_js_path(),
+                ],
+            }
+
+            return self.common_render(
+                request, self.template, context=context, assets=assets, modals=modals
+            )
+        except AccessControlError:
+            return self.common_render(
+                request,
+                "core_main_app/common/commons/error.html",
+                context={"error": "Access Forbidden", "status_code": 403},
+            )
 
 
 class DashboardTypes(CommonView):
@@ -718,60 +731,69 @@ class DashboardTypes(CommonView):
         Returns:
         """
 
-        # Get types
-        if self.administration:
-            type_versions = type_version_manager_api.get_all_version_manager()
-        else:
-            type_versions = type_version_manager_api.get_version_managers_by_user(
-                request.user.id
-            )
-
-        detailed_types = []
-        for type_version in type_versions:
-            # If the version manager doesn't have a user, the type is global.
-            if type_version.user is not None:
-                detailed_types.append(
-                    {
-                        "type_version": type_version,
-                        "type": type_api.get(type_version.current),
-                        "user": user_api.get_user_by_id(type_version.user).username,
-                        "title": type_version.title,
-                    }
+        try:
+            # Get types
+            if self.administration:
+                type_versions = type_version_manager_api.get_all_version_manager(
+                    request=request
+                )
+            else:
+                type_versions = type_version_manager_api.get_version_managers_by_user(
+                    request=request
                 )
 
-        context = {
-            "number_total": len(detailed_types),
-            "user_form": UserForm(request.user),
-            "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE.value,
-            "object_name": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE.value,
-            "template": dashboard_constants.DASHBOARD_TYPES_TEMPLATE_TABLE,
-            "menu": False,
-            "user_data": detailed_types,
-        }
+            detailed_types = []
+            for type_version in type_versions:
+                # If the version manager doesn't have a user, the type is global.
+                if type_version.user is not None:
+                    detailed_types.append(
+                        {
+                            "type_version": type_version,
+                            "type": type_api.get(type_version.current, request=request),
+                            "user": user_api.get_user_by_id(type_version.user).username,
+                            "title": type_version.title,
+                        }
+                    )
 
-        modals = [
-            "core_main_app/admin/templates/list/modals/disable.html",
-            EditTemplateVersionManagerView.get_modal_html_path(),
-        ]
+            context = {
+                "number_total": len(detailed_types),
+                "user_form": UserForm(request.user),
+                "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE.value,
+                "object_name": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.TYPE.value,
+                "template": dashboard_constants.DASHBOARD_TYPES_TEMPLATE_TABLE,
+                "menu": False,
+                "user_data": detailed_types,
+            }
 
-        assets = {
-            "css": dashboard_constants.CSS_COMMON,
-            "js": [
-                {
-                    "path": "core_main_app/common/js/templates/list/restore.js",
-                    "is_raw": False,
-                },
-                {
-                    "path": "core_main_app/common/js/templates/list/modals/disable.js",
-                    "is_raw": False,
-                },
-                EditTemplateVersionManagerView.get_modal_js_path(),
-            ],
-        }
+            modals = [
+                "core_main_app/admin/templates/list/modals/disable.html",
+                EditTemplateVersionManagerView.get_modal_html_path(),
+            ]
 
-        return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
-        )
+            assets = {
+                "css": dashboard_constants.CSS_COMMON,
+                "js": [
+                    {
+                        "path": "core_main_app/common/js/templates/list/restore.js",
+                        "is_raw": False,
+                    },
+                    {
+                        "path": "core_main_app/common/js/templates/list/modals/disable.js",
+                        "is_raw": False,
+                    },
+                    EditTemplateVersionManagerView.get_modal_js_path(),
+                ],
+            }
+
+            return self.common_render(
+                request, self.template, context=context, assets=assets, modals=modals
+            )
+        except AccessControlError:
+            return self.common_render(
+                request,
+                "core_main_app/common/commons/error.html",
+                context={"error": "Access Forbidden", "status_code": 403},
+            )
 
 
 class DashboardWorkspaces(CommonView):
