@@ -358,7 +358,7 @@ def _change_owner_form(request, form_ids, user_id):
 
     Args:
         request:
-        data_ids:
+        form_ids:
         user_id:
 
     Returns:
@@ -369,9 +369,9 @@ def _change_owner_form(request, form_ids, user_id):
         return HttpResponseBadRequest(escape(str(e)))
 
     try:
+        new_user = user_api.get_user_by_id(user_id)
         for form in list_form:
-            form.user = user_id
-            curate_data_structure_api.upsert(form, request.user)
+            curate_data_structure_api.change_owner(form, new_user, request.user)
     except Exception as e:
         return HttpResponseBadRequest(escape(str(e)))
 
