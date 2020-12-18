@@ -47,6 +47,7 @@ CSS_COMMON = [
     "core_main_app/common/css/XMLTree.css",
     "core_main_app/libs/datatables/1.10.13/css/jquery.dataTables.css",
     "core_main_app/common/css/table.css",
+    "core_dashboard_common_app/common/css/list.css",
 ]
 JS_COMMON = [
     {
