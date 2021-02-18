@@ -1,0 +1,19 @@
+{% extends 'core_main_app/_render/admin/theme/tools/modal.html' %}
+
+{% block modal_id %}rename-persistent-query-modal{% endblock %}
+{% block modal_title %}Rename query{% endblock %}
+
+{% block modal_body %}
+<div class="alert alert-danger" id="edit_query_banner_errors" style="display: none;">
+        <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
+     	<h4><i class="fa fa-exclamation-circle"></i> Error</h4>
+        <div id="edit_query_errors"></div>
+</div>
+<label>Name:</label>
+<input type="text" name="name" class="form-control" placeholder="Type the new name" id="query_name">
+{% endblock %}
+
+{% block modal_footer %}
+<a class="btn btn-secondary pull-left" data-dismiss="modal" href="#"><i class="fa fa-times"></i> Close</a>
+<a id="edit-query-save" class="btn btn-primary" href="#"><i class="fa fa-save"></i> Save</a>
+{% endblock %}

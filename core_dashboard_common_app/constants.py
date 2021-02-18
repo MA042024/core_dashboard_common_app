@@ -34,6 +34,9 @@ DASHBOARD_TYPES_TEMPLATE_TABLE = (
 DASHBOARD_FILES_TEMPLATE_TABLE = (
     "core_dashboard_common_app/list/my_dashboard_my_files_table.html"
 )
+DASHBOARD_QUERIES_TEMPLATE_TABLE = (
+    "core_dashboard_common_app/list/my_dashboard_my_queries_table.html"
+)
 DASHBOARD_WORKSPACES_TEMPLATE_TABLE = (
     "core_dashboard_common_app/list/my_dashboard_my_workspaces_table.html"
 )
@@ -91,6 +94,7 @@ FUNCTIONAL_OBJECT_ENUM = Enum(
         "TEMPLATE": "template",
         "TYPE": "type",
         "FILE": "file",
+        "QUERY": "query",
         "WORKSPACE": "workspace",
     },
 )

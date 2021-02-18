@@ -20,7 +20,11 @@ delete_document = function(){
         dataType: "json",
         data : {
         	document_id: getSelectedDocument(),
-            functional_object: functional_object
+            functional_object: functional_object,
+
+            // get query class name
+            document_type: $('.nav-tabs .active').attr("title")
+
         },
 		success: function(data){
 		        location.reload(true);

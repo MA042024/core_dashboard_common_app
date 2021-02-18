@@ -45,7 +45,7 @@
 
     <div class="tab-content">
             {% if data.user_data %}
-                {% include data.template with objects=data.user_data group='user' %}
+                {% include data.template with objects=data.user_data group='user' count=data.number_total tabs=data.tabs %}
             {% else %}
                 No {{data.document}}s found.
             {% endif %}

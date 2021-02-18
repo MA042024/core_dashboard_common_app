@@ -37,6 +37,13 @@ from core_main_app.views.admin.forms import EditProfileForm
 from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
 from core_main_app.views.user.forms import WorkspaceForm
+import re
+from core_explore_common_app.components.abstract_persistent_query import (
+    api as abstract_persistent_query_api,
+)
+from core_explore_common_app.components.abstract_persistent_query.models import (
+    AbstractPersistentQuery,
+)
 
 if "core_curate_app" in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -1040,3 +1047,199 @@ class DashboardWorkspaceRecords(CommonView):
             )
 
         return assets
+
+
+class DashboardQueries(CommonView):
+    """List the queries."""
+
+    template = dashboard_constants.DASHBOARD_TEMPLATE
+
+    def get(self, request, *args, **kwargs):
+        """Method GET
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+        """
+        # Get all persistent queries
+        persistent_query_subclasses = AbstractPersistentQuery.get_subclasses()
+
+        items_to_render = []
+
+        tab_selected = request.GET.get("tab", persistent_query_subclasses[0].__name__)
+        tabs = []
+
+        for subclass in persistent_query_subclasses:
+            # Get persistent query tabs
+            tabs.append(subclass.__name__)
+
+            # Get selected persistent query tab
+            if tab_selected == subclass.__name__:
+                query_subclass = subclass
+
+        if self.administration:
+            try:
+                items_to_render = (
+                    abstract_persistent_query_api.get_all_persistent_queries(
+                        query_subclass, request.user
+                    )
+                )
+
+            except AccessControlError as ace:
+                abstract_persistent_query_api.get_none(query_subclass)
+        else:
+            items_to_render = (
+                abstract_persistent_query_api.get_all_persistent_queries_by_user(
+                    query_subclass, request.user
+                )
+            )
+
+        # Paginator
+        page = request.GET.get("page", 1)
+        results_paginator = ResultsPaginator.get_results(
+            items_to_render, page, settings.RECORD_PER_PAGE_PAGINATION
+        )
+
+        # Get query type
+        persistent_query_type = re.findall("[A-Z][^A-Z]*", tab_selected)[2]
+
+        try:
+            detailed_query = self._get_detailed_queries(results_paginator)
+        except:
+            detailed_query = []
+
+        context = {
+            "administration": self.administration,
+            "number_total": items_to_render.count(),
+            "user_data": detailed_query,
+            "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.QUERY.value,
+            "template": dashboard_constants.DASHBOARD_QUERIES_TEMPLATE_TABLE,
+            "type": persistent_query_type,
+            "tab": tab_selected,
+            "tabs": tabs,
+            "menu": self.administration,
+        }
+
+        if self.administration:
+            context.update(
+                {"action_form": ActionForm([("1", "Delete selected queries")])}
+            )
+
+        modals = [
+            dashboard_constants.MODALS_COMMON_DELETE,
+            "core_main_app/common/modals/error_page_modal.html",
+            "core_explore_common_app/user/persistent_query/modal.html",
+            "core_dashboard_common_app/list/modals/edit_persistent_query.html",
+        ]
+
+        assets = {
+            "css": dashboard_constants.CSS_COMMON,
+            "js": [
+                {
+                    "path": "core_dashboard_common_app/user/js/init.raw.js",
+                    "is_raw": True,
+                },
+                {
+                    "path": "core_main_app/common/js/modals/error_page_modal.js",
+                    "is_raw": True,
+                },
+                {
+                    "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
+                    "is_raw": False,
+                },
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True,
+                },
+                {
+                    "path": "core_main_app/user/js/sharing_modal.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/persistent_query_config.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/init_pagination.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_app/common/js/my_dashboard_tabs.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_common_app/user/js/list/modals/edit_persistent_query.js",
+                    "is_raw": False,
+                },
+            ],
+        }
+        assets["css"].append("core_dashboard_app/common/css/my_dashboard_tabs.css")
+
+        # Admin
+        if self.administration:
+            assets["js"].append(
+                {
+                    "path": "core_dashboard_common_app/common/js/init_pagination.js",
+                    "is_raw": False,
+                }
+            )
+            assets["js"].append(
+                {"path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD, "is_raw": True}
+            )
+            assets["js"].append(
+                {"path": dashboard_constants.JS_ADMIN_COUNT_CHECK, "is_raw": True}
+            )
+            assets["js"].append(
+                {"path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX, "is_raw": True}
+            )
+            assets["js"].append(
+                {"path": dashboard_constants.JS_ADMIN_SELECT_ALL, "is_raw": True}
+            )
+            assets["js"].append(
+                {"path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT, "is_raw": False}
+            )
+            assets["js"].append(
+                {"path": dashboard_constants.JS_ADMIN_INIT_MENU, "is_raw": False}
+            )
+            assets["js"].append(
+                {
+                    "path": "core_main_app/user/js/sharing_modal.js",
+                    "is_raw": False,
+                }
+            )
+            assets["js"].append(
+                {
+                    "path": "core_explore_common_app/user/js/persistent_query_config.js",
+                    "is_raw": False,
+                }
+            )
+            assets["js"].append(
+                {
+                    "path": "core_dashboard_common_app/admin/js/my_dashboard_tabs.raw.js",
+                    "is_raw": True,
+                }
+            )
+        else:
+            assets["js"].append(
+                {
+                    "path": "core_dashboard_common_app/user/js/my_dashboard_tabs.raw.js",
+                    "is_raw": True,
+                }
+            )
+
+        return self.common_render(
+            request, self.template, context=context, assets=assets, modals=modals
+        )
+
+    def _get_detailed_queries(self, queries):
+
+        detailed_queries = []
+        for query in queries:
+            detailed_queries.append(
+                {"query": query, "user": user_api.get_user_by_id(query.user_id)}
+            )
+
+        return list(reversed(detailed_queries))

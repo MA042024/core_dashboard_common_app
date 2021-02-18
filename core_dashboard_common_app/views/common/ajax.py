@@ -16,6 +16,12 @@ from core_dashboard_common_app import constants
 from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.commons.exceptions import DoesNotExist
 from core_main_app.components.blob import api as blob_api
+from core_explore_common_app.components.abstract_persistent_query import (
+    api as persistent_query_api,
+)
+from core_explore_common_app.components.abstract_persistent_query.models import (
+    AbstractPersistentQuery,
+)
 from core_main_app.components.lock import api as lock_api
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
@@ -159,6 +165,37 @@ def _get_data(data_ids, user):
     return data_table
 
 
+def _get_query(query_type, query_ids, user):
+    """Get all the persistent queries from the list of ids.
+
+    Args:
+        query_type:
+        query_ids:
+        user:
+
+    Returns:
+        data table
+    """
+
+    query_table = []
+    try:
+        for query_id in query_ids:
+
+            # Get the persistent query
+            query = persistent_query_api.get_by_id(query_type, query_id, user)
+
+            # Check the rights
+            _check_rights_document(user.is_superuser, str(user.id), query.user_id)
+
+            query_table.append(query)
+    except DoesNotExist:
+        raise Exception("It seems a query is missing. Please refresh the page.")
+    except Exception as e:
+        raise Exception(str(e))
+
+    return query_table
+
+
 # FIXME: fix error message
 @login_required
 def delete_document(request):
@@ -183,6 +220,8 @@ def delete_document(request):
         return _delete_form(request, document_ids)
     elif document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
         return _delete_file(request, document_ids)
+    elif document == constants.FUNCTIONAL_OBJECT_ENUM.QUERY.value:
+        return _delete_query(request, document_ids)
     elif document == constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE.value:
         return _delete_workspace(request, document_ids)
 
@@ -307,6 +346,54 @@ def _delete_record(request, data_ids):
             request,
             messages.INFO,
             get_data_label().capitalize() + " deleted with success.",
+        )
+    except:
+        messages.add_message(
+            request, messages.INFO, "A problem occurred while deleting."
+        )
+
+    return HttpResponse(json.dumps({}), content_type="application/javascript")
+
+
+def _delete_query(request, query_ids):
+    """Delete query.
+
+    Args:
+        request:
+        query_ids:
+
+    Returns:
+    """
+
+    try:
+        # Get persistent query class name
+        persistent_query_type = request.POST["document_type"]
+
+        # Get  persistent query document
+        persistent_query_class = next(
+            (
+                subclass
+                for subclass in AbstractPersistentQuery.get_subclasses()
+                if subclass.__name__ == persistent_query_type
+            ),
+            None,
+        )
+
+        # Get the persistent queries
+        list_query = _get_query(persistent_query_class, query_ids, request.user)
+
+    except Exception as e:
+        messages.add_message(request, messages.INFO, str(e))
+        return HttpResponse(json.dumps({}), content_type="application/javascript")
+
+    try:
+        for query in list_query:
+            persistent_query_api.delete(query, request.user)
+
+        messages.add_message(
+            request,
+            messages.INFO,
+            " Query deleted with success.",
         )
     except:
         messages.add_message(
