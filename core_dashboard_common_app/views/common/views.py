@@ -7,14 +7,12 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.exceptions import ValidationError
-from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 
 import core_main_app.components.data.api as workspace_data_api
-from core_main_app.commons.validators import validate_password
 from core_dashboard_common_app import constants as dashboard_constants
 from core_dashboard_common_app import settings
 from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
@@ -179,43 +177,23 @@ class UserDashboardPasswordChangeFormView(CommonView):
 
     def post(self, request, *args, **kwargs):
         form = PasswordChangeForm(request.user, request.POST)
-
-        try:
-            if form.is_valid():
-                validate_password(request.POST["new_password1"])
-                user = form.save()
-                update_session_auth_hash(request, user)
-                messages.success(request, "Your password was successfully updated!")
-                return redirect(self.success_url)
-            else:
-                messages.error(request, "There are errors on the form.")
-                return render(
-                    request,
-                    self.template_name,
-                    context={"form": form},
-                    assets=self._get_assets(),
-                )
-        except ValidationError as e:
-            error_message = "The following error(s) occurred during validation:"
-            error_items = [str(error) for error in e.messages]
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password was successfully updated!")
+            return redirect(self.success_url)
+        else:
+            messages.error(request, "There are errors on the form.")
             return render(
                 request,
                 self.template_name,
-                context={
-                    "form": form,
-                    "form_error_message": error_message,
-                    "error_items": error_items,
-                },
+                context={"form": form},
                 assets=self._get_assets(),
             )
 
-    def _get_assets(self):
-        return {
-            "css": [
-                "core_dashboard_common_app/common/css/password_form.css",
-                "core_website_app/user/css/list.css",
-            ]
-        }
+    @staticmethod
+    def _get_assets():
+        return {"css": ["core_dashboard_common_app/common/css/password_form.css"]}
 
 
 class DashboardRecords(CommonView):
