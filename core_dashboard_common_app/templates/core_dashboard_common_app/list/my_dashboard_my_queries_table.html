@@ -1,6 +1,7 @@
 {% load dict_key_extras %}
 <div>
     <input type="hidden" id="persistent-query-type"  value="{{data.type|lower}}">
+    <input type="hidden" id="persistent-query-path"  value="{{data.url_path|lower}}">
     <ul class="nav nav-tabs" role="tablist">
         {% for tab in data.tabs %}
             <li role="presentation" class="nav-item">
@@ -61,7 +62,7 @@
                                     <i class="fa fa-eye"></i> View
                                 </a>
 
-                                <a class="btn btn-secondary" href="/explore/{{data.type|lower}}/results-redirect?id={{object.query.id}}">
+                                <a class="btn btn-secondary" href="{{data.url_path}}results-redirect?id={{object.query.id}}">
                                     <i class="fa fa-play-circle"></i> Execute
                                 </a>
                                 <button class="btn btn-secondary edit-query-btn" objectid="{{ object.query.id }}">

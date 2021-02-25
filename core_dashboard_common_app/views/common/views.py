@@ -16,6 +16,7 @@ import core_main_app.components.data.api as workspace_data_api
 from core_dashboard_common_app import constants as dashboard_constants
 from core_dashboard_common_app import settings
 from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
+from core_explore_common_app.views.user.views import ResultQueryRedirectView
 from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.components.blob import api as blob_api, utils as blob_utils
 from core_main_app.components.data import api as data_api
@@ -1102,9 +1103,12 @@ class DashboardQueries(CommonView):
         results_paginator = ResultsPaginator.get_results(
             items_to_render, page, settings.RECORD_PER_PAGE_PAGINATION
         )
-
-        # Get query type
-        persistent_query_type = re.findall("[A-Z][^A-Z]*", tab_selected)[2]
+        for result_view in ResultQueryRedirectView.__subclasses__():
+            if result_view.model_name == query_subclass._class_name:
+                # Get query type
+                url_path = result_view.get_url_path()
+                query_type = result_view.object_name
+                break
 
         try:
             detailed_query = self._get_detailed_queries(results_paginator)
@@ -1117,7 +1121,8 @@ class DashboardQueries(CommonView):
             "user_data": detailed_query,
             "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.QUERY.value,
             "template": dashboard_constants.DASHBOARD_QUERIES_TEMPLATE_TABLE,
-            "type": persistent_query_type,
+            "type": query_type,
+            "url_path": url_path,
             "tab": tab_selected,
             "tabs": tabs,
             "menu": self.administration,

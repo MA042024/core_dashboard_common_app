@@ -19,15 +19,14 @@ openEditQueryModal = function () {
     var persistent_query_class_name = $('.nav-tabs .active').attr("title")
 
     // get only the type of the query e.g : example, keyword ...
-    var query_type = $("#persistent-query-type").val()
+    var persistent_query_path = $("#persistent-query-path").val()
+    var persistent_query_type = $("#persistent-query-type").val()
 
     // get persistent query id
     var persistent_query_id = getSelectedDocument()
 
-    // FIXME : make the redirect url correctly
-
     // make REST API link
-    renameUrl =  window.origin+"/explore/"+query_type+"/rest/persistent_query_"+query_type+"/"+persistent_query_id+"/"
+    renameUrl =  persistent_query_path+"rest/"+persistent_query_type+"/"+persistent_query_id+"/"
 };
 
 /**
