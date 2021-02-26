@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -384,9 +385,13 @@ class DashboardFiles(CommonView):
 
         detailed_file = []
         for file in files:
+            try:
+                username = user_api.get_user_by_id(file.user_id).username
+            except ObjectDoesNotExist:
+                username = "None"
             detailed_file.append(
                 {
-                    "user": user_api.get_user_by_id(file.user_id).username,
+                    "user": username,
                     "date": file.id.generation_time,
                     "file": file,
                     "url": blob_utils.get_blob_download_uri(file, request),
@@ -647,15 +652,20 @@ class DashboardTemplates(CommonView):
             for template_version in template_versions:
                 # If the version manager doesn't have a user, the template is global.
                 if template_version.user is not None:
+                    try:
+                        username = user_api.get_user_by_id(
+                            template_version.user
+                        ).username
+                    except ObjectDoesNotExist:
+                        username = "None"
+
                     detailed_templates.append(
                         {
                             "template_version": template_version,
                             "template": template_api.get(
                                 template_version.current, request=request
                             ),
-                            "user": user_api.get_user_by_id(
-                                template_version.user
-                            ).username,
+                            "user": username,
                             "title": template_version.title,
                         }
                     )
@@ -732,11 +742,15 @@ class DashboardTypes(CommonView):
             for type_version in type_versions:
                 # If the version manager doesn't have a user, the type is global.
                 if type_version.user is not None:
+                    try:
+                        username = user_api.get_user_by_id(type_version.user).username
+                    except ObjectDoesNotExist:
+                        username = "None"
                     detailed_types.append(
                         {
                             "type_version": type_version,
                             "type": type_api.get(type_version.current, request=request),
-                            "user": user_api.get_user_by_id(type_version.user).username,
+                            "user": username,
                             "title": type_version.title,
                         }
                     )
@@ -818,11 +832,17 @@ class DashboardWorkspaces(CommonView):
 
         detailed_user_workspaces = []
         for user_workspace in user_workspaces:
+            try:
+                username = (
+                    user_api.get_user_by_id(user_workspace.owner).username
+                    if not workspace_api.is_workspace_global(user_workspace)
+                    else "GLOBAL"
+                )
+            except ObjectDoesNotExist:
+                username = "None"
             detailed_user_workspaces.append(
                 {
-                    "user": user_api.get_user_by_id(user_workspace.owner).username
-                    if not workspace_api.is_workspace_global(user_workspace)
-                    else "GLOBAL",
+                    "user": username,
                     "is_owner": self.administration
                     or user_workspace.owner == str(request.user.id),
                     "name": user_workspace.title,
@@ -1241,11 +1261,12 @@ class DashboardQueries(CommonView):
         )
 
     def _get_detailed_queries(self, queries):
-
         detailed_queries = []
         for query in queries:
-            detailed_queries.append(
-                {"query": query, "user": user_api.get_user_by_id(query.user_id)}
-            )
+            try:
+                user = user_api.get_user_by_id(query.user_id)
+            except ObjectDoesNotExist:
+                user = None
+            detailed_queries.append({"query": query, "user": user})
 
         return list(reversed(detailed_queries))
