@@ -54,25 +54,25 @@
             <td>
                 {% if data_loaded.can_read %}
                     <a class="btn btn-secondary view-record-btn">
-                        <i class="far fa-file-alt"></i> View
+                        <i class="fas fa-file-alt"></i> View
                     </a>
                 {% endif %}
                 {% if data_loaded.can_write %}
                     <a class="btn btn-secondary edit-record-btn">
-                        <i class="fa fa-edit"></i> Edit
+                        <i class="fas fa-edit"></i> Edit
                     </a>
                     {% if data_loaded.can_change_workspace %}
                         <a class="btn btn-secondary assign-workspace-record-btn">
-                            <i class="fa fa-folder"></i> Change workspace
+                            <i class="fas fa-folder"></i> Change workspace
                         </a>
                     {% endif %}
                 {% endif %}
                 {% if data_loaded.is_owner %}
                     <a class="btn btn-secondary change-owner-btn">
-                        <i class="fa fa-user-circle"></i> Change Owner
+                        <i class="fas fa-user-circle"></i> Change Owner
                     </a>
                     <button class="btn btn-danger delete-document-btn">
-                        <i class="fa fa-trash"></i> Delete
+                        <i class="fas fa-trash"></i> Delete
                     </button>
                 {% endif %}
             </td>
