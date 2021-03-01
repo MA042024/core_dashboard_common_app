@@ -58,9 +58,15 @@
                                 </td>
                             {% endif %}
                             <td>
-                                <a class="btn btn-secondary " href="{% url 'core_explore_common_persistent_query_content' data.tab  object.query.id %}">
-                                    <i class="fa fa-eye"></i> View
-                                </a>
+                                {% if come_from_admin %}
+                                    <a class="btn btn-secondary " href="{% url 'admin:core_explore_common_persistent_query_content' data.tab  object.query.id %}">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                {% else %}
+                                    <a class="btn btn-secondary" href="{% url 'core_explore_common_persistent_query_content' data.tab  object.query.id %}">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                {% endif %}
 
                                 <a class="btn btn-secondary" href="{{data.url_path}}results-redirect?id={{object.query.id}}">
                                     <i class="fa fa-play-circle"></i> Execute
