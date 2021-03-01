@@ -3,7 +3,8 @@
  */
 
 $(document).ready(function() {
-    var id = "";
+    var persistent_query_id = null;
+    var persistent_query_name = null;
     $('.share-btn').on('click', getDocumentId);
     initSharingModal(
         configurePersistentQueryModal, "#persistent-query", "#persistent-query-modal",
@@ -20,10 +21,17 @@ let configurePersistentQueryModal = function() {
     var tab_name = $('.nav-tabs .active').attr("title")
 
     // get persistent query path
-    var query_path = $("#persistent-query-path").val()
+    var query_path = $("#persistent-query-path").val();
+
+    var suffixUrl = null
+
+    if (persistent_query_name != 'None'){
+       suffixUrl = "results-redirect?name="+persistent_query_name;
+    }
+    else  suffixUrl ="results-redirect?id="+persistent_query_id;
 
     // make the redirect url
-    var redirect_url = window.origin+query_path+"results-redirect?id="+id;
+    var redirect_url = window.origin+query_path+suffixUrl;
 
     $("#persistent-query-link").val(redirect_url);
     $("#rename_tools").hide();
@@ -32,6 +40,9 @@ let configurePersistentQueryModal = function() {
 
 
 let getDocumentId = function () {
-    id = $(this).closest('button').attr("objectid");
+    // get query id
+    persistent_query_id = $(this).closest('button').attr("objectid");
+    // get query name
+    persistent_query_name = $.trim($(this).closest('tr').find('.persistent-query-name').text())
    }
 
