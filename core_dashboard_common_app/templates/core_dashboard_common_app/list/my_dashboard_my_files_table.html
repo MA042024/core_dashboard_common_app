@@ -45,21 +45,21 @@
                 {% endif %}
                 <td>
                     <a class="btn btn-secondary download-{{data.document}}-btn" href="{{ object.url }}">
-                        <i class="fa fa-list"></i> Download
+                        <i class="fas fa-list"></i> Download
                     </a>
 
                     {% if object.can_change_workspace %}
                         <a class="btn btn-secondary assign-workspace-record-btn">
-                            <i class="fa fa-folder"></i> Change workspace
+                            <i class="fas fa-folder"></i> Change workspace
                         </a>
                     {% endif %}
                     {% if object.is_owner %}
                         <a class="btn btn-secondary change-owner-btn">
-                            <i class="fa fa-folder"></i> Change Owner
+                            <i class="fas fa-folder"></i> Change Owner
                         </a>
                     {% endif %}
                     <button class="btn btn-danger delete-document-btn" objectid="{{ object.file.id }}">
-                        <i class="fa fa-trash"></i> Delete
+                        <i class="fas fa-trash"></i> Delete
                     </button>
                 </td>
             </tr>

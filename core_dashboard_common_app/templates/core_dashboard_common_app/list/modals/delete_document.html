@@ -6,7 +6,7 @@
 {% block modal_body %}
 <div class="alert alert-danger" id="delete_banner_errors" style="display: none;">
         <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
-     	<h4><i class="fa fa-exclamation-circle"></i> Error</h4>
+     	<h4><i class="fas fa-exclamation-circle"></i> Error</h4>
         <div id="delete_document_errors"></div>
 </div>
 <input type="hidden" class="{{data.document}}-id"/>
@@ -17,6 +17,6 @@
 {% endblock %}
 
 {% block modal_footer %}
-<button class="btn btn-secondary pull-left" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
-<button id="delete-document-yes" class="btn btn-danger"><i class="fa fa-check"></i> Yes</button>
+<button class="btn btn-secondary pull-left" data-dismiss="modal"><i class="fas fa-times"></i> No</button>
+<button id="delete-document-yes" class="btn btn-danger"><i class="fas fa-check"></i> Yes</button>
 {% endblock %}
