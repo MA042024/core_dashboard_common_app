@@ -14,7 +14,7 @@ import core_main_app.components.user.api as user_api
 import core_main_app.components.template.api as template_api
 from core_dashboard_common_app import constants
 from core_main_app.access_control.exceptions import AccessControlError
-from core_main_app.commons.exceptions import DoesNotExist
+from core_main_app.commons.exceptions import DoesNotExist, ModelError
 from core_main_app.components.blob import api as blob_api
 from core_explore_common_app.components.abstract_persistent_query import (
     api as persistent_query_api,
@@ -560,9 +560,19 @@ def edit_record(request):
             form_string=data.xml_content,
             data=data,
         )
-        curate_data_structure = curate_data_structure_api.upsert(
-            curate_data_structure, request.user
-        )
+        try:
+            curate_data_structure = curate_data_structure_api.upsert(
+                curate_data_structure, request.user
+            )
+        except ModelError as e:
+            message = Message(
+                messages.ERROR,
+                f"Unable to edit the {get_data_label()}. Please check that a {get_form_label()} with the same name does not already exist.",
+            )
+            return HttpResponseBadRequest(
+                json.dumps({"message": message.message, "tags": message.tags}),
+                content_type="application/json",
+            )
     except Exception as e:
         message = Message(messages.ERROR, "A problem occurred while editing.")
         return HttpResponseBadRequest(
