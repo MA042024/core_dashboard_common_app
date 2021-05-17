@@ -37,6 +37,9 @@ DASHBOARD_FILES_TEMPLATE_TABLE = (
 DASHBOARD_QUERIES_TEMPLATE_TABLE = (
     "core_dashboard_common_app/list/my_dashboard_my_queries_table.html"
 )
+DASHBOARD_QUERIES_TEMPLATE_TABLE_PAGINATION = (
+    "core_dashboard_common_app/list/my_dashboard_my_queries_table_pagination.html"
+)
 DASHBOARD_WORKSPACES_TEMPLATE_TABLE = (
     "core_dashboard_common_app/list/my_dashboard_my_workspaces_table.html"
 )

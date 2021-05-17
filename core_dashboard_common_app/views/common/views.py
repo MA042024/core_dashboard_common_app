@@ -46,6 +46,8 @@ from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
 from core_main_app.views.user.forms import WorkspaceForm
 
+import math
+
 if "core_curate_app" in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
 if "core_composer_app" in INSTALLED_APPS:
@@ -1073,6 +1075,7 @@ class DashboardQueries(CommonView):
     """List the queries."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
+    data_template = dashboard_constants.DASHBOARD_QUERIES_TEMPLATE_TABLE_PAGINATION
 
     def get(self, request, *args, **kwargs):
         """Method GET
@@ -1120,7 +1123,7 @@ class DashboardQueries(CommonView):
         # Paginator
         page = request.GET.get("page", 1)
         results_paginator = ResultsPaginator.get_results(
-            items_to_render, page, settings.RECORD_PER_PAGE_PAGINATION
+            items_to_render, page, settings.QUERY_PER_PAGE_PAGINATION
         )
         for result_view in ResultQueryRedirectView.__subclasses__():
             if result_view.model_name == query_subclass._class_name:
@@ -1128,6 +1131,31 @@ class DashboardQueries(CommonView):
                 url_path = result_view.get_url_path()
                 query_type = result_view.object_name
                 break
+
+        # get pagination information
+        previous_page_number = (
+            results_paginator.previous_page_number()
+            if results_paginator.has_previous()
+            else None
+        )
+        next_page_number = (
+            results_paginator.next_page_number()
+            if results_paginator.has_next()
+            else None
+        )
+        results_count = items_to_render.count()
+        page_count = int(
+            math.ceil(float(results_count) / settings.QUERY_PER_PAGE_PAGINATION)
+        )
+
+        # pagination has other pages?
+        has_other_pages = results_count > settings.QUERY_PER_PAGE_PAGINATION
+
+        # pagination has previous?
+        has_previous = previous_page_number is not None
+
+        # pagination has next?
+        has_next = next_page_number is not None and next_page_number <= page_count
 
         try:
             detailed_query = self._get_detailed_queries(results_paginator)
@@ -1139,12 +1167,21 @@ class DashboardQueries(CommonView):
             "number_total": items_to_render.count(),
             "user_data": detailed_query,
             "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.QUERY.value,
-            "template": dashboard_constants.DASHBOARD_QUERIES_TEMPLATE_TABLE,
+            "template": self.data_template,
             "type": query_type,
             "url_path": url_path,
             "tab": tab_selected,
             "tabs": tabs,
             "menu": self.administration,
+            "pagination": {
+                "number": int(page),
+                "paginator": {"num_pages": page_count},
+                "has_other_pages": has_other_pages,
+                "previous_page_number": previous_page_number,
+                "next_page_number": next_page_number,
+                "has_previous": has_previous,
+                "has_next": has_next,
+            },
         }
 
         if self.administration:
