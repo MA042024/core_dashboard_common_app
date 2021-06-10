@@ -928,7 +928,7 @@ class DashboardWorkspaceRecords(CommonView):
                 workspace, request.user
             )
         except AccessControlError as ace:
-            workspace_data = []
+            workspace_data = workspace_data_api.get_none()
 
         user_can_read = workspace_api.can_user_read_workspace(workspace, request.user)
         user_can_write = workspace_api.can_user_write_workspace(workspace, request.user)
