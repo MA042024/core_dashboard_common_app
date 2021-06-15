@@ -1235,9 +1235,21 @@ class DashboardQueries(CommonView):
                     "path": "core_dashboard_common_app/user/js/list/modals/edit_persistent_query.js",
                     "is_raw": False,
                 },
+                {
+                    "path": "core_main_app/libs/highlight/11.0.0/js/highlight.min.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_main_app/libs/highlight/11.0.0/js/init_highlight.js",
+                    "is_raw": False,
+                },
             ],
         }
         assets["css"].append("core_dashboard_app/common/css/my_dashboard_tabs.css")
+        assets["css"].append("core_dashboard_common_app/common/css/content_query.css")
+        assets["css"].append(
+            "core_main_app/libs/highlight/11.0.0/css/atom-one-light.css"
+        )
 
         # Admin
         if self.administration:

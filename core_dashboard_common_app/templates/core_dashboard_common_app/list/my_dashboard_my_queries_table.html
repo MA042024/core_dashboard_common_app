@@ -45,9 +45,15 @@
                                     None
                                 {% endif %}
                             </td>
-                            <td>
+                             {% if come_from_admin %}
+                               <td class="col-md-5" style="overflow: hidden;">
+                             {% else %}
+                               <td class="col-md-6" style="overflow: hidden;">
+                            {% endif %}
+
                                 {% if object.query.content != "{}" %}
-                                    {{object.query.content }}
+                                    <pre ><code class="json content-ellipsis" >{{object.query.content}}</code></pre>
+
                                 {% else %}
                                     No content
                                 {% endif %}
@@ -57,6 +63,7 @@
                                     {{object.user}}
                                 </td>
                             {% endif %}
+
                             <td>
                                 {% if come_from_admin %}
                                     <a class="btn btn-secondary " href="{% url 'admin:core_explore_common_persistent_query_content' data.tab  object.query.id %}">
