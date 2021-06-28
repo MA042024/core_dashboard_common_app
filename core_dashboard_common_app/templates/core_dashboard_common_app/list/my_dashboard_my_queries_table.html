@@ -1,4 +1,5 @@
 {% load dict_key_extras %}
+
 <div>
     <input type="hidden" id="persistent-query-type"  value="{{data.type|lower}}">
     <input type="hidden" id="persistent-query-path"  value="{{data.url_path|lower}}">
@@ -15,6 +16,7 @@
             </li>
         {% endfor %}
     </ul>
+    {% if data.number_total != 0 %}
     <div class="tab-content">
         <div role="tabpanel" id="data_table" class="tab-pane active">
             <table class="table table-bordered table-striped table-hover">
@@ -24,46 +26,34 @@
                     {% endif %}
                     <th>Name (query title)</th>
                     <th>Content</th>
-                    {% if come_from_admin %}
-                        <th>User</th>
-                    {% endif %}
+                    {% if come_from_admin %} <th>User</th> {% endif %}
                     <th>Actions</th>
                 </thead>
                 <tbody>
                     {% for object in objects %}
-                        <tr class="{{ rowcolors }}" objectid="{{object.query.id}}">
-                            {% if data.menu %}
-                                 <td id="actionCheckbox_{{forloop.counter}}">
-                                     <input type="checkbox" id={{object.query.id}} name={{group}}>
-                                 </td>
-                            {% endif %}
+                    <tr class="{{ rowcolors }}" objectid="{{object.query.id}}">
+                        {% if data.menu %}
+                            <td id="actionCheckbox_{{forloop.counter}}">
+                                <input type="checkbox" id={{object.query.id}} name={{group}}>
+                            </td>
+                        {% endif %}
                             <td class="persistent-query-name">
-
-                                {% if object.query.name %}
-                                    {{object.query.name}}
-                                {% else %}
-                                    None
-                                {% endif %}
+                                {% if object.query.name %} {{object.query.name}} {% else %} None {% endif %}
                             </td>
-                             {% if come_from_admin %}
-                               <td class="col-md-5" style="overflow: hidden;">
-                             {% else %}
-                               <td class="col-md-6" style="overflow: hidden;">
-                            {% endif %}
 
-                                {% if object.query.content != "{}" %}
-                                    <pre ><code class="json content-ellipsis" >{{object.query.content}}</code></pre>
-
+                        {% if come_from_admin %}
+                            <td class="col-md-5" style="overflow: hidden;">
                                 {% else %}
-                                    No content
-                                {% endif %}
-                            </td>
-                             {% if come_from_admin %}
-                                <td>
-                                    {{object.user}}
-                                </td>
-                            {% endif %}
+                            <td class="col-md-6" style="overflow: hidden;">
+                        {% endif %}
 
+                        {% if object.query.content != "{}" %}
+                            <pre ><code class="json content-ellipsis" >{{object.query.content}}</code></pre>
+                        {% else %}
+                            No content
+                        {% endif %}
+                            </td>
+                                 {% if come_from_admin %}<td>{{object.user}}</td>{% endif %}
                             <td>
                                 {% if come_from_admin %}
                                     <a class="btn btn-secondary " href="{% url 'admin:core_explore_common_persistent_query_content' data.tab  object.query.id %}">
@@ -75,23 +65,29 @@
                                     </a>
                                 {% endif %}
 
-                                <a class="btn btn-secondary" href="{{data.url_path}}results-redirect?id={{object.query.id}}">
-                                    <i class="fas fa-play-circle"></i> Execute
-                                </a>
-                                <button class="btn btn-secondary edit-query-btn" objectid="{{ object.query.id }}">
-                                    <i class="fas fa-edit"></i> Rename
-                                </button>
-                                {% include "core_explore_common_app/user/persistent_query/button.html" with come_from_my_queries='True' objectid=object.query.id%}
+                                    <a class="btn btn-secondary" href="{{data.url_path}}results-redirect?id={{object.query.id}}">
+                                        <i class="fas fa-play-circle"></i> Execute
+                                    </a>
 
-                                <button class="btn btn-danger delete-document-btn" objectid="{{ object.query.id }}">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
+                                    <button class="btn btn-secondary edit-query-btn" objectid="{{ object.query.id }}">
+                                        <i class="fas fa-edit"></i> Rename
+                                    </button>
+                                    {% include "core_explore_common_app/user/persistent_query/button.html" with come_from_my_queries='True' objectid=object.query.id%}
+
+                                    <button class="btn btn-danger delete-document-btn" objectid="{{ object.query.id }}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
                             </td>
-                        </tr>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    {% else %}
 
+    <div class="alert alert-light">
+      No queries found
+    </div>
+    {% endif %}
 </div>
