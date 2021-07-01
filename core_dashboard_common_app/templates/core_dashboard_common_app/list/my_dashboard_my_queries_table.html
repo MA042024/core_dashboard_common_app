@@ -37,8 +37,9 @@
                                 <input type="checkbox" id={{object.query.id}} name={{group}}>
                             </td>
                         {% endif %}
-                            <td class="persistent-query-name">
-                                {% if object.query.name %} {{object.query.name}} {% else %} None {% endif %}
+                            <td >
+                                <input type="hidden"  class="persistent-query-name" value="{% if object.query.name != None %} {{object.query.name}}{% endif %}">
+                                {{object.query.name}}
                             </td>
 
                         {% if come_from_admin %}

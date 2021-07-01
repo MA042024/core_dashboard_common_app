@@ -7,10 +7,10 @@ openEditQueryModal = function () {
     $("#rename-persistent-query-modal").modal("show");
 
     // get query old name
-    var persistent_query_name = $.trim($recordRow.find('.persistent-query-name').text())
+    var persistent_query_name = $.trim($recordRow.find('.persistent-query-name').val())
 
     // set old name on the popup
-    if (persistent_query_name != 'None'){
+    if (persistent_query_name != ''){
         $("#query_name").val(persistent_query_name)
     }
     else  $("#query_name").val("")

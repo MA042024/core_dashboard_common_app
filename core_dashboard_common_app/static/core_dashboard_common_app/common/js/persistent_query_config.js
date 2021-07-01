@@ -25,7 +25,7 @@ let configurePersistentQueryModal = function() {
 
     var suffixUrl = null
 
-    if (persistent_query_name != 'None'){
+    if (persistent_query_name != ''){
        suffixUrl = "results-redirect?name="+persistent_query_name;
     }
     else  suffixUrl ="results-redirect?id="+persistent_query_id;
@@ -43,6 +43,6 @@ let getDocumentId = function () {
     // get query id
     persistent_query_id = $(this).closest('button').attr("objectid");
     // get query name
-    persistent_query_name = $.trim($(this).closest('tr').find('.persistent-query-name').text())
+    persistent_query_name = $.trim($(this).closest('tr').find('.persistent-query-name').val())
    }
 
