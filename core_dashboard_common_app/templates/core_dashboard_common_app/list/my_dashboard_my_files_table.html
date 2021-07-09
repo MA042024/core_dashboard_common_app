@@ -2,18 +2,23 @@
 
 <table class="table table-bordered table-striped table-hover">
     <thead>
-        {% if data.menu %}
-            <th> <input type="checkbox" id="select_all_{{group}}" onchange="selectAll(this, '{{group}}')"> </th>
-        {% endif %}
-        <th>File name</th>
-        <th>Upload date</th>
-        {% if come_from_admin %}
-            <th>User</th>
-        {% endif %}
-        {% if not data.title%}
-            <th>Workspace</th>
-        {% endif %}
-        <th>Actions</th>
+        <tr>
+            {% if data.menu %}
+                <th>
+                    <input type="checkbox" id="select_all_{{group}}"
+                           onchange="selectAll(this, '{{group}}')">
+                </th>
+            {% endif %}
+            <th>File name</th>
+            <th>Upload date</th>
+            {% if come_from_admin %}
+                <th>User</th>
+            {% endif %}
+            {% if not data.title%}
+                <th>Workspace</th>
+            {% endif %}
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
         {% for object in objects %}
@@ -47,7 +52,9 @@
                     <a class="btn btn-secondary download-{{data.document}}-btn" href="{{ object.url }}">
                         <i class="fas fa-list"></i> Download
                     </a>
-
+                    {% if data.share_pid_button %}
+                        {% include 'core_linked_records_app/user/sharing/data_detail/button_inline.html' %}
+                    {% endif %}
                     {% if object.can_change_workspace %}
                         <a class="btn btn-secondary assign-workspace-record-btn">
                             <i class="fas fa-folder"></i> Change workspace

@@ -257,7 +257,9 @@ class DashboardRecords(CommonView):
             ),
             "menu": self.administration,
             "administration": self.administration,
+            "share_pid_button": "core_linked_records_app" in settings.INSTALLED_APPS,
         }
+
         if self.administration:
             context.update(
                 {"username_list": get_id_username_dict(user_api.get_all_users())}
@@ -270,6 +272,24 @@ class DashboardRecords(CommonView):
         ]
 
         assets = self._get_assets()
+
+        if context["share_pid_button"]:
+            modals.append("core_linked_records_app/user/sharing/data_detail/modal.html")
+
+            assets["js"] += [
+                {
+                    "path": "core_main_app/user/js/sharing_modal.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_linked_records_app/user/js/sharing/common_list.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_linked_records_app/user/js/sharing/data_list.js",
+                    "is_raw": False,
+                },
+            ]
 
         return self.common_render(
             request, self.template, context=context, assets=assets, modals=modals
@@ -410,6 +430,7 @@ class DashboardFiles(CommonView):
             "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE.value,
             "template": dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
             "menu": self.administration,
+            "share_pid_button": "core_linked_records_app" in settings.INSTALLED_APPS,
         }
 
         if self.administration:
@@ -468,6 +489,24 @@ class DashboardFiles(CommonView):
             )
             assets["css"].append("core_file_preview_app/user/css/file_preview.css")
             modals.append("core_file_preview_app/user/file_preview_modal.html")
+
+        if context["share_pid_button"]:
+            modals.append("core_linked_records_app/user/sharing/data_detail/modal.html")
+
+            assets["js"] += [
+                {
+                    "path": "core_main_app/user/js/sharing_modal.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_linked_records_app/user/js/sharing/common_list.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_linked_records_app/user/js/sharing/blob_list.js",
+                    "is_raw": False,
+                },
+            ]
 
         # Admin
         if self.administration:

@@ -4,19 +4,24 @@
 {% load timestamptags %}
 
 <thead>
-    {% if data.menu and not data.title %}
-        <th> <input type="checkbox" id="select_all_{{group}}" onchange="selectAll(this, '{{group}}')"> </th>
-    {% endif %}
-    <th>Name</th>
-    <th>Template</th>
-    <th>Last Modification date</th>
-    {% if data.username_list %}
-        <th>User</th>
-    {% endif %}
-    {% if not data.title%}
-        <th>Workspace</th>
-    {% endif %}
-    <th>Actions</th>
+    <tr>
+        {% if data.menu and not data.title %}
+            <th>
+                <input type="checkbox" id="select_all_{{group}}"
+                       onchange="selectAll(this, '{{group}}')" />
+            </th>
+        {% endif %}
+        <th>Name</th>
+        <th>Template</th>
+        <th>Last Modification date</th>
+        {% if data.username_list %}
+            <th>User</th>
+        {% endif %}
+        {% if not data.title%}
+            <th>Workspace</th>
+        {% endif %}
+        <th>Actions</th>
+    </tr>
 </thead>
 <tbody>
     {% for data_loaded in objects %}
@@ -27,7 +32,10 @@
             </td>
             {% endif %}
             <td>
-                {{ data_loaded.data.title }}{% if data_loaded.data|has_draft:request.user %},<text class="text-danger">&nbsp;Draft</text>{% endif %}
+                {{ data_loaded.data.title }}
+                {% if data_loaded.data|has_draft:request.user %}
+                    ,<text class="text-danger">&nbsp;Draft</text>
+                {% endif %}
             </td>
             <td>
                 {{ data_loaded.data.template.display_name }}
@@ -53,24 +61,27 @@
             {% endif %}
             <td>
                 {% if data_loaded.can_read %}
-                    <a class="btn btn-secondary view-record-btn">
+                    <button class="btn btn-secondary view-record-btn">
                         <i class="fas fa-file-alt"></i> View
-                    </a>
+                    </button>
+                {% endif %}
+                {% if data.share_pid_button %}
+                    {% include 'core_linked_records_app/user/sharing/data_detail/button_inline.html' %}
                 {% endif %}
                 {% if data_loaded.can_write %}
-                    <a class="btn btn-secondary edit-record-btn">
+                    <button class="btn btn-secondary edit-record-btn">
                         <i class="fas fa-edit"></i> Edit
-                    </a>
+                    </button>
                     {% if data_loaded.can_change_workspace %}
-                        <a class="btn btn-secondary assign-workspace-record-btn">
+                        <button class="btn btn-secondary assign-workspace-record-btn">
                             <i class="fas fa-folder"></i> Change workspace
-                        </a>
+                        </button>
                     {% endif %}
                 {% endif %}
                 {% if data_loaded.is_owner %}
-                    <a class="btn btn-secondary change-owner-btn">
+                    <button class="btn btn-secondary change-owner-btn">
                         <i class="fas fa-user-circle"></i> Change Owner
-                    </a>
+                    </button>
                     <button class="btn btn-danger delete-document-btn">
                         <i class="fas fa-trash"></i> Delete
                     </button>
