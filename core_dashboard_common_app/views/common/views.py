@@ -262,7 +262,9 @@ class DashboardRecords(CommonView):
 
         if self.administration:
             context.update(
-                {"username_list": get_id_username_dict(user_api.get_all_users())}
+                {
+                    "username_list": get_id_username_dict(user_api.get_all_users()),
+                }
             )
 
         modals = [
@@ -719,7 +721,6 @@ class DashboardTemplates(CommonView):
                 "template": dashboard_constants.DASHBOARD_TEMPLATES_TEMPLATE_TABLE,
                 "menu": False,
             }
-
             modals = [
                 "core_main_app/admin/templates/list/modals/disable.html",
                 EditTemplateVersionManagerView.get_modal_html_path(),
@@ -1225,7 +1226,9 @@ class DashboardQueries(CommonView):
 
         if self.administration:
             context.update(
-                {"action_form": ActionForm([("1", "Delete selected queries")])}
+                {
+                    "action_form": ActionForm([("1", "Delete selected queries")]),
+                }
             )
 
         modals = [

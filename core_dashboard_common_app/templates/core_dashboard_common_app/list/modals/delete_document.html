@@ -1,7 +1,7 @@
 {% extends 'core_main_app/_render/admin/theme/tools/modal.html' %}
-
+{% load special_plural %}
 {% block modal_id %}delete-result-modal{% endblock %}
-{% block modal_title %}Delete {{data.document}}{% if data.administration %}(s){% endif %}{% endblock %}
+{% block modal_title %}Delete {% if data.administration %}{{data.document|special_plural}}{% else %}{{data.document}}{% endif %}{% endblock %}
 
 {% block modal_body %}
 <div class="alert alert-danger" id="delete_banner_errors" style="display: none;">
@@ -11,9 +11,9 @@
 </div>
 <input type="hidden" class="{{data.document}}-id"/>
 <p>
-    The {{data.document}}{% if data.administration %}(s){% endif %} will be erased.
+    The {% if data.administration %} {{data.document|special_plural}}{% else %}{{data.document}}{% endif %} will be erased.
 </p>
-<p>Are you sure you want to delete the {{data.document}}{% if data.administration %}(s){% endif %} ?</p>
+<p>Are you sure you want to delete the {% if data.administration %}{{data.document|special_plural}}{% else %}{{data.document}}{% endif %} ?</p>
 {% endblock %}
 
 {% block modal_footer %}
