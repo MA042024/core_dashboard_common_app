@@ -5,7 +5,7 @@
         {% if data.title %}
             <h1>{{data.title}}</h1>
         {% else %}
-            {% if come_from_admin %} {{ data.document|special_plural}} list {% else %} My {{data.document|special_plural}} {% endif %}
+            {% if come_from_admin %} {{ data.document|special_plural|capfirst}} list {% else %} My {{data.document|special_plural}} {% endif %}
         {% endif %}
 {% endblock %}
 
