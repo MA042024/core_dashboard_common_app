@@ -10,18 +10,18 @@ from django.urls import reverse
 from django.utils.html import escape
 
 import core_main_app.components.data.api as data_api
-import core_main_app.components.user.api as user_api
 import core_main_app.components.template.api as template_api
+import core_main_app.components.user.api as user_api
 from core_dashboard_common_app import constants
-from core_main_app.access_control.exceptions import AccessControlError
-from core_main_app.commons.exceptions import DoesNotExist, ModelError
-from core_main_app.components.blob import api as blob_api
 from core_explore_common_app.components.abstract_persistent_query import (
     api as persistent_query_api,
 )
 from core_explore_common_app.components.abstract_persistent_query.models import (
     AbstractPersistentQuery,
 )
+from core_main_app.access_control.exceptions import AccessControlError
+from core_main_app.commons.exceptions import DoesNotExist, ModelError
+from core_main_app.components.blob import api as blob_api
 from core_main_app.components.lock import api as lock_api
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
@@ -551,11 +551,11 @@ def edit_record(request):
             data.id, request.user
         )
     except DoesNotExist:
-        template = template_api.get(str(data.template.id), request=request)
+        template = template_api.get_by_id(str(data.template.id), request=request)
         # Create a new curate data structure
         curate_data_structure = CurateDataStructure(
             user=str(request.user.id),
-            template=str(template.id),
+            template=template,
             name=data.title,
             form_string=data.xml_content,
             data=data,

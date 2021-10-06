@@ -2,6 +2,7 @@
     Common views
 """
 import copy
+import math
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -45,8 +46,6 @@ from core_main_app.views.admin.forms import EditProfileForm
 from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
 from core_main_app.views.user.forms import WorkspaceForm
-
-import math
 
 if "core_curate_app" in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -415,7 +414,7 @@ class DashboardFiles(CommonView):
             detailed_file.append(
                 {
                     "user": username,
-                    "date": file.id.generation_time,
+                    "date": file.creation_date,
                     "file": file,
                     "url": blob_utils.get_blob_download_uri(file, request),
                     "can_change_workspace": check_if_workspace_can_be_changed(file),
@@ -704,7 +703,7 @@ class DashboardTemplates(CommonView):
                     detailed_templates.append(
                         {
                             "template_version": template_version,
-                            "template": template_api.get(
+                            "template": template_api.get_by_id(
                                 template_version.current, request=request
                             ),
                             "user": username,
@@ -1166,7 +1165,7 @@ class DashboardQueries(CommonView):
             items_to_render, page, settings.QUERY_PER_PAGE_PAGINATION
         )
         for result_view in ResultQueryRedirectView.__subclasses__():
-            if result_view.model_name == query_subclass._class_name:
+            if result_view.model_name == query_subclass._meta.object_name:
                 # Get query type
                 url_path = result_view.get_url_path()
                 query_type = result_view.object_name
