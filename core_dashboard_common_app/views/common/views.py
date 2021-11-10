@@ -405,8 +405,13 @@ class DashboardFiles(CommonView):
         else:
             files = blob_api.get_all_by_user(request.user)
 
+        # Paginator
+        page = request.GET.get("page", 1)
+        results_paginator = ResultsPaginator.get_results(
+            files, page, settings.FILE_PER_PAGE_PAGINATION
+        )
         detailed_file = []
-        for file in files:
+        for file in results_paginator:
             try:
                 username = user_api.get_user_by_id(file.user_id).username
             except ObjectDoesNotExist:
@@ -421,6 +426,7 @@ class DashboardFiles(CommonView):
                     "is_owner": True,
                 }
             )
+
         # Add user_form for change owner
         user_form = UserForm(request.user)
         context = {
@@ -432,6 +438,12 @@ class DashboardFiles(CommonView):
             "template": dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
             "menu": self.administration,
             "share_pid_button": "core_linked_records_app" in settings.INSTALLED_APPS,
+            "pagination": _get_pagination_document(
+                page,
+                results_paginator,
+                files.count(),
+                settings.FILE_PER_PAGE_PAGINATION,
+            ),
         }
 
         if self.administration:
@@ -474,6 +486,10 @@ class DashboardFiles(CommonView):
                 },
                 {
                     "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/init_pagination.js",
                     "is_raw": False,
                 },
             ],
@@ -1171,31 +1187,6 @@ class DashboardQueries(CommonView):
                 query_type = result_view.object_name
                 break
 
-        # get pagination information
-        previous_page_number = (
-            results_paginator.previous_page_number()
-            if results_paginator.has_previous()
-            else None
-        )
-        next_page_number = (
-            results_paginator.next_page_number()
-            if results_paginator.has_next()
-            else None
-        )
-        results_count = items_to_render.count()
-        page_count = int(
-            math.ceil(float(results_count) / settings.QUERY_PER_PAGE_PAGINATION)
-        )
-
-        # pagination has other pages?
-        has_other_pages = results_count > settings.QUERY_PER_PAGE_PAGINATION
-
-        # pagination has previous?
-        has_previous = previous_page_number is not None
-
-        # pagination has next?
-        has_next = next_page_number is not None and next_page_number <= page_count
-
         try:
             detailed_query = self._get_detailed_queries(results_paginator)
         except:
@@ -1212,15 +1203,12 @@ class DashboardQueries(CommonView):
             "tab": tab_selected,
             "tabs": tabs,
             "menu": self.administration,
-            "pagination": {
-                "number": int(page),
-                "paginator": {"num_pages": page_count},
-                "has_other_pages": has_other_pages,
-                "previous_page_number": previous_page_number,
-                "next_page_number": next_page_number,
-                "has_previous": has_previous,
-                "has_next": has_next,
-            },
+            "pagination": _get_pagination_document(
+                page,
+                results_paginator,
+                items_to_render.count(),
+                settings.QUERY_PER_PAGE_PAGINATION,
+            ),
         }
 
         if self.administration:
@@ -1361,3 +1349,46 @@ class DashboardQueries(CommonView):
             detailed_queries.append({"query": query, "user": user})
 
         return list(reversed(detailed_queries))
+
+
+def _get_pagination_document(page, results_paginator, number_total, document_per_page):
+    """Get pagination per document.
+
+    Args:
+        page:
+        results_paginator:
+        number_total:
+        document_per_page:
+
+    Returns:
+
+    """
+    # get pagination information
+    previous_page_number = (
+        results_paginator.previous_page_number()
+        if results_paginator.has_previous()
+        else None
+    )
+    next_page_number = (
+        results_paginator.next_page_number() if results_paginator.has_next() else None
+    )
+
+    page_count = int(math.ceil(float(number_total) / document_per_page))
+
+    # pagination has other pages?
+    has_other_pages = number_total > document_per_page
+
+    # pagination has previous?
+    has_previous = previous_page_number is not None
+    # pagination has next?
+    has_next = next_page_number is not None and next_page_number <= page_count
+
+    return {
+        "number": int(page),
+        "paginator": {"num_pages": page_count},
+        "has_other_pages": has_other_pages,
+        "previous_page_number": previous_page_number,
+        "next_page_number": next_page_number,
+        "has_previous": has_previous,
+        "has_next": has_next,
+    }
