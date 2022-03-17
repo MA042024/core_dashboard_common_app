@@ -551,7 +551,17 @@ def edit_record(request):
             data.id, request.user
         )
     except DoesNotExist:
-        template = template_api.get_by_id(str(data.template.id), request=request)
+        try:
+            template = template_api.get_by_id(str(data.template.id), request=request)
+        except AccessControlError:
+            message = Message(
+                messages.ERROR,
+                "Unable to access the template for this data: Access forbidden.",
+            )
+            return HttpResponseBadRequest(
+                json.dumps({"message": message.message, "tags": message.tags}),
+                content_type="application/json",
+            )
         # Create a new curate data structure
         curate_data_structure = CurateDataStructure(
             user=str(request.user.id),
