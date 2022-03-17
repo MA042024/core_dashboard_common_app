@@ -54,6 +54,7 @@ if "core_composer_app" in INSTALLED_APPS:
         api as type_version_manager_api,
     )
     from core_composer_app.components.type import api as type_api
+    from core_composer_app.views.user.ajax import EditTypeVersionManagerView
 
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
@@ -823,7 +824,7 @@ class DashboardTypes(CommonView):
 
             modals = [
                 "core_main_app/admin/templates/list/modals/disable.html",
-                EditTemplateVersionManagerView.get_modal_html_path(),
+                EditTypeVersionManagerView.get_modal_html_path(),
             ]
 
             assets = {
@@ -837,7 +838,7 @@ class DashboardTypes(CommonView):
                         "path": "core_main_app/common/js/templates/list/modals/disable.js",
                         "is_raw": False,
                     },
-                    EditTemplateVersionManagerView.get_modal_js_path(),
+                    EditTypeVersionManagerView.get_modal_js_path(),
                 ],
             }
 
