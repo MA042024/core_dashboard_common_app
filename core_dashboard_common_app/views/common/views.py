@@ -293,6 +293,9 @@ class DashboardRecords(CommonView):
                 },
             ]
 
+        if self.administration:
+            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
+
         return self.common_render(
             request, self.template, context=context, assets=assets, modals=modals
         )
@@ -528,6 +531,7 @@ class DashboardFiles(CommonView):
 
         # Admin
         if self.administration:
+            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
             assets["js"].append(
                 {
                     "path": "core_dashboard_common_app/common/js/init_pagination.js",
