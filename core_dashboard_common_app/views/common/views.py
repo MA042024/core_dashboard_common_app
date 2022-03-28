@@ -277,6 +277,7 @@ class DashboardRecords(CommonView):
 
         if context["share_pid_button"]:
             modals.append("core_linked_records_app/user/sharing/data_detail/modal.html")
+            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
 
             assets["js"] += [
                 {
@@ -528,6 +529,7 @@ class DashboardFiles(CommonView):
 
         # Admin
         if self.administration:
+            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
             assets["js"].append(
                 {
                     "path": "core_dashboard_common_app/common/js/init_pagination.js",
