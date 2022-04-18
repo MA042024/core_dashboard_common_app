@@ -457,8 +457,15 @@ def _change_owner_form(request, form_ids, user_id):
 
     try:
         new_user = user_api.get_user_by_id(user_id)
+        failed_draft = 0
         for form in list_form:
-            curate_data_structure_api.change_owner(form, new_user, request.user)
+            try:
+                curate_data_structure_api.change_owner(form, new_user, request.user)
+            except:
+                failed_draft += 1
+        if failed_draft > 0:
+            error_message = f"Unable to change owner for {failed_draft} document(s)"
+            messages.add_message(request, messages.WARNING, error_message)
     except Exception as e:
         return HttpResponseBadRequest(escape(str(e)))
 
