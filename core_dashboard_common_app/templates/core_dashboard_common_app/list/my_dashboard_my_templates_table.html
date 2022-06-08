@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         {% for object in objects %}
-            <tr objectid="{{object.template_version.id}}">
+            <tr object-id="{{object.template_version.id}}" draggable="true" ondragstart="start()"  ondragover="dragover()">
                 <td>{{ object.title }}</td>
                 <td>{{ object.template.filename }}</td>
                 {% if come_from_admin %}
@@ -49,3 +49,4 @@
         {% endfor %}
     </tbody>
 </table>
+{% include 'core_main_app/common/buttons/save_ordering.html' %}

@@ -941,6 +941,10 @@ class DashboardTemplates(CommonView):
                         "path": "core_main_app/common/js/templates/list/modals/disable.js",
                         "is_raw": False,
                     },
+                    {
+                        "path": "core_main_app/common/js/templates/sort.js",
+                        "is_raw": False,
+                    },
                     EditTemplateVersionManagerView.get_modal_js_path(),
                 ],
             }
