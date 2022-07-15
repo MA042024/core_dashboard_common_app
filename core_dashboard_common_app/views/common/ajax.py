@@ -581,16 +581,17 @@ def edit_record(request):
             curate_data_structure = curate_data_structure_api.upsert(
                 curate_data_structure, request.user
             )
-        except ModelError as e:
+        except ModelError:
             message = Message(
                 messages.ERROR,
-                f"Unable to edit the {get_data_label()}. Please check that a {get_form_label()} with the same name does not already exist.",
+                f"Unable to edit the {get_data_label()}. Please check that a {get_form_label()}"
+                f" with the same name does not already exist.",
             )
             return HttpResponseBadRequest(
                 json.dumps({"message": message.message, "tags": message.tags}),
                 content_type="application/json",
             )
-    except Exception as e:
+    except Exception:
         message = Message(messages.ERROR, "A problem occurred while editing.")
         return HttpResponseBadRequest(
             json.dumps({"message": message.message, "tags": message.tags}),

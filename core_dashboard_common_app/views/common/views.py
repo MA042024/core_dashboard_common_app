@@ -111,7 +111,7 @@ def my_profile_edit(request):
                     )
                 else:
                     _error_while_saving(request, form)
-            except Exception as e:
+            except Exception:
                 _error_while_saving(request, form)
 
             messages.add_message(
@@ -150,7 +150,7 @@ def _get_edit_profile_form(request, url, data=None):
     data = request.POST if data is None else data
     try:
         return EditProfileForm(data)
-    except Exception as e:
+    except Exception:
         message = "A problem with the form has occurred."
         return render(request, url, context={"action_result": message})
 
@@ -221,7 +221,7 @@ class DashboardRecords(CommonView):
             try:
                 loaded_data = data_api.get_all(request.user)
 
-            except AccessControlError as ace:
+            except AccessControlError:
                 loaded_data = data_api.get_none()
 
         else:
@@ -404,7 +404,7 @@ class DashboardFiles(CommonView):
             try:
                 files = blob_api.get_all(request.user)
 
-            except AccessControlError as ace:
+            except AccessControlError:
                 files = blob_api.get_none()
         else:
             files = blob_api.get_all_by_user(request.user)
@@ -583,7 +583,7 @@ class DashboardForms(CommonView):
         if self.administration:
             try:
                 forms = curate_data_structure_api.get_all_with_no_data(request.user)
-            except AccessControlError as ace:
+            except AccessControlError:
                 forms = curate_data_structure_api.get_none()
         else:
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(
@@ -987,7 +987,7 @@ class DashboardWorkspaceRecords(CommonView):
             workspace_data = workspace_data_api.get_all_by_workspace(
                 workspace, request.user
             )
-        except AccessControlError as ace:
+        except AccessControlError:
             workspace_data = workspace_data_api.get_none()
 
         user_can_read = workspace_api.can_user_read_workspace(workspace, request.user)
@@ -1171,7 +1171,7 @@ class DashboardQueries(CommonView):
                     )
                 )
 
-            except AccessControlError as ace:
+            except AccessControlError:
                 abstract_persistent_query_api.get_none(query_subclass)
         else:
             items_to_render = (
