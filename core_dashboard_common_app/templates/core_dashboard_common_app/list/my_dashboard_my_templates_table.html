@@ -1,13 +1,14 @@
 {% load dict_key_extras %}
 {% load get_attribute %}
-<table class="table table-bordered table-striped table-hover">
+<table class="table table-bordered table-striped table-hover fixed-table
+        {% if come_from_admin %}table-col-4{% else %}table-col-3{% endif %}">
     <thead>
-        <th class="col-sm-3">Template name</th>
-        <th class="col-sm-3">Filename</th>
+        <th>Template name</th>
+        <th>Filename</th>
         {% if come_from_admin %}
             <th>User</th>
         {% endif %}
-        <th class="col-sm-4">Actions</th>
+        <th>Actions</th>
     </thead>
     <tbody>
         {% for object in objects %}
@@ -38,14 +39,9 @@
                             {% url 'core_dashboard_app_edit_template' object.template_version.id as edit_url %}
                             {% include 'core_main_app/common/buttons/edit.html' %}
                         {% endif %}
-                        <a href="{% url 'core_main_app_rest_template_download' object.template.id %}" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Download
-                        </a>
                         <button class="btn btn-danger disable-{{data.document}}-btn" objectid="{{ object.template_version.id }}">
                             <i class="fas fa-trash"></i> Disable
                         </button>
-
-
                     {% endif %}
 
                 </td>
