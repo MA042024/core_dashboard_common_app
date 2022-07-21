@@ -14,6 +14,9 @@ openDeleteDocument = function () {
  * @param result_id
  */
 delete_document = function(){
+    var icon = $("[id^='delete-document-yes'] > i").attr("class");
+    // Show loading spinner
+    showSpinner($("[id^='delete-document-yes'] > i"))
 	$.ajax({
         url : dashboardDeleteDocumentUrl,
         type : "POST",
@@ -33,6 +36,9 @@ delete_document = function(){
             var error_message = JSON.parse(data.responseText);
             $.notify(error_message.message);
         }
+    }).always(function() {
+        // get old button icon
+        hideSpinner($("[id^='delete-document-yes'] > i"), icon)
     });
 };
 

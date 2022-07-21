@@ -4,7 +4,10 @@
 openEditRecord = function() {
     var $registryRow = $(this).closest('tr');
     var objectID = $registryRow.attr("objectid");
+    var icon = $(this).find( "i" ).attr("class");
 
+    // Show loading spinner
+    showSpinner($(this).find("i"))
     $.ajax({
         url : editRecordUrl,
         type : "POST",
@@ -16,9 +19,13 @@ openEditRecord = function() {
             window.location = data.url;
         },
         error:function(data){
+
             var myArr = JSON.parse(data.responseText);
             $.notify(myArr.message, {style: myArr.tags });
         }
+    }).always(function() {
+        // get old button icon
+        hideSpinner($(this).find("i"), icon)
     });
 };
 
