@@ -10,6 +10,13 @@ register = template.Library()
 
 @register.filter(name="special_plural")
 def special_case_plural(value):
+    """special_case_plural
+
+    Args:
+        value:
+
+    Returns:
+    """
     if value.endswith("y"):
         return value.replace("y", "ies")
     return f"{value}s"

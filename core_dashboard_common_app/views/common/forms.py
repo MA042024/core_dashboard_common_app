@@ -14,7 +14,7 @@ class ActionForm(forms.Form):
     actions = forms.ChoiceField(label="", required=True, choices=[])
 
     def __init__(self, list_actions):
-        super(ActionForm, self).__init__()
+        super().__init__()
         self.fields["actions"].choices = list_actions
 
 
@@ -24,11 +24,11 @@ class UserForm(forms.Form):
     """
 
     users = forms.ChoiceField(label="", required=True)
-    USERS_OPTIONS = []
+    user_options = []
 
     def __init__(self, current_user):
-        self.USERS_OPTIONS = []
-        self.USERS_OPTIONS.append(("", "-----------"))
+        self.user_options = []
+        self.user_options.append(("", "-----------"))
 
         # We retrieve all users
         sort_users = get_active_users()
@@ -38,8 +38,8 @@ class UserForm(forms.Form):
         # We add them
         for user in sort_users:
             if user.id != current_user.id or current_user.is_superuser:
-                self.USERS_OPTIONS.append((user.id, user.username))
+                self.user_options.append((user.id, user.username))
 
-        super(UserForm, self).__init__()
+        super().__init__()
         self.fields["users"].choices = []
-        self.fields["users"].choices = self.USERS_OPTIONS
+        self.fields["users"].choices = self.user_options

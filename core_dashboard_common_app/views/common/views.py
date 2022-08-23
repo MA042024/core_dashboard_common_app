@@ -15,9 +15,6 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 
 import core_main_app.components.data.api as workspace_data_api
-from core_dashboard_common_app import constants as dashboard_constants
-from core_dashboard_common_app import settings
-from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
 from core_explore_common_app.components.abstract_persistent_query import (
     api as abstract_persistent_query_api,
 )
@@ -55,6 +52,9 @@ if "core_composer_app" in INSTALLED_APPS:
     )
     from core_composer_app.components.type import api as type_api
     from core_composer_app.views.user.ajax import EditTypeVersionManagerView
+from core_dashboard_common_app import constants as dashboard_constants
+from core_dashboard_common_app import settings
+from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
 
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
@@ -101,8 +101,8 @@ def my_profile_edit(request):
             user.email = request.POST["email"]
             try:
                 user_api.upsert(user)
-            except IntegrityError as e:
-                if "unique constraint" in str(e):
+            except IntegrityError as exception:
+                if "unique constraint" in str(exception):
                     message = "A user with the same username already exists."
                     return render(
                         request,
@@ -118,17 +118,16 @@ def my_profile_edit(request):
                 request, messages.INFO, "Profile information edited with success."
             )
             return HttpResponseRedirect(reverse("core_dashboard_profile"))
-    else:
-        user = request.user
-        data = {
-            "firstname": user.first_name,
-            "lastname": user.last_name,
-            "username": user.username,
-            "email": user.email,
-        }
-        form = _get_edit_profile_form(
-            request, dashboard_constants.DASHBOARD_PROFILE_TEMPLATE, data
-        )
+    user = request.user
+    data = {
+        "firstname": user.first_name,
+        "lastname": user.last_name,
+        "username": user.username,
+        "email": user.email,
+    }
+    form = _get_edit_profile_form(
+        request, dashboard_constants.DASHBOARD_PROFILE_TEMPLATE, data
+    )
 
     return render(
         request,
@@ -173,10 +172,23 @@ def _error_while_saving(request, form):
 
 
 class UserDashboardPasswordChangeFormView(CommonView):
+    """User Dashboard Password Change Form View"""
+
     success_url = "core_main_app_homepage"
     template_name = "core_dashboard_common_app/my_profile_change_password.html"
 
     def get(self, request, *args, **kwargs):
+        """get password form
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+
+        """
+
         form = PasswordChangeForm(request.user)
         return render(
             request,
@@ -186,20 +198,31 @@ class UserDashboardPasswordChangeFormView(CommonView):
         )
 
     def post(self, request, *args, **kwargs):
+        """update password
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+
+        """
+
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, "Your password was successfully updated!")
             return redirect(self.success_url)
-        else:
-            messages.error(request, "There are errors on the form.")
-            return render(
-                request,
-                self.template_name,
-                context={"form": form},
-                assets=self._get_assets(),
-            )
+
+        messages.error(request, "There are errors on the form.")
+        return render(
+            request,
+            self.template_name,
+            context={"form": form},
+            assets=self._get_assets(),
+        )
 
     @staticmethod
     def _get_assets():
@@ -215,6 +238,16 @@ class DashboardRecords(CommonView):
     allow_change_workspace_if_public = True
 
     def get(self, request, *args, **kwargs):
+        """get
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+
+        """
 
         # Get records
         if self.administration:
