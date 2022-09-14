@@ -2,6 +2,7 @@
     Common views
 """
 import copy
+import math
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -14,9 +15,6 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 
 import core_main_app.components.data.api as workspace_data_api
-from core_dashboard_common_app import constants as dashboard_constants
-from core_dashboard_common_app import settings
-from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
 from core_explore_common_app.components.abstract_persistent_query import (
     api as abstract_persistent_query_api,
 )
@@ -46,8 +44,6 @@ from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
 from core_main_app.views.user.forms import WorkspaceForm
 
-import math
-
 if "core_curate_app" in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
 if "core_composer_app" in INSTALLED_APPS:
@@ -55,6 +51,10 @@ if "core_composer_app" in INSTALLED_APPS:
         api as type_version_manager_api,
     )
     from core_composer_app.components.type import api as type_api
+    from core_composer_app.views.user.ajax import EditTypeVersionManagerView
+from core_dashboard_common_app import constants as dashboard_constants
+from core_dashboard_common_app import settings
+from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
 
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
@@ -101,8 +101,8 @@ def my_profile_edit(request):
             user.email = request.POST["email"]
             try:
                 user_api.upsert(user)
-            except IntegrityError as e:
-                if "unique constraint" in str(e):
+            except IntegrityError as exception:
+                if "unique constraint" in str(exception):
                     message = "A user with the same username already exists."
                     return render(
                         request,
@@ -111,24 +111,23 @@ def my_profile_edit(request):
                     )
                 else:
                     _error_while_saving(request, form)
-            except Exception as e:
+            except Exception:
                 _error_while_saving(request, form)
 
             messages.add_message(
                 request, messages.INFO, "Profile information edited with success."
             )
             return HttpResponseRedirect(reverse("core_dashboard_profile"))
-    else:
-        user = request.user
-        data = {
-            "firstname": user.first_name,
-            "lastname": user.last_name,
-            "username": user.username,
-            "email": user.email,
-        }
-        form = _get_edit_profile_form(
-            request, dashboard_constants.DASHBOARD_PROFILE_TEMPLATE, data
-        )
+    user = request.user
+    data = {
+        "firstname": user.first_name,
+        "lastname": user.last_name,
+        "username": user.username,
+        "email": user.email,
+    }
+    form = _get_edit_profile_form(
+        request, dashboard_constants.DASHBOARD_PROFILE_TEMPLATE, data
+    )
 
     return render(
         request,
@@ -150,7 +149,7 @@ def _get_edit_profile_form(request, url, data=None):
     data = request.POST if data is None else data
     try:
         return EditProfileForm(data)
-    except Exception as e:
+    except Exception:
         message = "A problem with the form has occurred."
         return render(request, url, context={"action_result": message})
 
@@ -173,10 +172,23 @@ def _error_while_saving(request, form):
 
 
 class UserDashboardPasswordChangeFormView(CommonView):
+    """User Dashboard Password Change Form View"""
+
     success_url = "core_main_app_homepage"
     template_name = "core_dashboard_common_app/my_profile_change_password.html"
 
     def get(self, request, *args, **kwargs):
+        """get password form
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+
+        """
+
         form = PasswordChangeForm(request.user)
         return render(
             request,
@@ -186,20 +198,31 @@ class UserDashboardPasswordChangeFormView(CommonView):
         )
 
     def post(self, request, *args, **kwargs):
+        """update password
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+
+        """
+
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, "Your password was successfully updated!")
             return redirect(self.success_url)
-        else:
-            messages.error(request, "There are errors on the form.")
-            return render(
-                request,
-                self.template_name,
-                context={"form": form},
-                assets=self._get_assets(),
-            )
+
+        messages.error(request, "There are errors on the form.")
+        return render(
+            request,
+            self.template_name,
+            context={"form": form},
+            assets=self._get_assets(),
+        )
 
     @staticmethod
     def _get_assets():
@@ -215,13 +238,23 @@ class DashboardRecords(CommonView):
     allow_change_workspace_if_public = True
 
     def get(self, request, *args, **kwargs):
+        """get
+
+        Args:
+            request:
+            args:
+            kwargs:
+
+        Returns:
+
+        """
 
         # Get records
         if self.administration:
             try:
                 loaded_data = data_api.get_all(request.user)
 
-            except AccessControlError as ace:
+            except AccessControlError:
                 loaded_data = data_api.get_none()
 
         else:
@@ -293,6 +326,9 @@ class DashboardRecords(CommonView):
                     "is_raw": False,
                 },
             ]
+
+        if self.administration:
+            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
 
         return self.common_render(
             request, self.template, context=context, assets=assets, modals=modals
@@ -402,7 +438,7 @@ class DashboardFiles(CommonView):
             try:
                 files = blob_api.get_all(request.user)
 
-            except AccessControlError as ace:
+            except AccessControlError:
                 files = blob_api.get_none()
         else:
             files = blob_api.get_all_by_user(request.user)
@@ -421,7 +457,7 @@ class DashboardFiles(CommonView):
             detailed_file.append(
                 {
                     "user": username,
-                    "date": file.id.generation_time,
+                    "date": file.creation_date,
                     "file": file,
                     "url": blob_utils.get_blob_download_uri(file, request),
                     "can_change_workspace": check_if_workspace_can_be_changed(file),
@@ -581,7 +617,7 @@ class DashboardForms(CommonView):
         if self.administration:
             try:
                 forms = curate_data_structure_api.get_all_with_no_data(request.user)
-            except AccessControlError as ace:
+            except AccessControlError:
                 forms = curate_data_structure_api.get_none()
         else:
             forms = curate_data_structure_api.get_all_by_user_id_with_no_data(
@@ -722,7 +758,7 @@ class DashboardTemplates(CommonView):
                     detailed_templates.append(
                         {
                             "template_version": template_version,
-                            "template": template_api.get(
+                            "template": template_api.get_by_id(
                                 template_version.current, request=request
                             ),
                             "user": username,
@@ -826,7 +862,7 @@ class DashboardTypes(CommonView):
 
             modals = [
                 "core_main_app/admin/templates/list/modals/disable.html",
-                EditTemplateVersionManagerView.get_modal_html_path(),
+                EditTypeVersionManagerView.get_modal_html_path(),
             ]
 
             assets = {
@@ -840,7 +876,7 @@ class DashboardTypes(CommonView):
                         "path": "core_main_app/common/js/templates/list/modals/disable.js",
                         "is_raw": False,
                     },
-                    EditTemplateVersionManagerView.get_modal_js_path(),
+                    EditTypeVersionManagerView.get_modal_js_path(),
                 ],
             }
 
@@ -985,7 +1021,7 @@ class DashboardWorkspaceRecords(CommonView):
             workspace_data = workspace_data_api.get_all_by_workspace(
                 workspace, request.user
             )
-        except AccessControlError as ace:
+        except AccessControlError:
             workspace_data = workspace_data_api.get_none()
 
         user_can_read = workspace_api.can_user_read_workspace(workspace, request.user)
@@ -1169,7 +1205,7 @@ class DashboardQueries(CommonView):
                     )
                 )
 
-            except AccessControlError as ace:
+            except AccessControlError:
                 abstract_persistent_query_api.get_none(query_subclass)
         else:
             items_to_render = (
@@ -1184,7 +1220,7 @@ class DashboardQueries(CommonView):
             items_to_render, page, settings.QUERY_PER_PAGE_PAGINATION
         )
         for result_view in ResultQueryRedirectView.__subclasses__():
-            if result_view.model_name == query_subclass._class_name:
+            if result_view.model_name == query_subclass._meta.object_name:
                 # Get query type
                 url_path = result_view.get_url_path()
                 query_type = result_view.object_name

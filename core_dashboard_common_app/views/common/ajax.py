@@ -10,18 +10,17 @@ from django.urls import reverse
 from django.utils.html import escape
 
 import core_main_app.components.data.api as data_api
-import core_main_app.components.user.api as user_api
 import core_main_app.components.template.api as template_api
-from core_dashboard_common_app import constants
-from core_main_app.access_control.exceptions import AccessControlError
-from core_main_app.commons.exceptions import DoesNotExist, ModelError
-from core_main_app.components.blob import api as blob_api
+import core_main_app.components.user.api as user_api
 from core_explore_common_app.components.abstract_persistent_query import (
     api as persistent_query_api,
 )
 from core_explore_common_app.components.abstract_persistent_query.models import (
     AbstractPersistentQuery,
 )
+from core_main_app.access_control.exceptions import AccessControlError
+from core_main_app.commons.exceptions import DoesNotExist, ModelError
+from core_main_app.components.blob import api as blob_api
 from core_main_app.components.lock import api as lock_api
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
@@ -32,6 +31,7 @@ if "core_curate_app" in INSTALLED_APPS:
         CurateDataStructure,
     )
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
+from core_dashboard_common_app import constants
 
 
 def _check_rights_document(request_user_is_superuser, request_user_id, document_user):
@@ -69,8 +69,8 @@ def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
             list_workspaces.append(workspace)
     except DoesNotExist:
         raise Exception("It seems a workspace is missing. Please refresh the page.")
-    except Exception as e:
-        raise Exception(str(e))
+    except Exception as exception:
+        raise Exception(str(exception))
 
     return list_workspaces
 
@@ -99,8 +99,8 @@ def _get_blobs(blob_ids, user):
             list_blobs.append(blob)
     except DoesNotExist:
         raise Exception("It seems a blob is missing. Please refresh the page.")
-    except Exception as e:
-        raise Exception(str(e))
+    except Exception as exception:
+        raise Exception(str(exception))
 
     return list_blobs
 
@@ -127,8 +127,8 @@ def _get_forms(form_ids, user):
         raise Exception(
             "It seems a " + get_form_label() + " is missing. Please refresh the page."
         )
-    except Exception as e:
-        raise Exception(str(e))
+    except Exception as exception:
+        raise Exception(str(exception))
 
     return list_form
 
@@ -159,8 +159,8 @@ def _get_data(data_ids, user):
         raise Exception(
             "It seems a " + get_data_label() + " is missing. Please refresh the page."
         )
-    except Exception as e:
-        raise Exception(str(e))
+    except Exception as exception:
+        raise Exception(str(exception))
 
     return data_table
 
@@ -190,8 +190,8 @@ def _get_query(query_type, query_ids, user):
             query_table.append(query)
     except DoesNotExist:
         raise Exception("It seems a query is missing. Please refresh the page.")
-    except Exception as e:
-        raise Exception(str(e))
+    except Exception as exception:
+        raise Exception(str(exception))
 
     return query_table
 
@@ -216,13 +216,13 @@ def delete_document(request):
 
     if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
         return _delete_record(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
+    if document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
         return _delete_form(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
+    if document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
         return _delete_file(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.QUERY.value:
+    if document == constants.FUNCTIONAL_OBJECT_ENUM.QUERY.value:
         return _delete_query(request, document_ids)
-    elif document == constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE.value:
+    if document == constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE.value:
         return _delete_workspace(request, document_ids)
 
     return HttpResponseBadRequest({"Bad entries. Please check the parameters."})
@@ -241,8 +241,8 @@ def _delete_workspace(request, workspace_ids):
         list_workspaces = _get_workspaces(
             workspace_ids, request.user.is_superuser, request.user.id
         )
-    except Exception as e:
-        messages.add_message(request, messages.INFO, str(e))
+    except Exception as exception:
+        messages.add_message(request, messages.INFO, str(exception))
         return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
@@ -265,8 +265,8 @@ def _delete_file(request, blob_ids):
     """
     try:
         list_blob = _get_blobs(blob_ids, request.user)
-    except Exception as e:
-        messages.add_message(request, messages.INFO, str(e))
+    except Exception as exception:
+        messages.add_message(request, messages.INFO, str(exception))
         return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
@@ -292,8 +292,8 @@ def _delete_form(request, form_ids):
     """
     try:
         list_form = _get_forms(form_ids, request.user)
-    except Exception as e:
-        messages.add_message(request, messages.INFO, str(e))
+    except Exception as exception:
+        messages.add_message(request, messages.INFO, str(exception))
         return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
@@ -324,8 +324,8 @@ def _delete_record(request, data_ids):
 
     try:
         list_data = _get_data(data_ids, request.user)
-    except Exception as e:
-        messages.add_message(request, messages.INFO, str(e))
+    except Exception as exception:
+        messages.add_message(request, messages.INFO, str(exception))
         return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
@@ -382,8 +382,8 @@ def _delete_query(request, query_ids):
         # Get the persistent queries
         list_query = _get_query(persistent_query_class, query_ids, request.user)
 
-    except Exception as e:
-        messages.add_message(request, messages.INFO, str(e))
+    except Exception as exception:
+        messages.add_message(request, messages.INFO, str(exception))
         return HttpResponse(json.dumps({}), content_type="application/javascript")
 
     try:
@@ -429,9 +429,9 @@ def change_owner_document(request):
 
         if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
             return _change_owner_record(request, document_ids, user_id)
-        elif document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
+        if document == constants.FUNCTIONAL_OBJECT_ENUM.FORM.value:
             return _change_owner_form(request, document_ids, user_id)
-        elif document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
+        if document == constants.FUNCTIONAL_OBJECT_ENUM.FILE.value:
             return _change_owner_file(request, document_ids, user_id)
 
     else:
@@ -452,15 +452,22 @@ def _change_owner_form(request, form_ids, user_id):
     """
     try:
         list_form = _get_forms(form_ids, request.user)
-    except Exception as e:
-        return HttpResponseBadRequest(escape(str(e)))
+    except Exception as exception:
+        return HttpResponseBadRequest(escape(str(exception)))
 
     try:
         new_user = user_api.get_user_by_id(user_id)
+        failed_draft = 0
         for form in list_form:
-            curate_data_structure_api.change_owner(form, new_user, request.user)
-    except Exception as e:
-        return HttpResponseBadRequest(escape(str(e)))
+            try:
+                curate_data_structure_api.change_owner(form, new_user, request.user)
+            except:
+                failed_draft += 1
+        if failed_draft > 0:
+            error_message = f"Unable to change owner for {failed_draft} document(s)"
+            messages.add_message(request, messages.WARNING, error_message)
+    except Exception as exception:
+        return HttpResponseBadRequest(escape(str(exception)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -478,14 +485,14 @@ def _change_owner_record(request, data_ids, user_id):
     """
     try:
         list_data = _get_data(data_ids, request.user)
-    except Exception as e:
-        return HttpResponseBadRequest(escape(str(e)))
+    except Exception as exception:
+        return HttpResponseBadRequest(escape(str(exception)))
     try:
         new_user = user_api.get_user_by_id(user_id)
         for data in list_data:
             data_api.change_owner(data, new_user, request.user)
-    except Exception as e:
-        return HttpResponseBadRequest(escape(str(e)))
+    except Exception as exception:
+        return HttpResponseBadRequest(escape(str(exception)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -502,14 +509,14 @@ def _change_owner_file(request, blob_ids, user_id):
     """
     try:
         list_blob = _get_blobs(blob_ids, request.user)
-    except Exception as e:
-        return HttpResponseBadRequest(escape(str(e)))
+    except Exception as exception:
+        return HttpResponseBadRequest(escape(str(exception)))
     try:
         new_user = user_api.get_user_by_id(user_id)
         for blob in list_blob:
             blob_api.change_owner(blob, new_user, request.user)
-    except Exception as e:
-        return HttpResponseBadRequest(escape(str(e)))
+    except Exception as exception:
+        return HttpResponseBadRequest(escape(str(exception)))
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -551,11 +558,21 @@ def edit_record(request):
             data.id, request.user
         )
     except DoesNotExist:
-        template = template_api.get(str(data.template.id), request=request)
+        try:
+            template = template_api.get_by_id(str(data.template.id), request=request)
+        except AccessControlError:
+            message = Message(
+                messages.ERROR,
+                "Unable to access the template for this data: Access forbidden.",
+            )
+            return HttpResponseBadRequest(
+                json.dumps({"message": message.message, "tags": message.tags}),
+                content_type="application/json",
+            )
         # Create a new curate data structure
         curate_data_structure = CurateDataStructure(
             user=str(request.user.id),
-            template=str(template.id),
+            template=template,
             name=data.title,
             form_string=data.xml_content,
             data=data,
@@ -564,16 +581,17 @@ def edit_record(request):
             curate_data_structure = curate_data_structure_api.upsert(
                 curate_data_structure, request.user
             )
-        except ModelError as e:
+        except ModelError:
             message = Message(
                 messages.ERROR,
-                f"Unable to edit the {get_data_label()}. Please check that a {get_form_label()} with the same name does not already exist.",
+                f"Unable to edit the {get_data_label()}. Please check that a {get_form_label()}"
+                f" with the same name does not already exist.",
             )
             return HttpResponseBadRequest(
                 json.dumps({"message": message.message, "tags": message.tags}),
                 content_type="application/json",
             )
-    except Exception as e:
+    except Exception:
         message = Message(messages.ERROR, "A problem occurred while editing.")
         return HttpResponseBadRequest(
             json.dumps({"message": message.message, "tags": message.tags}),

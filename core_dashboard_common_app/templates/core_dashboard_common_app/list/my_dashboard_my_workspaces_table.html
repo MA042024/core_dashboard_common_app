@@ -22,7 +22,7 @@
                     {% if come_from_admin %}
                         <a class="btn btn-secondary view-data-{{data.document}}-btn"
                            objectid="{{ object.workspace.id }}"
-                           href="{% url 'admin:core_dashboard_workspace_list' object.workspace.id %}">
+                           href="{% url 'core-admin:core_dashboard_workspace_list' object.workspace.id %}">
                             <i class="fas fa-list"></i> View Content
                         </a>
                     {% else %}
@@ -36,7 +36,7 @@
                     {% if object.is_owner %}
                         {% if come_from_admin %}
                             <a class="btn btn-secondary rights-document-btn"
-                                href="{% url 'admin:core_main_edit_rights_workspace' object.workspace.id %}">
+                                href="{% url 'core-admin:core_main_edit_rights_workspace' object.workspace.id %}">
                                 <i class="fas fa-edit"></i> Manage Access
                             </a>
                         {% else %}
