@@ -273,7 +273,7 @@ def _delete_file(request, blob_ids):
         for blob in list_blob:
             blob_api.delete(blob, request.user)
         messages.add_message(request, messages.INFO, "File deleted with success.")
-    except:
+    except Exception:
         messages.add_message(
             request, messages.INFO, "A problem occurred while deleting."
         )
@@ -304,7 +304,7 @@ def _delete_form(request, form_ids):
             messages.INFO,
             get_form_label().capitalize() + " deleted with success.",
         )
-    except:
+    except Exception:
         messages.add_message(
             request, messages.INFO, "A problem occurred while deleting."
         )
@@ -347,7 +347,7 @@ def _delete_record(request, data_ids):
             messages.INFO,
             get_data_label().capitalize() + " deleted with success.",
         )
-    except:
+    except Exception:
         messages.add_message(
             request, messages.INFO, "A problem occurred while deleting."
         )
@@ -395,7 +395,7 @@ def _delete_query(request, query_ids):
             messages.INFO,
             " Query deleted with success.",
         )
-    except:
+    except Exception:
         messages.add_message(
             request, messages.INFO, "A problem occurred while deleting."
         )
@@ -461,7 +461,7 @@ def _change_owner_form(request, form_ids, user_id):
         for form in list_form:
             try:
                 curate_data_structure_api.change_owner(form, new_user, request.user)
-            except:
+            except Exception:
                 failed_draft += 1
         if failed_draft > 0:
             error_message = f"Unable to change owner for {failed_draft} document(s)"

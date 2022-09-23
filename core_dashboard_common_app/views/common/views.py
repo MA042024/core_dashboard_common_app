@@ -271,7 +271,7 @@ class DashboardRecords(CommonView):
             results_paginator.object_list = self._format_data_context(
                 results_paginator.object_list
             )
-        except:
+        except Exception:
             results_paginator.object_list = []
 
         # Add user_form for change owner
@@ -626,7 +626,7 @@ class DashboardForms(CommonView):
 
         try:
             detailed_forms = self._get_detailed_forms(forms)
-        except:
+        except Exception:
             detailed_forms = []
 
         context = {
@@ -1041,7 +1041,7 @@ class DashboardWorkspaceRecords(CommonView):
                 user_can_read,
                 user_can_write,
             )
-        except:
+        except Exception:
             results_paginator.object_list = []
 
         # Add user_form for change owner
@@ -1228,7 +1228,7 @@ class DashboardQueries(CommonView):
 
         try:
             detailed_query = self._get_detailed_queries(results_paginator)
-        except:
+        except Exception:
             detailed_query = []
 
         context = {
