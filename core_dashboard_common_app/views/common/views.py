@@ -736,8 +736,13 @@ class DashboardForms(CommonView):
                 request.user.id
             )
 
+        # Paginator
+        page = request.GET.get("page", 1)
+        results_paginator = ResultsPaginator.get_results(
+            forms, page, settings.FORM_PER_PAGE_PAGINATION
+        )
         try:
-            detailed_forms = self._get_detailed_forms(forms)
+            detailed_forms = self._get_detailed_forms(results_paginator)
         except Exception:
             detailed_forms = []
 
@@ -749,6 +754,12 @@ class DashboardForms(CommonView):
             "document": self.document,
             "template": dashboard_constants.DASHBOARD_FORMS_TEMPLATE_TABLE,
             "menu": self.administration,
+            "pagination": _get_pagination_document(
+                page,
+                results_paginator,
+                forms.count(),
+                settings.FORM_PER_PAGE_PAGINATION,
+            ),
         }
 
         modals = [
@@ -771,6 +782,10 @@ class DashboardForms(CommonView):
                 {
                     "path": "core_dashboard_common_app/user/js/init.raw.js",
                     "is_raw": True,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/init_pagination.js",
+                    "is_raw": False,
                 },
             ],
         }
