@@ -32,7 +32,9 @@ from core_main_app.components.template_version_manager import (
 from core_main_app.components.user import api as user_api
 from core_main_app.components.user.api import get_id_username_dict
 from core_main_app.components.workspace import api as workspace_api
-from core_main_app.components.workspace.api import check_if_workspace_can_be_changed
+from core_main_app.components.workspace.api import (
+    check_if_workspace_can_be_changed,
+)
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.labels import get_data_label
 from core_main_app.utils.pagination.django_paginator.results_paginator import (
@@ -92,7 +94,8 @@ def my_profile_edit(request):
     """
     if request.method == "POST":
         form = _get_edit_profile_form(
-            request=request, url=dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE
+            request=request,
+            url=dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
         )
         if form.is_valid():
             user = request.user
@@ -115,7 +118,9 @@ def my_profile_edit(request):
                 _error_while_saving(request, form)
 
             messages.add_message(
-                request, messages.INFO, "Profile information edited with success."
+                request,
+                messages.INFO,
+                "Profile information edited with success.",
             )
             return HttpResponseRedirect(reverse("core_dashboard_profile"))
     user = request.user
@@ -213,7 +218,9 @@ class UserDashboardPasswordChangeFormView(CommonView):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, "Your password was successfully updated!")
+            messages.success(
+                request, "Your password was successfully updated!"
+            )
             return redirect(self.success_url)
 
         messages.error(request, "There are errors on the form.")
@@ -226,14 +233,18 @@ class UserDashboardPasswordChangeFormView(CommonView):
 
     @staticmethod
     def _get_assets():
-        return {"css": ["core_dashboard_common_app/common/css/password_form.css"]}
+        return {
+            "css": ["core_dashboard_common_app/common/css/password_form.css"]
+        }
 
 
 class DashboardRecords(CommonView):
     """List the records."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
-    data_template = dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION
+    data_template = (
+        dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION
+    )
     document = dashboard_constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value
     allow_change_workspace_if_public = True
 
@@ -290,13 +301,16 @@ class DashboardRecords(CommonView):
             ),
             "menu": self.administration,
             "administration": self.administration,
-            "share_pid_button": "core_linked_records_app" in settings.INSTALLED_APPS,
+            "share_pid_button": "core_linked_records_app"
+            in settings.INSTALLED_APPS,
         }
 
         if self.administration:
             context.update(
                 {
-                    "username_list": get_id_username_dict(user_api.get_all_users()),
+                    "username_list": get_id_username_dict(
+                        user_api.get_all_users()
+                    ),
                 }
             )
 
@@ -309,8 +323,12 @@ class DashboardRecords(CommonView):
         assets = self._get_assets()
 
         if context["share_pid_button"]:
-            modals.append("core_linked_records_app/user/sharing/data_detail/modal.html")
-            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
+            modals.append(
+                "core_linked_records_app/user/sharing/data_detail/modal.html"
+            )
+            assets["css"].append(
+                "core_dashboard_common_app/admin/css/share_link.css"
+            ),
 
             assets["js"] += [
                 {
@@ -328,10 +346,16 @@ class DashboardRecords(CommonView):
             ]
 
         if self.administration:
-            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
+            assets["css"].append(
+                "core_dashboard_common_app/admin/css/share_link.css"
+            ),
 
         return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
+            request,
+            self.template,
+            context=context,
+            assets=assets,
+            modals=modals,
         )
 
     def _format_data_context(self, data_list):
@@ -343,7 +367,9 @@ class DashboardRecords(CommonView):
                     "can_read": True,
                     "can_write": True,
                     "is_owner": True,
-                    "can_change_workspace": check_if_workspace_can_be_changed(data),
+                    "can_change_workspace": check_if_workspace_can_be_changed(
+                        data
+                    ),
                 }
             )
         return data_context_list
@@ -384,7 +410,10 @@ class DashboardRecords(CommonView):
         # Admin
         if self.administration:
             assets["js"].append(
-                {"path": dashboard_constants.ADMIN_VIEW_RECORD_RAW, "is_raw": True}
+                {
+                    "path": dashboard_constants.ADMIN_VIEW_RECORD_RAW,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
                 {
@@ -393,26 +422,47 @@ class DashboardRecords(CommonView):
                 }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_COUNT_CHECK, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELECT_ALL, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
+                    "is_raw": False,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_INIT_MENU, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_INIT_MENU,
+                    "is_raw": False,
+                }
             )
         else:
             assets["js"].append(
-                {"path": dashboard_constants.JS_USER_SELECTED_ELEMENT, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.USER_VIEW_RECORD_RAW, "is_raw": True}
+                {
+                    "path": dashboard_constants.USER_VIEW_RECORD_RAW,
+                    "is_raw": True,
+                }
             )
 
         return assets
@@ -460,7 +510,9 @@ class DashboardFiles(CommonView):
                     "date": file.creation_date,
                     "file": file,
                     "url": blob_utils.get_blob_download_uri(file, request),
-                    "can_change_workspace": check_if_workspace_can_be_changed(file),
+                    "can_change_workspace": check_if_workspace_can_be_changed(
+                        file
+                    ),
                     "is_owner": True,
                 }
             )
@@ -475,7 +527,8 @@ class DashboardFiles(CommonView):
             "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE.value,
             "template": dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
             "menu": self.administration,
-            "share_pid_button": "core_linked_records_app" in settings.INSTALLED_APPS,
+            "share_pid_button": "core_linked_records_app"
+            in settings.INSTALLED_APPS,
             "pagination": _get_pagination_document(
                 page,
                 results_paginator,
@@ -513,7 +566,10 @@ class DashboardFiles(CommonView):
                     "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
                     "is_raw": False,
                 },
-                {"path": dashboard_constants.JS_USER_SELECTED_ELEMENT, "is_raw": True},
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True,
+                },
                 {
                     "path": "core_main_app/user/js/workspaces/list/modals/assign_workspace.js",
                     "is_raw": False,
@@ -542,11 +598,15 @@ class DashboardFiles(CommonView):
                     }
                 ]
             )
-            assets["css"].append("core_file_preview_app/user/css/file_preview.css")
+            assets["css"].append(
+                "core_file_preview_app/user/css/file_preview.css"
+            )
             modals.append("core_file_preview_app/user/file_preview_modal.html")
 
         if context["share_pid_button"]:
-            modals.append("core_linked_records_app/user/sharing/data_detail/modal.html")
+            modals.append(
+                "core_linked_records_app/user/sharing/data_detail/modal.html"
+            )
 
             assets["js"] += [
                 {
@@ -565,7 +625,9 @@ class DashboardFiles(CommonView):
 
         # Admin
         if self.administration:
-            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
+            assets["css"].append(
+                "core_dashboard_common_app/admin/css/share_link.css"
+            ),
             assets["js"].append(
                 {
                     "path": "core_dashboard_common_app/common/js/init_pagination.js",
@@ -573,26 +635,48 @@ class DashboardFiles(CommonView):
                 }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_COUNT_CHECK, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELECT_ALL, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
+                    "is_raw": False,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_INIT_MENU, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_INIT_MENU,
+                    "is_raw": False,
+                }
             )
 
         return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
+            request,
+            self.template,
+            context=context,
+            assets=assets,
+            modals=modals,
         )
 
 
@@ -616,7 +700,9 @@ class DashboardForms(CommonView):
         # Get the forms
         if self.administration:
             try:
-                forms = curate_data_structure_api.get_all_with_no_data(request.user)
+                forms = curate_data_structure_api.get_all_with_no_data(
+                    request.user
+                )
             except AccessControlError:
                 forms = curate_data_structure_api.get_none()
         else:
@@ -665,7 +751,9 @@ class DashboardForms(CommonView):
 
         if self.administration:
             # Get all username and corresponding ids
-            user_names = dict((str(x.id), x.username) for x in user_api.get_all_users())
+            user_names = dict(
+                (str(x.id), x.username) for x in user_api.get_all_users()
+            )
             context.update(
                 {
                     "usernames": user_names,
@@ -688,26 +776,42 @@ class DashboardForms(CommonView):
                         "path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD,
                         "is_raw": True,
                     },
-                    {"path": dashboard_constants.JS_ADMIN_COUNT_CHECK, "is_raw": True},
+                    {
+                        "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
+                        "is_raw": True,
+                    },
                     {
                         "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
                         "is_raw": True,
                     },
-                    {"path": dashboard_constants.JS_ADMIN_SELECT_ALL, "is_raw": True},
+                    {
+                        "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
+                        "is_raw": True,
+                    },
                     {
                         "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
                         "is_raw": False,
                     },
-                    {"path": dashboard_constants.JS_ADMIN_INIT_MENU, "is_raw": False},
+                    {
+                        "path": dashboard_constants.JS_ADMIN_INIT_MENU,
+                        "is_raw": False,
+                    },
                 ]
             )
         else:
             assets["js"].append(
-                {"path": dashboard_constants.JS_USER_SELECTED_ELEMENT, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True,
+                }
             )
 
         return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
+            request,
+            self.template,
+            context=context,
+            assets=assets,
+            modals=modals,
         )
 
     def _get_detailed_forms(self, forms):
@@ -740,8 +844,10 @@ class DashboardTemplates(CommonView):
                     request=request
                 )
             else:
-                template_versions = template_version_manager_api.get_all_by_user_id(
-                    request=request
+                template_versions = (
+                    template_version_manager_api.get_all_by_user_id(
+                        request=request
+                    )
                 )
 
             detailed_templates = []
@@ -796,7 +902,11 @@ class DashboardTemplates(CommonView):
             }
 
             return self.common_render(
-                request, self.template, context=context, assets=assets, modals=modals
+                request,
+                self.template,
+                context=context,
+                assets=assets,
+                modals=modals,
             )
         except AccessControlError:
             return self.common_render(
@@ -825,12 +935,16 @@ class DashboardTypes(CommonView):
         try:
             # Get types
             if self.administration:
-                type_versions = type_version_manager_api.get_all_version_manager(
-                    request=request
+                type_versions = (
+                    type_version_manager_api.get_all_version_manager(
+                        request=request
+                    )
                 )
             else:
-                type_versions = type_version_manager_api.get_version_managers_by_user(
-                    request=request
+                type_versions = (
+                    type_version_manager_api.get_version_managers_by_user(
+                        request=request
+                    )
                 )
 
             detailed_types = []
@@ -838,13 +952,17 @@ class DashboardTypes(CommonView):
                 # If the version manager doesn't have a user, the type is global.
                 if type_version.user is not None:
                     try:
-                        username = user_api.get_user_by_id(type_version.user).username
+                        username = user_api.get_user_by_id(
+                            type_version.user
+                        ).username
                     except ObjectDoesNotExist:
                         username = "None"
                     detailed_types.append(
                         {
                             "type_version": type_version,
-                            "type": type_api.get(type_version.current, request=request),
+                            "type": type_api.get(
+                                type_version.current, request=request
+                            ),
                             "user": username,
                             "title": type_version.title,
                         }
@@ -881,7 +999,11 @@ class DashboardTypes(CommonView):
             }
 
             return self.common_render(
-                request, self.template, context=context, assets=assets, modals=modals
+                request,
+                self.template,
+                context=context,
+                assets=assets,
+                modals=modals,
             )
         except AccessControlError:
             return self.common_render(
@@ -913,11 +1035,15 @@ class DashboardWorkspaces(CommonView):
         else:
             # Get the workspace the user can read
             user_workspace_read = list(
-                workspace_api.get_all_workspaces_with_read_access_by_user(request.user)
+                workspace_api.get_all_workspaces_with_read_access_by_user(
+                    request.user
+                )
             )
             # Get the workspace the user can write
             user_workspace_write = list(
-                workspace_api.get_all_workspaces_with_write_access_by_user(request.user)
+                workspace_api.get_all_workspaces_with_write_access_by_user(
+                    request.user
+                )
             )
             # Get the merged list without doublons
             user_workspaces = user_workspace_read + list(
@@ -946,8 +1072,12 @@ class DashboardWorkspaces(CommonView):
                     or user_workspace in user_workspace_read,
                     "can_write": self.administration
                     or user_workspace in user_workspace_write,
-                    "is_public": workspace_api.is_workspace_public(user_workspace),
-                    "is_global": workspace_api.is_workspace_global(user_workspace),
+                    "is_public": workspace_api.is_workspace_public(
+                        user_workspace
+                    ),
+                    "is_global": workspace_api.is_workspace_global(
+                        user_workspace
+                    ),
                 }
             )
 
@@ -966,7 +1096,10 @@ class DashboardWorkspaces(CommonView):
         assets = {
             "css": copy.deepcopy(dashboard_constants.CSS_COMMON),
             "js": [
-                {"path": dashboard_constants.JS_USER_SELECTED_ELEMENT, "is_raw": True},
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True,
+                },
                 {
                     "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
                     "is_raw": False,
@@ -979,7 +1112,9 @@ class DashboardWorkspaces(CommonView):
         }
 
         if not self.administration:
-            modals.append("core_main_app/user/workspaces/list/create_workspace.html")
+            modals.append(
+                "core_main_app/user/workspaces/list/create_workspace.html"
+            )
             assets["js"].append(
                 {
                     "path": "core_main_app/user/js/workspaces/create_workspace.js",
@@ -988,14 +1123,18 @@ class DashboardWorkspaces(CommonView):
             )
 
         if settings.CAN_SET_WORKSPACE_PUBLIC:
-            modals.append("core_main_app/user/workspaces/list/modals/set_public.html")
+            modals.append(
+                "core_main_app/user/workspaces/list/modals/set_public.html"
+            )
             assets["js"].append(
                 {
                     "path": "core_main_app/user/js/workspaces/list/modals/set_public.js",
                     "is_raw": False,
                 }
             )
-            modals.append("core_main_app/user/workspaces/list/modals/set_private.html")
+            modals.append(
+                "core_main_app/user/workspaces/list/modals/set_private.html"
+            )
             assets["js"].append(
                 {
                     "path": "core_main_app/user/js/workspaces/list/modals/set_private.js",
@@ -1004,7 +1143,11 @@ class DashboardWorkspaces(CommonView):
             )
 
         return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
+            request,
+            self.template,
+            context=context,
+            assets=assets,
+            modals=modals,
         )
 
 
@@ -1012,7 +1155,9 @@ class DashboardWorkspaceRecords(CommonView):
     """List the records of a workspace."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
-    data_template = dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION
+    data_template = (
+        dashboard_constants.DASHBOARD_RECORDS_TEMPLATE_TABLE_PAGINATION
+    )
 
     def get(self, request, workspace_id, *args, **kwargs):
         workspace = workspace_api.get_by_id(workspace_id)
@@ -1024,8 +1169,12 @@ class DashboardWorkspaceRecords(CommonView):
         except AccessControlError:
             workspace_data = workspace_data_api.get_none()
 
-        user_can_read = workspace_api.can_user_read_workspace(workspace, request.user)
-        user_can_write = workspace_api.can_user_write_workspace(workspace, request.user)
+        user_can_read = workspace_api.can_user_read_workspace(
+            workspace, request.user
+        )
+        user_can_write = workspace_api.can_user_write_workspace(
+            workspace, request.user
+        )
 
         # Paginator
         page = request.GET.get("page", 1)
@@ -1057,7 +1206,9 @@ class DashboardWorkspaceRecords(CommonView):
         }
 
         # Get all username and corresponding ids
-        user_names = dict((str(x.id), x.username) for x in user_api.get_all_users())
+        user_names = dict(
+            (str(x.id), x.username) for x in user_api.get_all_users()
+        )
         context.update({"usernames": user_names})
         context.update(
             {
@@ -1073,10 +1224,16 @@ class DashboardWorkspaceRecords(CommonView):
         assets = self._get_assets()
 
         return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
+            request,
+            self.template,
+            context=context,
+            assets=assets,
+            modals=modals,
         )
 
-    def _format_data_context(self, data_list, user, user_can_read, user_can_write):
+    def _format_data_context(
+        self, data_list, user, user_can_read, user_can_write
+    ):
         detailed_user_data = []
         for data in data_list:
             is_owner = str(data.user_id) == str(user.id) or self.administration
@@ -1105,8 +1262,14 @@ class DashboardWorkspaceRecords(CommonView):
                     "path": "core_main_app/user/js/workspaces/list/modals/assign_workspace.js",
                     "is_raw": False,
                 },
-                {"path": "core_main_app/common/js/backtoprevious.js", "is_raw": True},
-                {"path": dashboard_constants.USER_VIEW_RECORD_RAW, "is_raw": True},
+                {
+                    "path": "core_main_app/common/js/backtoprevious.js",
+                    "is_raw": True,
+                },
+                {
+                    "path": dashboard_constants.USER_VIEW_RECORD_RAW,
+                    "is_raw": True,
+                },
                 {"path": dashboard_constants.JS_EDIT_RECORD, "is_raw": False},
                 {"path": dashboard_constants.JS_VIEW_RECORD, "is_raw": False},
                 {
@@ -1131,7 +1294,10 @@ class DashboardWorkspaceRecords(CommonView):
         # Admin
         if self.administration:
             assets["js"].append(
-                {"path": dashboard_constants.ADMIN_VIEW_RECORD_RAW, "is_raw": True}
+                {
+                    "path": dashboard_constants.ADMIN_VIEW_RECORD_RAW,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
                 {
@@ -1140,26 +1306,47 @@ class DashboardWorkspaceRecords(CommonView):
                 }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_COUNT_CHECK, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELECT_ALL, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
+                    "is_raw": False,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_INIT_MENU, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_INIT_MENU,
+                    "is_raw": False,
+                }
             )
         else:
             assets["js"].append(
-                {"path": dashboard_constants.JS_USER_SELECTED_ELEMENT, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_USER_SELECTED_ELEMENT,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.USER_VIEW_RECORD_RAW, "is_raw": True}
+                {
+                    "path": dashboard_constants.USER_VIEW_RECORD_RAW,
+                    "is_raw": True,
+                }
             )
 
         return assets
@@ -1169,7 +1356,9 @@ class DashboardQueries(CommonView):
     """List the queries."""
 
     template = dashboard_constants.DASHBOARD_TEMPLATE
-    data_template = dashboard_constants.DASHBOARD_QUERIES_TEMPLATE_TABLE_PAGINATION
+    data_template = (
+        dashboard_constants.DASHBOARD_QUERIES_TEMPLATE_TABLE_PAGINATION
+    )
 
     def get(self, request, *args, **kwargs):
         """Method GET
@@ -1186,7 +1375,9 @@ class DashboardQueries(CommonView):
 
         items_to_render = []
 
-        tab_selected = request.GET.get("tab", persistent_query_subclasses[0].__name__)
+        tab_selected = request.GET.get(
+            "tab", persistent_query_subclasses[0].__name__
+        )
         tabs = []
 
         for subclass in persistent_query_subclasses:
@@ -1208,10 +1399,8 @@ class DashboardQueries(CommonView):
             except AccessControlError:
                 abstract_persistent_query_api.get_none(query_subclass)
         else:
-            items_to_render = (
-                abstract_persistent_query_api.get_all_persistent_queries_by_user(
-                    query_subclass, request.user
-                )
+            items_to_render = abstract_persistent_query_api.get_all_persistent_queries_by_user(
+                query_subclass, request.user
             )
 
         # Paginator
@@ -1253,7 +1442,9 @@ class DashboardQueries(CommonView):
         if self.administration:
             context.update(
                 {
-                    "action_form": ActionForm([("1", "Delete selected queries")]),
+                    "action_form": ActionForm(
+                        [("1", "Delete selected queries")]
+                    ),
                 }
             )
 
@@ -1313,15 +1504,21 @@ class DashboardQueries(CommonView):
                 },
             ],
         }
-        assets["css"].append("core_dashboard_app/common/css/my_dashboard_tabs.css")
-        assets["css"].append("core_dashboard_common_app/common/css/content_query.css")
+        assets["css"].append(
+            "core_dashboard_app/common/css/my_dashboard_tabs.css"
+        )
+        assets["css"].append(
+            "core_dashboard_common_app/common/css/content_query.css"
+        )
         assets["css"].append(
             "core_main_app/libs/highlight/11.0.0/css/atom-one-light.css"
         )
 
         # Admin
         if self.administration:
-            assets["css"].append("core_dashboard_common_app/admin/css/share_link.css"),
+            assets["css"].append(
+                "core_dashboard_common_app/admin/css/share_link.css"
+            ),
             assets["js"].append(
                 {
                     "path": "core_dashboard_common_app/common/js/init_pagination.js",
@@ -1329,22 +1526,40 @@ class DashboardQueries(CommonView):
                 }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_ACTION_DASHBOARD,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_COUNT_CHECK, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_COUNT_CHECK,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_RESET_CHECKBOX,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELECT_ALL, "is_raw": True}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELECT_ALL,
+                    "is_raw": True,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_SELETED_ELEMENT,
+                    "is_raw": False,
+                }
             )
             assets["js"].append(
-                {"path": dashboard_constants.JS_ADMIN_INIT_MENU, "is_raw": False}
+                {
+                    "path": dashboard_constants.JS_ADMIN_INIT_MENU,
+                    "is_raw": False,
+                }
             )
             assets["js"].append(
                 {
@@ -1373,7 +1588,11 @@ class DashboardQueries(CommonView):
             )
 
         return self.common_render(
-            request, self.template, context=context, assets=assets, modals=modals
+            request,
+            self.template,
+            context=context,
+            assets=assets,
+            modals=modals,
         )
 
     def _get_detailed_queries(self, queries):
@@ -1390,7 +1609,9 @@ class DashboardQueries(CommonView):
         return list(reversed(detailed_queries))
 
 
-def _get_pagination_document(page, results_paginator, number_total, document_per_page):
+def _get_pagination_document(
+    page, results_paginator, number_total, document_per_page
+):
     """Get pagination per document.
 
     Args:
@@ -1409,7 +1630,9 @@ def _get_pagination_document(page, results_paginator, number_total, document_per
         else None
     )
     next_page_number = (
-        results_paginator.next_page_number() if results_paginator.has_next() else None
+        results_paginator.next_page_number()
+        if results_paginator.has_next()
+        else None
     )
 
     page_count = int(math.ceil(float(number_total) / document_per_page))

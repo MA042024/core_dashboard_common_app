@@ -5,7 +5,11 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.storage.base import Message
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseServerError,
+)
 from django.urls import reverse
 from django.utils.html import escape
 
@@ -34,7 +38,9 @@ if "core_curate_app" in INSTALLED_APPS:
 from core_dashboard_common_app import constants
 
 
-def _check_rights_document(request_user_is_superuser, request_user_id, document_user):
+def _check_rights_document(
+    request_user_is_superuser, request_user_id, document_user
+):
     """Check if the user is superuser or if the document belongs to the user.
 
     Args:
@@ -44,7 +50,9 @@ def _check_rights_document(request_user_is_superuser, request_user_id, document_
 
     Returns:
     """
-    if not request_user_is_superuser and str(request_user_id) != str(document_user):
+    if not request_user_is_superuser and str(request_user_id) != str(
+        document_user
+    ):
         raise Exception("You don't have the rights to perform this action.")
 
 
@@ -68,7 +76,9 @@ def _get_workspaces(workspace_ids, request_user_is_superuser, request_user_id):
 
             list_workspaces.append(workspace)
     except DoesNotExist:
-        raise Exception("It seems a workspace is missing. Please refresh the page.")
+        raise Exception(
+            "It seems a workspace is missing. Please refresh the page."
+        )
     except Exception as exception:
         raise Exception(str(exception))
 
@@ -125,7 +135,9 @@ def _get_forms(form_ids, user):
             list_form.append(form)
     except DoesNotExist:
         raise Exception(
-            "It seems a " + get_form_label() + " is missing. Please refresh the page."
+            "It seems a "
+            + get_form_label()
+            + " is missing. Please refresh the page."
         )
     except Exception as exception:
         raise Exception(str(exception))
@@ -152,12 +164,16 @@ def _get_data(data_ids, user):
             data = data_api.get_by_id(data_id, user)
 
             # Check the rights
-            _check_rights_document(user.is_superuser, str(user.id), data.user_id)
+            _check_rights_document(
+                user.is_superuser, str(user.id), data.user_id
+            )
 
             data_table.append(data)
     except DoesNotExist:
         raise Exception(
-            "It seems a " + get_data_label() + " is missing. Please refresh the page."
+            "It seems a "
+            + get_data_label()
+            + " is missing. Please refresh the page."
         )
     except Exception as exception:
         raise Exception(str(exception))
@@ -185,11 +201,15 @@ def _get_query(query_type, query_ids, user):
             query = persistent_query_api.get_by_id(query_type, query_id, user)
 
             # Check the rights
-            _check_rights_document(user.is_superuser, str(user.id), query.user_id)
+            _check_rights_document(
+                user.is_superuser, str(user.id), query.user_id
+            )
 
             query_table.append(query)
     except DoesNotExist:
-        raise Exception("It seems a query is missing. Please refresh the page.")
+        raise Exception(
+            "It seems a query is missing. Please refresh the page."
+        )
     except Exception as exception:
         raise Exception(str(exception))
 
@@ -225,7 +245,9 @@ def delete_document(request):
     if document == constants.FUNCTIONAL_OBJECT_ENUM.WORKSPACE.value:
         return _delete_workspace(request, document_ids)
 
-    return HttpResponseBadRequest({"Bad entries. Please check the parameters."})
+    return HttpResponseBadRequest(
+        {"Bad entries. Please check the parameters."}
+    )
 
 
 def _delete_workspace(request, workspace_ids):
@@ -243,7 +265,9 @@ def _delete_workspace(request, workspace_ids):
         )
     except Exception as exception:
         messages.add_message(request, messages.INFO, str(exception))
-        return HttpResponse(json.dumps({}), content_type="application/javascript")
+        return HttpResponse(
+            json.dumps({}), content_type="application/javascript"
+        )
 
     try:
         for workspace in list_workspaces:
@@ -267,12 +291,16 @@ def _delete_file(request, blob_ids):
         list_blob = _get_blobs(blob_ids, request.user)
     except Exception as exception:
         messages.add_message(request, messages.INFO, str(exception))
-        return HttpResponse(json.dumps({}), content_type="application/javascript")
+        return HttpResponse(
+            json.dumps({}), content_type="application/javascript"
+        )
 
     try:
         for blob in list_blob:
             blob_api.delete(blob, request.user)
-        messages.add_message(request, messages.INFO, "File deleted with success.")
+        messages.add_message(
+            request, messages.INFO, "File deleted with success."
+        )
     except Exception:
         messages.add_message(
             request, messages.INFO, "A problem occurred while deleting."
@@ -294,7 +322,9 @@ def _delete_form(request, form_ids):
         list_form = _get_forms(form_ids, request.user)
     except Exception as exception:
         messages.add_message(request, messages.INFO, str(exception))
-        return HttpResponse(json.dumps({}), content_type="application/javascript")
+        return HttpResponse(
+            json.dumps({}), content_type="application/javascript"
+        )
 
     try:
         for form in list_form:
@@ -326,7 +356,9 @@ def _delete_record(request, data_ids):
         list_data = _get_data(data_ids, request.user)
     except Exception as exception:
         messages.add_message(request, messages.INFO, str(exception))
-        return HttpResponse(json.dumps({}), content_type="application/javascript")
+        return HttpResponse(
+            json.dumps({}), content_type="application/javascript"
+        )
 
     try:
         for data in list_data:
@@ -334,7 +366,9 @@ def _delete_record(request, data_ids):
             if lock_api.is_object_locked(data.id, request.user):
                 message = Message(
                     messages.ERROR,
-                    "The " + get_data_label() + " is locked. You can't edit it.",
+                    "The "
+                    + get_data_label()
+                    + " is locked. You can't edit it.",
                 )
                 return HttpResponseBadRequest(
                     json.dumps({"message": message.message}),
@@ -380,11 +414,15 @@ def _delete_query(request, query_ids):
         )
 
         # Get the persistent queries
-        list_query = _get_query(persistent_query_class, query_ids, request.user)
+        list_query = _get_query(
+            persistent_query_class, query_ids, request.user
+        )
 
     except Exception as exception:
         messages.add_message(request, messages.INFO, str(exception))
-        return HttpResponse(json.dumps({}), content_type="application/javascript")
+        return HttpResponse(
+            json.dumps({}), content_type="application/javascript"
+        )
 
     try:
         for query in list_query:
@@ -424,7 +462,8 @@ def change_owner_document(request):
         document_ids = request.POST.getlist("document_id[]", [])
         if len(document_ids) > 1 and not request.user.is_superuser:
             return HttpResponseServerError(
-                {"You don't have the rights to perform this action."}, status=403
+                {"You don't have the rights to perform this action."},
+                status=403,
             )
 
         if document == constants.FUNCTIONAL_OBJECT_ENUM.RECORD.value:
@@ -435,7 +474,9 @@ def change_owner_document(request):
             return _change_owner_file(request, document_ids, user_id)
 
     else:
-        return HttpResponseBadRequest({"Bad entries. Please check the parameters."})
+        return HttpResponseBadRequest(
+            {"Bad entries. Please check the parameters."}
+        )
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
 
@@ -460,11 +501,15 @@ def _change_owner_form(request, form_ids, user_id):
         failed_draft = 0
         for form in list_form:
             try:
-                curate_data_structure_api.change_owner(form, new_user, request.user)
+                curate_data_structure_api.change_owner(
+                    form, new_user, request.user
+                )
             except Exception:
                 failed_draft += 1
         if failed_draft > 0:
-            error_message = f"Unable to change owner for {failed_draft} document(s)"
+            error_message = (
+                f"Unable to change owner for {failed_draft} document(s)"
+            )
             messages.add_message(request, messages.WARNING, error_message)
     except Exception as exception:
         return HttpResponseBadRequest(escape(str(exception)))
@@ -535,7 +580,9 @@ def edit_record(request):
     except DoesNotExist:
         message = Message(
             messages.ERROR,
-            "It seems a " + get_data_label() + " is missing. Please refresh the page.",
+            "It seems a "
+            + get_data_label()
+            + " is missing. Please refresh the page.",
         )
         return HttpResponseBadRequest(
             json.dumps({"message": message.message, "tags": message.tags}),
@@ -545,7 +592,8 @@ def edit_record(request):
     # Check if the data is locked
     if lock_api.is_object_locked(data.id, request.user):
         message = Message(
-            messages.ERROR, "The " + get_data_label() + " is locked. You can't edit it."
+            messages.ERROR,
+            "The " + get_data_label() + " is locked. You can't edit it.",
         )
         return HttpResponseBadRequest(
             json.dumps({"message": message.message, "tags": message.tags}),
@@ -559,7 +607,9 @@ def edit_record(request):
         )
     except DoesNotExist:
         try:
-            template = template_api.get_by_id(str(data.template.id), request=request)
+            template = template_api.get_by_id(
+                str(data.template.id), request=request
+            )
         except AccessControlError:
             message = Message(
                 messages.ERROR,
@@ -600,7 +650,11 @@ def edit_record(request):
 
     return HttpResponse(
         json.dumps(
-            {"url": reverse("core_curate_enter_data", args=(curate_data_structure.id,))}
+            {
+                "url": reverse(
+                    "core_curate_enter_data", args=(curate_data_structure.id,)
+                )
+            }
         ),
         content_type="application/javascript",
     )

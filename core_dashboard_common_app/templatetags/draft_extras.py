@@ -25,7 +25,9 @@ def has_draft(data, user):
     """
     try:
         # Check if a curate data structure already exists
-        curate_data_structure = curate_data_structure_api.get_by_data_id(data.id, user)
+        curate_data_structure = curate_data_structure_api.get_by_data_id(
+            data.id, user
+        )
     except Exception:
         curate_data_structure = None
 
