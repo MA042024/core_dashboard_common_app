@@ -68,7 +68,11 @@ def home(request):
 
     Returns:
     """
-    return render(request, dashboard_constants.DASHBOARD_HOME_TEMPLATE)
+    return render(
+        request,
+        dashboard_constants.DASHBOARD_HOME_TEMPLATE,
+        context={"page_title": "Dashboard"},
+    )
 
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
@@ -80,7 +84,11 @@ def my_profile(request):
 
     Returns:
     """
-    return render(request, dashboard_constants.DASHBOARD_PROFILE_TEMPLATE)
+    return render(
+        request,
+        dashboard_constants.DASHBOARD_PROFILE_TEMPLATE,
+        context={"page_title": "My Profile"},
+    )
 
 
 @login_required(login_url=reverse_lazy("core_main_app_login"))
@@ -110,7 +118,11 @@ def my_profile_edit(request):
                     return render(
                         request,
                         dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
-                        context={"form": form, "action_result": message},
+                        context={
+                            "form": form,
+                            "action_result": message,
+                            "page_title": "Error",
+                        },
                     )
                 else:
                     _error_while_saving(request, form)
@@ -137,7 +149,7 @@ def my_profile_edit(request):
     return render(
         request,
         dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
-        context={"form": form},
+        context={"form": form, "page_title": "Edit Profile"},
     )
 
 
@@ -156,7 +168,11 @@ def _get_edit_profile_form(request, url, data=None):
         return EditProfileForm(data)
     except Exception:
         message = "A problem with the form has occurred."
-        return render(request, url, context={"action_result": message})
+        return render(
+            request,
+            url,
+            context={"action_result": message, "page_title": "Error"},
+        )
 
 
 def _error_while_saving(request, form):
@@ -172,7 +188,11 @@ def _error_while_saving(request, form):
     return render(
         request,
         dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
-        context={"form": form, "action_result": message},
+        context={
+            "form": form,
+            "action_result": message,
+            "page_title": "Error",
+        },
     )
 
 
@@ -198,7 +218,7 @@ class UserDashboardPasswordChangeFormView(CommonView):
         return render(
             request,
             self.template_name,
-            context={"form": form},
+            context={"form": form, "page_title": "Change Password"},
             assets=self._get_assets(),
         )
 
@@ -227,7 +247,7 @@ class UserDashboardPasswordChangeFormView(CommonView):
         return render(
             request,
             self.template_name,
-            context={"form": form},
+            context={"form": form, "page_title": "Change Password"},
             assets=self._get_assets(),
         )
 
@@ -349,6 +369,9 @@ class DashboardRecords(CommonView):
             assets["css"].append(
                 "core_dashboard_common_app/admin/css/share_link.css"
             ),
+
+        # Set page title
+        context.update({"page_title": "Dashboard"})
 
         return self.common_render(
             request,
@@ -671,6 +694,9 @@ class DashboardFiles(CommonView):
                 }
             )
 
+        # Set page title
+        context.update({"page_title": "Dashboard"})
+
         return self.common_render(
             request,
             self.template,
@@ -806,6 +832,9 @@ class DashboardForms(CommonView):
                 }
             )
 
+        # Set page title
+        context.update({"page_title": "Dashboard"})
+
         return self.common_render(
             request,
             self.template,
@@ -901,6 +930,9 @@ class DashboardTemplates(CommonView):
                 ],
             }
 
+            # Set page title
+            context.update({"page_title": "Dashboard"})
+
             return self.common_render(
                 request,
                 self.template,
@@ -912,7 +944,11 @@ class DashboardTemplates(CommonView):
             return self.common_render(
                 request,
                 "core_main_app/common/commons/error.html",
-                context={"error": "Access Forbidden", "status_code": 403},
+                context={
+                    "error": "Access Forbidden",
+                    "status_code": 403,
+                    "page_title": "Error",
+                },
             )
 
 
@@ -997,6 +1033,8 @@ class DashboardTypes(CommonView):
                     EditTypeVersionManagerView.get_modal_js_path(),
                 ],
             }
+            # Set page title
+            context.update({"page_title": "Dashboard"})
 
             return self.common_render(
                 request,
@@ -1009,7 +1047,11 @@ class DashboardTypes(CommonView):
             return self.common_render(
                 request,
                 "core_main_app/common/commons/error.html",
-                context={"error": "Access Forbidden", "status_code": 403},
+                context={
+                    "error": "Access Forbidden",
+                    "status_code": 403,
+                    "page_title": "Error",
+                },
             )
 
 
@@ -1142,6 +1184,9 @@ class DashboardWorkspaces(CommonView):
                 }
             )
 
+        # Set page title
+        context.update({"page_title": "Dashboard"})
+
         return self.common_render(
             request,
             self.template,
@@ -1222,6 +1267,9 @@ class DashboardWorkspaceRecords(CommonView):
         modals = self._get_modals()
 
         assets = self._get_assets()
+
+        # Set page title
+        context.update({"page_title": "Dashboard"})
 
         return self.common_render(
             request,
@@ -1586,6 +1634,9 @@ class DashboardQueries(CommonView):
                     "is_raw": True,
                 }
             )
+
+        # Set page title
+        context.update({"page_title": "Dashboard"})
 
         return self.common_render(
             request,
