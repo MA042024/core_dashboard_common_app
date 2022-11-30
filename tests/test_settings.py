@@ -61,3 +61,5 @@ TEMPLATES = [
 CELERYBEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CUSTOM_NAME = "Curator"
 ROOT_URLCONF = "tests.urls"
+MONGODB_INDEXING = False
+MONGODB_ASYNC_SAVE = False
