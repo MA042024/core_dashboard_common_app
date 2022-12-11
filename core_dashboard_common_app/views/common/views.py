@@ -1,5 +1,4 @@
-"""
-    Common views
+""" Common views
 """
 import copy
 import math
@@ -346,9 +345,7 @@ class DashboardRecords(CommonView):
             modals.append(
                 "core_linked_records_app/user/sharing/data_detail/modal.html"
             )
-            assets["css"].append(
-                "core_dashboard_common_app/admin/css/share_link.css"
-            ),
+            assets["css"].append("core_main_app/common/css/share_link.css"),
 
             assets["js"] += [
                 {
@@ -364,11 +361,6 @@ class DashboardRecords(CommonView):
                     "is_raw": False,
                 },
             ]
-
-        if self.administration:
-            assets["css"].append(
-                "core_dashboard_common_app/admin/css/share_link.css"
-            ),
 
         # Set page title
         context.update({"page_title": "Dashboard"})
@@ -631,6 +623,7 @@ class DashboardFiles(CommonView):
                 "core_linked_records_app/user/sharing/data_detail/modal.html"
             )
 
+            assets["css"].append("core_main_app/common/css/share_link.css"),
             assets["js"] += [
                 {
                     "path": "core_main_app/user/js/sharing_modal.js",
@@ -648,9 +641,6 @@ class DashboardFiles(CommonView):
 
         # Admin
         if self.administration:
-            assets["css"].append(
-                "core_dashboard_common_app/admin/css/share_link.css"
-            ),
             assets["js"].append(
                 {
                     "path": "core_dashboard_common_app/common/js/init_pagination.js",
@@ -1580,12 +1570,10 @@ class DashboardQueries(CommonView):
         assets["css"].append(
             "core_main_app/libs/highlight/11.0.0/css/atom-one-light.css"
         )
+        assets["css"].append("core_main_app/common/css/share_link.css"),
 
         # Admin
         if self.administration:
-            assets["css"].append(
-                "core_dashboard_common_app/admin/css/share_link.css"
-            ),
             assets["js"].append(
                 {
                     "path": "core_dashboard_common_app/common/js/init_pagination.js",
