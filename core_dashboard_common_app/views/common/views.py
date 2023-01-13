@@ -412,6 +412,14 @@ class DashboardRecords(CommonView):
                 {"path": dashboard_constants.JS_EDIT_RECORD, "is_raw": False},
                 {"path": dashboard_constants.JS_VIEW_RECORD, "is_raw": False},
                 {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT,
+                    "is_raw": False,
+                },
+                {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                    "is_raw": True,
+                },
+                {
                     "path": dashboard_constants.JS_COMMON_FUNCTION_CHANGE_OWNER,
                     "is_raw": False,
                 },
@@ -762,6 +770,14 @@ class DashboardForms(CommonView):
             "css": dashboard_constants.CSS_COMMON,
             "js": [
                 {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT,
+                    "is_raw": False,
+                },
+                {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                    "is_raw": True,
+                },
+                {
                     "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
                     "is_raw": False,
                 },
@@ -934,6 +950,14 @@ class DashboardTemplates(CommonView):
                     {
                         "path": "core_main_app/common/js/templates/sort.js",
                         "is_raw": False,
+                    },
+                    {
+                        "path": dashboard_constants.JS_OPEN_DOCUMENT,
+                        "is_raw": False,
+                    },
+                    {
+                        "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                        "is_raw": True,
                     },
                     EditTemplateVersionManagerView.get_modal_js_path(),
                 ],
@@ -1329,6 +1353,14 @@ class DashboardWorkspaceRecords(CommonView):
                 },
                 {"path": dashboard_constants.JS_EDIT_RECORD, "is_raw": False},
                 {"path": dashboard_constants.JS_VIEW_RECORD, "is_raw": False},
+                {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT,
+                    "is_raw": False,
+                },
+                {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                    "is_raw": True,
+                },
                 {
                     "path": "core_dashboard_common_app/user/js/init.raw.js",
                     "is_raw": True,
