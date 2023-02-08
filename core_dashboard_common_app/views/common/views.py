@@ -416,7 +416,7 @@ class DashboardRecords(CommonView):
                     "is_raw": False,
                 },
                 {
-                    "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                    "path": "core_dashboard_common_app/common/js/list/open_record.raw.js",
                     "is_raw": True,
                 },
                 {
@@ -774,7 +774,7 @@ class DashboardForms(CommonView):
                     "is_raw": False,
                 },
                 {
-                    "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                    "path": "core_dashboard_common_app/common/js/list/open_form.raw.js",
                     "is_raw": True,
                 },
                 {
@@ -956,7 +956,7 @@ class DashboardTemplates(CommonView):
                         "is_raw": False,
                     },
                     {
-                        "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
+                        "path": "core_dashboard_common_app/common/js/list/open_template.raw.js",
                         "is_raw": True,
                     },
                     EditTemplateVersionManagerView.get_modal_js_path(),
@@ -1353,14 +1353,6 @@ class DashboardWorkspaceRecords(CommonView):
                 },
                 {"path": dashboard_constants.JS_EDIT_RECORD, "is_raw": False},
                 {"path": dashboard_constants.JS_VIEW_RECORD, "is_raw": False},
-                {
-                    "path": dashboard_constants.JS_OPEN_DOCUMENT,
-                    "is_raw": False,
-                },
-                {
-                    "path": dashboard_constants.JS_OPEN_DOCUMENT_RAW,
-                    "is_raw": True,
-                },
                 {
                     "path": "core_dashboard_common_app/user/js/init.raw.js",
                     "is_raw": True,

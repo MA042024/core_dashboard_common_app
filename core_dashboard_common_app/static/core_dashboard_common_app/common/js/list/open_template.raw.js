@@ -1,0 +1,1 @@
+var openTemplateUrl = "{% url 'core_main_app_xsd_text_editor_view' %}";

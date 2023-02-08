@@ -78,9 +78,6 @@ JS_EDIT_RECORD = "core_dashboard_common_app/user/js/list/edit_record.js"
 USER_VIEW_RECORD_RAW = (
     "core_dashboard_common_app/user/js/list/view_record.raw.js"
 )
-JS_OPEN_DOCUMENT_RAW = (
-    "core_dashboard_common_app/common/js/list/open_document.raw.js"
-)
 JS_VIEW_RECORD = "core_dashboard_common_app/common/js/list/view_record.js"
 JS_OPEN_DOCUMENT = "core_dashboard_common_app/common/js/list/open_document.js"
 
