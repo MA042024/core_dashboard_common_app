@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 
 import core_main_app.components.data.api as workspace_data_api
 from core_explore_common_app.components.abstract_persistent_query import (
@@ -58,7 +58,7 @@ from core_dashboard_common_app import settings
 from core_dashboard_common_app.views.common.forms import ActionForm, UserForm
 
 
-@login_required(login_url=reverse_lazy("core_main_app_login"))
+@login_required
 def home(request):
     """Home page.
 
@@ -74,7 +74,7 @@ def home(request):
     )
 
 
-@login_required(login_url=reverse_lazy("core_main_app_login"))
+@login_required
 def my_profile(request):
     """User's profile information page.
 
@@ -86,11 +86,14 @@ def my_profile(request):
     return render(
         request,
         dashboard_constants.DASHBOARD_PROFILE_TEMPLATE,
-        context={"page_title": "My Profile"},
+        context={
+            "page_title": "My Profile",
+            "ENABLE_2FA": settings.ENABLE_2FA,
+        },
     )
 
 
-@login_required(login_url=reverse_lazy("core_main_app_login"))
+@login_required
 def my_profile_edit(request):
     """Edit the profile.
 
@@ -102,7 +105,7 @@ def my_profile_edit(request):
     if request.method == "POST":
         form = _get_edit_profile_form(
             request=request,
-            url=dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
+            template=dashboard_constants.DASHBOARD_PROFILE_EDIT_TEMPLATE,
         )
         if form.is_valid():
             user = request.user
@@ -152,12 +155,12 @@ def my_profile_edit(request):
     )
 
 
-def _get_edit_profile_form(request, url, data=None):
+def _get_edit_profile_form(request, template, data=None):
     """Edit the profile.
 
     Args:
         request
-        url
+        template
         data
 
     Returns:
@@ -169,7 +172,7 @@ def _get_edit_profile_form(request, url, data=None):
         message = "A problem with the form has occurred."
         return render(
             request,
-            url,
+            template,
             context={"action_result": message, "page_title": "Error"},
         )
 

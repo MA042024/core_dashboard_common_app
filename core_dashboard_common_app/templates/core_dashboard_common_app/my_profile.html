@@ -7,6 +7,11 @@
 	<a class="btn btn-secondary" onclick=" href='{% url 'core_dashboard_profile_edit' %}'">
         <i class="fas fa-edit"></i> Edit Profile
     </a>
+    {% if data.ENABLE_2FA %}
+    <a class="btn btn-secondary" onclick=" href='{% url 'two_factor:profile' %}'">
+        <i class="fas fa-shield-alt"></i> Account Security
+    </a>
+    {% endif %}
 	<a class="btn btn-secondary" onclick=" href='{% url 'core_dashboard_profile_change_password' %}'">
         <i class="fas fa-lock"></i> Change Password
     </a>

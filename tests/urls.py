@@ -1,10 +1,9 @@
 """
     Url router for the dashboard common
 """
+from django.conf.urls import include
 from django.contrib.auth.decorators import login_required
 from django.urls import re_path
-from django.urls import reverse_lazy
-from django.conf.urls import include
 
 from core_dashboard_common_app.views.common import (
     ajax,
@@ -29,7 +28,6 @@ urlpatterns = [
         r"^forms$",
         login_required(
             dashboard_common_app_common_views.DashboardForms.as_view(),
-            login_url=reverse_lazy("core_main_app_login"),
         ),
         name="core_dashboard_common_forms",
     ),
