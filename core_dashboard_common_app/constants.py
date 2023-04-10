@@ -51,20 +51,14 @@ MODALS_COMMON_CHANGE_OWNER = (
 # TODO: replace with the constants in core main app once they are done
 CSS_COMMON = [
     "core_main_app/common/css/XMLTree.css",
-    "core_main_app/libs/datatables/1.10.13/css/jquery.dataTables.css",
     "core_main_app/common/css/table.css",
     "core_dashboard_common_app/common/css/list.css",
 ]
 JS_COMMON = [
-    {
-        "path": "core_main_app/libs/datatables/1.10.13/js/jquery.dataTables.js",
-        "is_raw": True,
-    },
     {"path": "core_dashboard_common_app/user/js/init.js", "is_raw": False},
 ]
 
 JS_INIT_USER = "core_dashboard_common_app/user/js/init_user.js"
-JS_USER_TABLE = "core_dashboard_common_app/user/js/user_table.js"
 JS_USER_SELECTED_ELEMENT = (
     "core_dashboard_common_app/user/js/get_selected_document.js"
 )
@@ -91,11 +85,9 @@ JS_ADMIN_SELETED_ELEMENT = (
     "core_dashboard_common_app/admin/js/get_selected_document_admin.js"
 )
 JS_ADMIN_INIT_MENU = "core_dashboard_common_app/admin/js/init_admin_menu.js"
-JS_INIT_ADMIN = "core_dashboard_common_app/admin/js/init_admin.js"
 JS_ADMIN_ACTION_DASHBOARD = (
     "core_dashboard_common_app/admin/js/action_dashboard.js"
 )
-JS_ADMIN_TABLE = "core_dashboard_common_app/admin/js/admin_table.js"
 ADMIN_VIEW_RECORD_RAW = (
     "core_dashboard_common_app/admin/js/list/view_record.raw.js"
 )
