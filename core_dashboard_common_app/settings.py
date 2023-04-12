@@ -38,6 +38,3 @@ QUERY_PER_PAGE_PAGINATION = getattr(
 
 # Set Workspace public
 CAN_SET_WORKSPACE_PUBLIC = getattr(settings, "CAN_SET_WORKSPACE_PUBLIC", True)
-
-# Enable 2-factor auth
-ENABLE_2FA = getattr(settings, "ENABLE_2FA", False)

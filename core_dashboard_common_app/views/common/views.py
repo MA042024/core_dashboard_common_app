@@ -88,7 +88,6 @@ def my_profile(request):
         dashboard_constants.DASHBOARD_PROFILE_TEMPLATE,
         context={
             "page_title": "My Profile",
-            "ENABLE_2FA": settings.ENABLE_2FA,
         },
     )
 
