@@ -53,6 +53,7 @@ CSS_COMMON = [
     "core_main_app/common/css/XMLTree.css",
     "core_main_app/common/css/table.css",
     "core_dashboard_common_app/common/css/list.css",
+    "core_main_app/common/css/highlight.css",
 ]
 JS_COMMON = [
     {"path": "core_dashboard_common_app/user/js/init.js", "is_raw": False},
