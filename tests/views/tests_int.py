@@ -3,7 +3,7 @@
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from core_main_app.utils.integration_tests.integration_base_test_case import (
-    MongoIntegrationBaseTestCase,
+    IntegrationBaseTestCase,
 )
 from core_main_app.utils.tests_tools.MockUser import create_mock_user
 from core_dashboard_common_app.views.common.views import DashboardForms
@@ -13,7 +13,7 @@ from tests.views.fixtures import (
 )
 
 
-class TestViewDashboardForms(MongoIntegrationBaseTestCase):
+class TestViewDashboardForms(IntegrationBaseTestCase):
     """Test View Dashboard Forms"""
 
     def setUp(self):
