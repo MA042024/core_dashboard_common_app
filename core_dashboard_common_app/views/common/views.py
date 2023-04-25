@@ -1303,6 +1303,16 @@ class DashboardWorkspaceRecords(CommonView):
 
         assets = self._get_assets()
 
+        if self.administration and workspace.owner:
+            context.update(
+                {
+                    "owner": user_api.get_user_by_id(workspace.owner).username,
+                    "owner_change_url": reverse(
+                        "admin:auth_user_change", args=[workspace.owner]
+                    ),
+                }
+            )
+
         # Set page title
         context.update({"page_title": "Dashboard"})
 
