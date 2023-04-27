@@ -10,9 +10,6 @@
         <div id="delete_document_errors"></div>
 </div>
 <input type="hidden" class="{{data.document}}-id"/>
-<p>
-    The {% if data.administration %} {{data.document|special_plural}}{% else %}{{data.document}}{% endif %} will be erased.
-</p>
 <p>Are you sure you want to delete the {% if data.administration %}{{data.document|special_plural}}{% else %}{{data.document}}{% endif %} ?</p>
 {% endblock %}
 
