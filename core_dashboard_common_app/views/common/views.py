@@ -3,6 +3,7 @@
 import copy
 import math
 
+from core_main_app.commons.exceptions import DoesNotExist
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -301,7 +302,7 @@ class DashboardRecords(CommonView):
         # Data context
         try:
             results_paginator.object_list = self._format_data_context(
-                results_paginator.object_list
+                results_paginator.object_list, request.user
             )
         except Exception:
             results_paginator.object_list = []
@@ -375,21 +376,41 @@ class DashboardRecords(CommonView):
             modals=modals,
         )
 
-    def _format_data_context(self, data_list):
+    def _format_data_context(self, data_list, user):
         data_context_list = []
+
         for data in data_list:
+            forms_count = (
+                len(
+                    curate_data_structure_api.get_all_curate_data_structures_by_data(
+                        data, user
+                    )
+                )
+                if self.administration
+                else 0
+            )
             data_context_list.append(
                 {
                     "data": data,
                     "can_read": True,
                     "can_write": True,
                     "is_owner": True,
+                    "forms_count": forms_count,
+                    "form_id": self._get_form(data, user),
                     "can_change_workspace": check_if_workspace_can_be_changed(
                         data
                     ),
                 }
             )
         return data_context_list
+
+    def _get_form(self, data, user):
+        try:
+            return curate_data_structure_api.get_by_data_id_and_user(
+                data.id, user
+            ).id
+        except DoesNotExist:
+            return None
 
     def _get_assets(self):
         assets = {
@@ -419,6 +440,14 @@ class DashboardRecords(CommonView):
                 },
                 {
                     "path": "core_dashboard_common_app/common/js/list/open_record.raw.js",
+                    "is_raw": True,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/list/delete_data_draft.js",
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/list/open_form.raw.js",
                     "is_raw": True,
                 },
                 {

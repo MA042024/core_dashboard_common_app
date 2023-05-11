@@ -1,7 +1,7 @@
 {# This file is included by other files which already contains <table> tags #}
 {% load dict_key_extras %}
-{% load draft_extras %}
 {% load timestamptags %}
+{% load special_plural %}
 
 <thead>
     <tr>
@@ -32,10 +32,14 @@
             </td>
             {% endif %}
             <td>
+
                 {{ data_loaded.data.title }}
-                {% if data_loaded.data|has_draft:request.user %}
-                    ,<text class="text-danger">&nbsp;Draft</text>
+                {% if data.administration and data_loaded.forms_count > 0  %}
+                    ,<text class="text-danger"> Draft{{ data_loaded.forms_count|pluralize }} </text>
+                {% elif data_loaded.form_id %}
+                    ,<text class="text-danger"> Draft </text>
                 {% endif %}
+
             </td>
             <td>
                 {{ data_loaded.data.template.display_name }}
@@ -60,35 +64,61 @@
             </td>
             {% endif %}
             <td>
-                {% if data_loaded.can_read %}
-                    <button class="btn btn-secondary view-record-btn">
-                        <i class="fas fa-file-alt"></i> View
-                    </button>
-                {% endif %}
-                {% if data.share_pid_button %}
-                    {% include 'core_linked_records_app/user/sharing/data_detail/button_inline.html' %}
-                {% endif %}
-                {% if data_loaded.can_write %}
-                    <button class="btn btn-secondary edit-record-btn">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <a class="btn btn-secondary open-record-btn">
-                        <i class="fas fa-code"></i> Open
-                    </a>
-                    {% if data_loaded.can_change_workspace %}
-                        <button class="btn btn-secondary assign-workspace-record-btn">
-                            <i class="fas fa-folder"></i> Change workspace
-                        </button>
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownActions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-sliders"></i> Actions
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownActions">
+                    {% if data_loaded.can_read %}
+                        <a class="dropdown-item view-record-btn" href="#">
+                            <i class="fas fa-file-alt"></i> View
+                        </a>
                     {% endif %}
-                {% endif %}
-                {% if data_loaded.is_owner %}
-                    <button class="btn btn-secondary change-owner-btn">
-                        <i class="fas fa-user-circle"></i> Change Owner
-                    </button>
-                    <button class="btn btn-danger delete-document-btn">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                {% endif %}
+                    {% if data.share_pid_button %}
+                        <a type="button"  id="pid-sharing" class="share-btn dropdown-item">
+                            <i class="fas fa-link"></i> Share PID
+                        </a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    {% if data_loaded.can_write %}
+                        <a class="dropdown-item edit-record-btn" href="#">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        {% if data_loaded.form_id %}
+                            <a class="dropdown-item" href="{% url 'core_curate_app_xml_text_editor_view'%}?id={{ data_loaded.form_id }}">
+                                <i class="fas fa-code"></i> Open Draft
+                            </a>
+                        {% else %}
+                            <a class="dropdown-item open-record-btn" href="#">
+                                <i class="fas fa-code"></i> Open
+                            </a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item assign-workspace-record-btn {% if not data_loaded.can_change_workspace %}disabled{% endif %}" href="#">
+                            <i class="fas fa-folder"></i> Change workspace
+                        </a>
+                    {% endif %}
+
+                    {% if data_loaded.is_owner %}
+                        <a class="dropdown-item change-owner-btn" href="#"><i class="fas fa-user-circle"></i> Change Owner</a>
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item delete-document-btn" href="#">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    {% endif %}
+                    {% if data.administration and  data_loaded.forms_count > 0 %}
+                        <a objectid="{{data_loaded.data.id}}" class="dropdown-item delete-data-draft-list-btn" href="#">
+                            <i class="fas fa-trash"></i> Delete Draft{{ data_loaded.forms_count|pluralize }}
+                        </a>
+                    {% elif data_loaded.form_id %}
+                        <a objectid="{{data_loaded.form_id}}" class="dropdown-item  delete-draft-btn" href="#">
+                            <i class="fas fa-trash"></i> Delete Draft
+                        </a>
+                    {% endif %}
+
+                </div>
+
             </td>
         </tr>
     {% endfor %}

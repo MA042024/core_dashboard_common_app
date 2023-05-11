@@ -1,3 +1,4 @@
 core-explore-common-app==2.4.*
+core-dashboard-app==2.4.*
 core-parser-app==2.4.*
 core-curate-app==2.4.*

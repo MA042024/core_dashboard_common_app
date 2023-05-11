@@ -2,31 +2,22 @@
  * Open document for text editor.
  */
 
-$(".open-template-btn").on('click',function(){
-    var $registryRow = $(this).closest('tr');
-    var objectID = $registryRow.attr("object-id");
-    var icon = $(this).find( "i" ).attr("class");
-    showSpinner($(this).find("i"))
-    window.location = openTemplateUrl + '?id=' + objectID;
-    hideSpinner($(this).find("i"), icon)
+$(".open-record-btn").on('click',function() {
+    redirectToTextEditor(openRecordUrl,$(this),"id")
 });
 
-
-$(".open-record-btn").on('click',function() {
-    var $registryRow = $(this).closest('tr');
-    var objectID = $registryRow.attr("objectid");
-    var icon = $(this).find( "i" ).attr("class");
-    showSpinner($(this).find("i"))
-    window.location = openRecordUrl + '?id=' + objectID;
-    hideSpinner($(this).find("i"), icon)
+$(".open-record-draft-btn").on('click',function() {
+    redirectToTextEditor(openFormUrl,$(this),"data_id")
 });
 
 $(".open-form-btn").on('click',function() {
-    var $registryRow = $(this).closest('tr');
-    var objectID = $registryRow.attr("objectid");
-    var icon = $(this).find( "i" ).attr("class");
-    showSpinner($(this).find("i"))
-    window.location = openFormUrl + '?id=' + objectID;
-    hideSpinner($(this).find("i"), icon)
+    redirectToTextEditor(openFormUrl,$(this),"id")
 });
 
+redirectToTextEditor = function(openUrl, selector, param) {
+    var objectID = selector.closest('tr').attr("objectid");
+    var icon = selector.find( "i" ).attr("class");
+    showSpinner(selector.find("i"))
+    window.location = openUrl + '?'+param+'=' + objectID;
+    hideSpinner(selector.find("i"), icon)
+};

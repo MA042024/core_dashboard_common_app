@@ -1,9 +1,12 @@
 {% load dict_key_extras %}
 {% load get_attribute %}
-<p>
-    This page lists user templates. Use drag and drop to update the order templates appear
-    on the website, then click on "Save ordering" when done.
-</p>
+
+{% if not come_from_admin %}
+    <p>
+        This page lists user templates. Use drag and drop to update the order templates appear
+        on the website, then click on "Save ordering" when done.
+    </p>
+{% endif %}
 <table class="table table-bordered table-striped table-hover fixed-table
         {% if come_from_admin %}table-col-4{% else %}table-col-3{% endif %}">
     <thead>
@@ -54,4 +57,8 @@
         {% endfor %}
     </tbody>
 </table>
-{% include 'core_main_app/common/buttons/save_ordering.html' %}
+{% if not come_from_admin %}
+    <button  class="btn btn-success mt-3 float-right save-order"  disabled>
+        <i class="fas fa-save"></i> Save ordering
+    </button>
+{% endif %}

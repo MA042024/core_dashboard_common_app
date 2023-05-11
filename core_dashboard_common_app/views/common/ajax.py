@@ -602,8 +602,10 @@ def edit_record(request):
 
     try:
         # Check if a curate data structure already exists
-        curate_data_structure = curate_data_structure_api.get_by_data_id(
-            data.id, request.user
+        curate_data_structure = (
+            curate_data_structure_api.get_by_data_id_and_user(
+                data.id, request.user
+            )
         )
     except DoesNotExist:
         try:

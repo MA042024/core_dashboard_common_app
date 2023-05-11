@@ -56,25 +56,35 @@
                     </td>
                 {% endif %}
                 <td>
-                    <a class="btn btn-secondary download-{{data.document}}-btn" href="{{ object.download_url }}">
-                        <i class="fas fa-list"></i> Download
-                    </a>
-                    {% if data.share_pid_button %}
-                        {% include 'core_linked_records_app/user/sharing/data_detail/button_inline.html' %}
-                    {% endif %}
-                    {% if object.can_change_workspace %}
-                        <a class="btn btn-secondary assign-workspace-record-btn">
-                            <i class="fas fa-folder"></i> Change workspace
-                        </a>
-                    {% endif %}
-                    {% if object.is_owner %}
-                        <a class="btn btn-secondary change-owner-btn">
-                            <i class="fas fa-folder"></i> Change Owner
-                        </a>
-                    {% endif %}
-                    <button class="btn btn-danger delete-document-btn" objectid="{{ object.file.id }}">
-                        <i class="fas fa-trash"></i> Delete
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownActions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-sliders"></i> Actions
                     </button>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownActions">
+                        <a class="dropdown-item download-{{data.document}}-btn" href="{{ object.url }}">
+                            <i class="fas fa-list"></i> Download
+                        </a>
+                        {% if data.share_pid_button %}
+                            <a id="pid-sharing" class="share-btn dropdown-item" href="#">
+                                <i class="fas fa-link"></i> Share PID
+                            </a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        {% if object.can_change_workspace %}
+                            <a class="dropdown-item assign-workspace-record-btn" href="#">
+                                <i class="fas fa-folder"></i> Change workspace
+                            </a>
+                        {% endif %}
+                        {% if object.is_owner %}
+                            <a class="dropdown-item change-owner-btn" href="#">
+                                <i class="fas fa-folder"></i> Change Owner
+                            </a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item delete-document-btn" objectid="{{ object.file.id }}" href="#">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
                 </td>
             </tr>
         {% empty %}
