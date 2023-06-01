@@ -30,27 +30,23 @@
     Total number of {{data.document|special_plural}}: {{ data.number_total }}
 {% endif %}
 
-    {% if data.menu and not data.title %}
-        <div class="dropdown" id="id_actions" style="display:none">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Choose action
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                {% for value, text in data.action_form.fields.actions.choices %}
-                    <li style="cursor:  pointer;" onclick="action_dashboard({{value}});">{{text}}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
+{% if data.menu and not data.title %}
+<div class="dropdown" id="id_actions" style="display:none">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Choose action
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        {% for value, text in data.action_form.fields.actions.choices %}
+            <li style="cursor:  pointer;" onclick="action_dashboard({{value}});">{{text}}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
 
-    <div class="tab-content">
-            {% if  data.document == 'query' or data.user_data  %}
-                {% include data.template with objects=data.user_data group='user' count=data.number_total tabs=data.tabs %}
-            {% else %}
-                No {{data.document|special_plural}} found.
-            {% endif %}
-    </div>
+<div class="tab-content">
+    {% include data.template with objects=data.user_data group='user' count=data.number_total tabs=data.tabs document=data.document%}
+</div>
 {% endblock %}
 
 

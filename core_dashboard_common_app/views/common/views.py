@@ -22,7 +22,7 @@ from core_explore_common_app.components.abstract_persistent_query.models import 
 )
 from core_explore_common_app.views.user.views import ResultQueryRedirectView
 from core_main_app.access_control.exceptions import AccessControlError
-from core_main_app.components.blob import api as blob_api, utils as blob_utils
+from core_main_app.components.blob import api as blob_api
 from core_main_app.components.data import api as data_api
 from core_main_app.components.template import api as template_api
 from core_main_app.components.template_version_manager import (
@@ -43,7 +43,7 @@ from core_main_app.utils.rendering import render
 from core_main_app.views.admin.forms import EditProfileForm
 from core_main_app.views.common.ajax import EditTemplateVersionManagerView
 from core_main_app.views.common.views import CommonView
-from core_main_app.views.user.forms import WorkspaceForm
+from core_main_app.views.user.forms import WorkspaceForm, BlobFileForm
 
 if "core_curate_app" in INSTALLED_APPS:
     import core_curate_app.components.curate_data_structure.api as curate_data_structure_api
@@ -534,7 +534,8 @@ class DashboardFiles(CommonView):
                     "user": username,
                     "date": file.creation_date,
                     "file": file,
-                    "url": blob_utils.get_blob_download_uri(file, request),
+                    "url": f"{reverse('core_main_app_blob_detail')}?id={file.id}",
+                    "download_url": f"{reverse('core_main_app_rest_blob_download', args=(file.id,))}",
                     "can_change_workspace": check_if_workspace_can_be_changed(
                         file
                     ),
@@ -544,6 +545,7 @@ class DashboardFiles(CommonView):
 
         # Add user_form for change owner
         user_form = UserForm(request.user)
+        file_upload_form = BlobFileForm()
         context = {
             "administration": self.administration,
             "number_total": files.count(),
@@ -552,6 +554,7 @@ class DashboardFiles(CommonView):
             "document": dashboard_constants.FUNCTIONAL_OBJECT_ENUM.FILE.value,
             "template": dashboard_constants.DASHBOARD_FILES_TEMPLATE_TABLE,
             "menu": self.administration,
+            "file_upload_form": file_upload_form,
             "share_pid_button": "core_linked_records_app"
             in settings.INSTALLED_APPS,
             "pagination": _get_pagination_document(
@@ -576,6 +579,7 @@ class DashboardFiles(CommonView):
 
         modals = [
             "core_main_app/user/workspaces/list/modals/assign_workspace.html",
+            "core_main_app/user/blob/list/modals/file_upload.html",
             dashboard_constants.MODALS_COMMON_DELETE,
             dashboard_constants.MODALS_COMMON_CHANGE_OWNER,
         ]
@@ -583,6 +587,10 @@ class DashboardFiles(CommonView):
         assets = {
             "css": dashboard_constants.CSS_COMMON,
             "js": [
+                {
+                    "path": "core_dashboard_common_app/user/js/list/modals/upload_file.js",
+                    "is_raw": False,
+                },
                 {
                     "path": "core_dashboard_common_app/user/js/init.raw.js",
                     "is_raw": True,
@@ -613,20 +621,6 @@ class DashboardFiles(CommonView):
                 },
             ],
         }
-
-        if "core_file_preview_app" in INSTALLED_APPS:
-            assets["js"].extend(
-                [
-                    {
-                        "path": "core_file_preview_app/user/js/file_preview.js",
-                        "is_raw": False,
-                    }
-                ]
-            )
-            assets["css"].append(
-                "core_file_preview_app/user/css/file_preview.css"
-            )
-            modals.append("core_file_preview_app/user/file_preview_modal.html")
 
         if context["share_pid_button"]:
             modals.append(

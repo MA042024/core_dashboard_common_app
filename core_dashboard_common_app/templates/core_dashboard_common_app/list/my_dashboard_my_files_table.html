@@ -1,5 +1,12 @@
 {% load dict_key_extras %}
 
+<div class="btn-group float-right">
+	<a class="btn btn-secondary" id="upload-blob-btn">
+        <i class="fas fa-upload"></i> Upload File
+    </a>
+</div>
+<br/><br/>
+
 <table class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
@@ -29,9 +36,9 @@
                 </td>
                 {% endif %}
                 <td>
-                    <span class="blob-link" data-blob-url="{{ object.url }}">
-                        {{ object.file.filename }}
-                    </span>
+                    <a href="{% url 'core_main_app_blob_detail'%}?id={{object.file.id}}">
+                    {{ object.file.filename }}
+                    </a>
                 </td>
                 <td>{{ object.date }}</td>
                 {% if come_from_admin %}
@@ -49,7 +56,7 @@
                     </td>
                 {% endif %}
                 <td>
-                    <a class="btn btn-secondary download-{{data.document}}-btn" href="{{ object.url }}">
+                    <a class="btn btn-secondary download-{{data.document}}-btn" href="{{ object.download_url }}">
                         <i class="fas fa-list"></i> Download
                     </a>
                     {% if data.share_pid_button %}
@@ -70,6 +77,12 @@
                     </button>
                 </td>
             </tr>
+        {% empty %}
+        <tr>
+            <td class="empty" style="text-align: center;" colspan="4">
+                 No {{document}} found.
+            </td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>

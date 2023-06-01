@@ -1,13 +1,14 @@
 """ Unit tests on common dashboard views.
 """
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from core_dashboard_common_app.views.common import views as common_views
-from core_main_app.utils.tests_tools.RequestMock import RequestMock
-from core_main_app.components.workspace import api as workspace_api
 from core_main_app.components.data import api as data_api
 from core_main_app.components.user import api as user_api
+from core_main_app.components.workspace import api as workspace_api
+from core_main_app.utils.tests_tools.MockUser import create_mock_user
+from core_main_app.utils.tests_tools.RequestMock import RequestMock
 
 
 class TestDashboardWorkspaceRecordsGet(TestCase):
@@ -99,3 +100,22 @@ class TestDashboardWorkspaceRecordsGet(TestCase):
 
         self.assertIn("owner", response.keys())
         self.assertIn("owner_change_url", response.keys())
+
+
+class TestDashboardFiles(TestCase):
+    @patch("core_main_app.components.user.api.get_active_users")
+    @patch("core_main_app.components.blob.api.get_all_by_user")
+    def test_dashboard_files_loads_blob_file_form(
+        self, blob_get_all_by_user, user_get_active_users
+    ):
+        files_qs = MagicMock()
+        files_qs.count.return_value = 0
+        blob_get_all_by_user.return_value = files_qs
+        response = RequestMock.do_request_get(
+            common_views.DashboardFiles.as_view(),
+            create_mock_user("1"),
+        )
+        self.assertTrue(
+            '<input type="file" name="file" required id="id_file">'
+            in response.content.decode()
+        )

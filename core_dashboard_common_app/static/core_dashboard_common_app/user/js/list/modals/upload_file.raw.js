@@ -1,0 +1,1 @@
+var uploadFileUrl = "{% url 'core_main_upload_file' %}";

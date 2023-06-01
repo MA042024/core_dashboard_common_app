@@ -3,7 +3,7 @@ Common Forms
 """
 from django import forms
 
-from core_main_app.components.user.api import get_active_users
+from core_main_app.components.user import api as user_api
 
 
 class ActionForm(forms.Form):
@@ -31,7 +31,7 @@ class UserForm(forms.Form):
         self.user_options.append(("", "-----------"))
 
         # We retrieve all users
-        sort_users = get_active_users()
+        sort_users = user_api.get_active_users()
         # We sort by username, case insensitive
         sort_users = sorted(sort_users, key=lambda s: s.username.lower())
 
