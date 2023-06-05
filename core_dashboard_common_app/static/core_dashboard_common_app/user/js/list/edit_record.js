@@ -19,9 +19,8 @@ openEditRecord = function() {
             window.location = data.url;
         },
         error:function(data){
-
-            var myArr = JSON.parse(data.responseText);
-            $.notify(myArr.message, {style: myArr.tags });
+            let jsonResponse = JSON.parse(data.responseText);
+            $.notify(jsonResponse.message, "danger");
         }
     }).always(function() {
         // get old button icon

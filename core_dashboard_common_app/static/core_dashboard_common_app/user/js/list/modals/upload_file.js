@@ -25,7 +25,7 @@ upload_file = function(){
 	    },
         error:function(data){
             var error_message = JSON.parse(data.responseText);
-            $.notify(error_message.message);
+            $.notify(error_message.message, "danger");
         }
     });
 };

@@ -133,7 +133,7 @@ def my_profile_edit(request):
 
             messages.add_message(
                 request,
-                messages.INFO,
+                messages.SUCCESS,
                 "Profile information edited with success.",
             )
             return HttpResponseRedirect(reverse("core_dashboard_profile"))

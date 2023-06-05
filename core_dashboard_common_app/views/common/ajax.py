@@ -264,7 +264,7 @@ def _delete_workspace(request, workspace_ids):
             workspace_ids, request.user.is_superuser, request.user.id
         )
     except Exception as exception:
-        messages.add_message(request, messages.INFO, str(exception))
+        messages.add_message(request, messages.ERROR, str(exception))
         return HttpResponse(
             json.dumps({}), content_type="application/javascript"
         )
@@ -290,7 +290,7 @@ def _delete_file(request, blob_ids):
     try:
         list_blob = _get_blobs(blob_ids, request.user)
     except Exception as exception:
-        messages.add_message(request, messages.INFO, str(exception))
+        messages.add_message(request, messages.ERROR, str(exception))
         return HttpResponse(
             json.dumps({}), content_type="application/javascript"
         )
@@ -299,11 +299,11 @@ def _delete_file(request, blob_ids):
         for blob in list_blob:
             blob_api.delete(blob, request.user)
         messages.add_message(
-            request, messages.INFO, "File deleted with success."
+            request, messages.SUCCESS, "File deleted with success."
         )
     except Exception:
         messages.add_message(
-            request, messages.INFO, "A problem occurred while deleting."
+            request, messages.ERROR, "A problem occurred while deleting."
         )
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
@@ -321,7 +321,7 @@ def _delete_form(request, form_ids):
     try:
         list_form = _get_forms(form_ids, request.user)
     except Exception as exception:
-        messages.add_message(request, messages.INFO, str(exception))
+        messages.add_message(request, messages.ERROR, str(exception))
         return HttpResponse(
             json.dumps({}), content_type="application/javascript"
         )
@@ -331,12 +331,12 @@ def _delete_form(request, form_ids):
             curate_data_structure_api.delete(form, request.user)
         messages.add_message(
             request,
-            messages.INFO,
+            messages.SUCCESS,
             get_form_label().capitalize() + " deleted with success.",
         )
     except Exception:
         messages.add_message(
-            request, messages.INFO, "A problem occurred while deleting."
+            request, messages.ERROR, "A problem occurred while deleting."
         )
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
@@ -355,7 +355,7 @@ def _delete_record(request, data_ids):
     try:
         list_data = _get_data(data_ids, request.user)
     except Exception as exception:
-        messages.add_message(request, messages.INFO, str(exception))
+        messages.add_message(request, messages.ERROR, str(exception))
         return HttpResponse(
             json.dumps({}), content_type="application/javascript"
         )
@@ -378,12 +378,12 @@ def _delete_record(request, data_ids):
             data_api.delete(data, request.user)
         messages.add_message(
             request,
-            messages.INFO,
+            messages.SUCCESS,
             get_data_label().capitalize() + " deleted with success.",
         )
     except Exception:
         messages.add_message(
-            request, messages.INFO, "A problem occurred while deleting."
+            request, messages.ERROR, "A problem occurred while deleting."
         )
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")
@@ -419,7 +419,7 @@ def _delete_query(request, query_ids):
         )
 
     except Exception as exception:
-        messages.add_message(request, messages.INFO, str(exception))
+        messages.add_message(request, messages.ERROR, str(exception))
         return HttpResponse(
             json.dumps({}), content_type="application/javascript"
         )
@@ -430,12 +430,12 @@ def _delete_query(request, query_ids):
 
         messages.add_message(
             request,
-            messages.INFO,
+            messages.SUCCESS,
             " Query deleted with success.",
         )
     except Exception:
         messages.add_message(
-            request, messages.INFO, "A problem occurred while deleting."
+            request, messages.ERROR, "A problem occurred while deleting."
         )
 
     return HttpResponse(json.dumps({}), content_type="application/javascript")

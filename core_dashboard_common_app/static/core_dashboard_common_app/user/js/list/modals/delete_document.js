@@ -30,11 +30,11 @@ delete_document = function(){
 
         },
 		success: function(data){
-		        location.reload(true);
+            location.reload();
 	    },
         error:function(data){
-            var error_message = JSON.parse(data.responseText);
-            $.notify(error_message.message);
+            let error_message = JSON.parse(data.responseText);
+            $.notify(error_message.message, "danger");
         }
     }).always(function() {
         // get old button icon

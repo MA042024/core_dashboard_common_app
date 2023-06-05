@@ -11,7 +11,7 @@ deleteDraft = function(deleteUrl) {
         },
         error:function(data){
             var myArr = JSON.parse(data.responseText);
-            $.notify(myArr.message, {style: myArr.tags });
+            $.notify(myArr.message, "danger");
         }
     })
 };
