@@ -1,7 +1,6 @@
 """
     Url router for the dashboard common
 """
-from django.conf.urls import include
 from django.contrib.auth.decorators import login_required
 from django.urls import re_path
 
@@ -43,5 +42,4 @@ urlpatterns = [
         ),
         name="core_dashboard_common_forms",
     ),
-    re_path(r"^tz_detect/", include("tz_detect.urls")),
 ]
