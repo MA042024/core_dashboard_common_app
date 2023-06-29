@@ -7,9 +7,11 @@
 	<a class="btn btn-secondary" onclick=" href='{% url 'core_dashboard_profile_edit' %}'">
         <i class="fas fa-edit"></i> Edit Profile
     </a>
-	<a class="btn btn-secondary" onclick=" href='{% url 'core_dashboard_profile_change_password' %}'">
+    {% if not data.ENABLE_SAML2_SSO_AUTH %}
+	<a class="btn btn-secondary" onclick=" href='{% url 'password_change' %}'">
         <i class="fas fa-lock"></i> Change Password
     </a>
+    {% endif %}
 </div>
 <br/><br/>
 <div>

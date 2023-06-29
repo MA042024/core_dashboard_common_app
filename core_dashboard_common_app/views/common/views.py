@@ -3,15 +3,12 @@
 import copy
 import math
 
-from core_main_app.commons.exceptions import DoesNotExist
+from django.conf import settings as conf_settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse
 
 import core_main_app.components.data.api as workspace_data_api
@@ -23,6 +20,7 @@ from core_explore_common_app.components.abstract_persistent_query.models import 
 )
 from core_explore_common_app.views.user.views import ResultQueryRedirectView
 from core_main_app.access_control.exceptions import AccessControlError
+from core_main_app.commons.exceptions import DoesNotExist
 from core_main_app.components.blob import api as blob_api
 from core_main_app.components.data import api as data_api
 from core_main_app.components.template import api as template_api
@@ -89,6 +87,7 @@ def my_profile(request):
         dashboard_constants.DASHBOARD_PROFILE_TEMPLATE,
         context={
             "page_title": "My Profile",
+            "ENABLE_SAML2_SSO_AUTH": conf_settings.ENABLE_SAML2_SSO_AUTH,
         },
     )
 
@@ -196,68 +195,6 @@ def _error_while_saving(request, form):
             "page_title": "Error",
         },
     )
-
-
-class UserDashboardPasswordChangeFormView(CommonView):
-    """User Dashboard Password Change Form View"""
-
-    success_url = "core_main_app_homepage"
-    template_name = "core_dashboard_common_app/my_profile_change_password.html"
-
-    def get(self, request, *args, **kwargs):
-        """get password form
-
-        Args:
-            request:
-            args:
-            kwargs:
-
-        Returns:
-
-        """
-
-        form = PasswordChangeForm(request.user)
-        return render(
-            request,
-            self.template_name,
-            context={"form": form, "page_title": "Change Password"},
-            assets=self._get_assets(),
-        )
-
-    def post(self, request, *args, **kwargs):
-        """update password
-
-        Args:
-            request:
-            args:
-            kwargs:
-
-        Returns:
-
-        """
-
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            messages.success(
-                request, "Your password was successfully updated!"
-            )
-            return redirect(self.success_url)
-
-        messages.error(request, "There are errors on the form.")
-        return render(
-            request,
-            self.template_name,
-            context={"form": form, "page_title": "Change Password"},
-            assets=self._get_assets(),
-        )
-
-    @staticmethod
-    def _get_assets():
-        return {
-            "css": ["core_dashboard_common_app/common/css/password_form.css"]
-        }
 
 
 class DashboardRecords(CommonView):
