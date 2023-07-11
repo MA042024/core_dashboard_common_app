@@ -3,6 +3,8 @@
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
+from django.test import override_settings
+
 from core_dashboard_common_app.views.common import views as common_views
 from core_main_app.components.data import api as data_api
 from core_main_app.components.user import api as user_api
@@ -119,3 +121,41 @@ class TestDashboardFiles(TestCase):
             '<input type="file" name="file" required id="id_file">'
             in response.content.decode()
         )
+
+    @patch("core_main_app.components.user.api.get_active_users")
+    @patch("core_main_app.components.blob.api.get_all_by_user")
+    @override_settings(
+        INSTALLED_APPS=[
+            "core_main_app",
+            "core_dashboard_common_app",
+            "core_file_preview_app",
+        ]
+    )
+    def test_dashboard_files_adds_file_preview_files_when_installed(
+        self, blob_get_all_by_user, user_get_active_users
+    ):
+        files_qs = MagicMock()
+        files_qs.count.return_value = 0
+        blob_get_all_by_user.return_value = files_qs
+        response = RequestMock.do_request_get(
+            common_views.DashboardFiles.as_view(),
+            create_mock_user("1"),
+        )
+        self.assertTrue("file_preview.js" in response.content.decode())
+
+    @patch("core_main_app.components.user.api.get_active_users")
+    @patch("core_main_app.components.blob.api.get_all_by_user")
+    @override_settings(
+        INSTALLED_APPS=["core_main_app", "core_dashboard_common_app"]
+    )
+    def test_dashboard_files_does_not_add_file_preview_files_when_not_installed(
+        self, blob_get_all_by_user, user_get_active_users
+    ):
+        files_qs = MagicMock()
+        files_qs.count.return_value = 0
+        blob_get_all_by_user.return_value = files_qs
+        response = RequestMock.do_request_get(
+            common_views.DashboardFiles.as_view(),
+            create_mock_user("1"),
+        )
+        self.assertTrue("file_preview.js" not in response.content.decode())

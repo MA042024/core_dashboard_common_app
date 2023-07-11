@@ -21,7 +21,7 @@ from core_explore_common_app.components.abstract_persistent_query.models import 
 from core_explore_common_app.views.user.views import ResultQueryRedirectView
 from core_main_app.access_control.exceptions import AccessControlError
 from core_main_app.commons.exceptions import DoesNotExist
-from core_main_app.components.blob import api as blob_api
+from core_main_app.components.blob import api as blob_api, utils as blob_utils
 from core_main_app.components.data import api as data_api
 from core_main_app.components.template import api as template_api
 from core_main_app.components.template_version_manager import (
@@ -501,7 +501,9 @@ class DashboardFiles(CommonView):
                     "date": file.creation_date,
                     "file": file,
                     "url": f"{reverse('core_main_app_blob_detail')}?id={file.id}",
-                    "download_url": f"{reverse('core_main_app_rest_blob_download', args=(file.id,))}",
+                    "download_url": blob_utils.get_blob_download_uri(
+                        file, request
+                    ),
                     "can_change_workspace": check_if_workspace_can_be_changed(
                         file
                     ),
@@ -587,6 +589,20 @@ class DashboardFiles(CommonView):
                 },
             ],
         }
+
+        if "core_file_preview_app" in conf_settings.INSTALLED_APPS:
+            assets["js"].extend(
+                [
+                    {
+                        "path": "core_file_preview_app/user/js/file_preview.js",
+                        "is_raw": False,
+                    }
+                ]
+            )
+            assets["css"].append(
+                "core_file_preview_app/user/css/file_preview.css"
+            )
+            modals.append("core_file_preview_app/user/file_preview_modal.html")
 
         if context["share_pid_button"]:
             modals.append(

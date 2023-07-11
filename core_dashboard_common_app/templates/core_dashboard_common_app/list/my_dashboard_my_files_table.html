@@ -36,9 +36,9 @@
                 </td>
                 {% endif %}
                 <td>
-                    <a href="{% url 'core_main_app_blob_detail'%}?id={{object.file.id}}">
-                    {{ object.file.filename }}
-                    </a>
+                    <span class="blob-link" data-blob-url="{{ object.download_url }}">
+                        {{ object.file.filename }}
+                    </span>
                 </td>
                 <td>{{ object.date }}</td>
                 {% if come_from_admin %}
@@ -61,8 +61,11 @@
                     </button>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownActions">
-                        <a class="dropdown-item download-{{data.document}}-btn" href="{{ object.url }}">
-                            <i class="fas fa-list"></i> Download
+                        <a class="dropdown-item" href="{{ object.url }}">
+                            <i class="fas fa-file-alt"></i> View
+                        </a>
+                        <a class="dropdown-item download-{{data.document}}-btn" href="{{ object.download_url }}">
+                            <i class="fas fa-download"></i> Download
                         </a>
                         {% if data.share_pid_button %}
                             <a id="pid-sharing" class="share-btn dropdown-item" href="#">
