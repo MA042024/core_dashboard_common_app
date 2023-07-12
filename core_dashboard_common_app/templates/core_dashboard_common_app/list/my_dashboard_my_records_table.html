@@ -121,5 +121,11 @@
 
             </td>
         </tr>
+    {% empty %}
+        <tr>
+            <td class="empty" style="text-align: center;" colspan="100%">
+                 No {{document}} found.
+            </td>
+        </tr>
     {% endfor %}
 </tbody>

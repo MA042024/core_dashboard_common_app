@@ -16,7 +16,6 @@
             </li>
         {% endfor %}
     </ul>
-    {% if data.number_total != 0 %}
     <div class="tab-content">
         <div role="tabpanel" id="data_table" class="tab-pane active">
             <table class="table table-bordered table-striped table-hover">
@@ -80,15 +79,15 @@
                                     </button>
                             </td>
                     </tr>
+                    {% empty %}
+                        <tr>
+                            <td class="empty" style="text-align: center;" colspan="100%">
+                                 No {{document}} found.
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    {% else %}
-
-    <div class="alert alert-light">
-      No queries found
-    </div>
-    {% endif %}
 </div>
