@@ -69,44 +69,36 @@
                 </button>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownActions">
-                    {% if data_loaded.can_read %}
-                        <a class="dropdown-item view-record-btn" href="#">
-                            <i class="fas fa-file-alt"></i> View
+                    <a class="dropdown-item view-record-btn {% if not data_loaded.can_read %} disabled {% endif %}" href="#">
+                        <i class="fas fa-file-alt"></i> View
+                    </a>
+                    <a type="button"  id="pid-sharing" class="share-btn dropdown-item {% if not data.share_pid_button %} disabled {% endif %}">
+                        <i class="fas fa-link"></i> Share PID
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item edit-record-btn {% if not data_loaded.can_write %} disabled {% endif %}" href="#" >
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    {% if data_loaded.form_id %}
+                        <a class="dropdown-item {% if not data_loaded.can_write %} disabled {% endif %}" href="{% url 'core_curate_app_xml_text_editor_view'%}?id={{ data_loaded.form_id }}">
+                            <i class="fas fa-code"></i> Open Draft
                         </a>
-                    {% endif %}
-                    {% if data.share_pid_button %}
-                        <a type="button"  id="pid-sharing" class="share-btn dropdown-item">
-                            <i class="fas fa-link"></i> Share PID
+                    {% else %}
+                        <a class="dropdown-item open-record-btn {% if not data_loaded.can_write %} disabled {% endif %}" href="#">
+                            <i class="fas fa-code"></i> Open
                         </a>
                     {% endif %}
                     <div class="dropdown-divider"></div>
-                    {% if data_loaded.can_write %}
-                        <a class="dropdown-item edit-record-btn" href="#">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        {% if data_loaded.form_id %}
-                            <a class="dropdown-item" href="{% url 'core_curate_app_xml_text_editor_view'%}?id={{ data_loaded.form_id }}">
-                                <i class="fas fa-code"></i> Open Draft
-                            </a>
-                        {% else %}
-                            <a class="dropdown-item open-record-btn" href="#">
-                                <i class="fas fa-code"></i> Open
-                            </a>
-                        {% endif %}
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item assign-workspace-record-btn {% if not data_loaded.can_change_workspace %}disabled{% endif %}" href="#">
-                            <i class="fas fa-folder"></i> Change workspace
-                        </a>
-                    {% endif %}
-
-                    {% if data_loaded.is_owner %}
-                        <a class="dropdown-item change-owner-btn" href="#"><i class="fas fa-user-circle"></i> Change Owner</a>
-
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item delete-document-btn" href="#">
+                    <a class="dropdown-item assign-workspace-record-btn {% if not data_loaded.can_change_workspace %} disabled {% endif %}" href="#">
+                        <i class="fas fa-folder"></i> Change workspace
+                    </a>
+                    <a class="dropdown-item change-owner-btn {% if not data_loaded.is_owner %} disabled {% endif %}" href="#" >
+                        <i class="fas fa-user-circle"></i> Change Owner
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item delete-document-btn {% if not data_loaded.is_owner %} disabled {% endif %}" href="#">
                             <i class="fas fa-trash"></i> Delete
-                        </a>
-                    {% endif %}
+                    </a>
                     {% if data.administration and  data_loaded.forms_count > 0 %}
                         <a objectid="{{data_loaded.data.id}}" class="dropdown-item delete-data-draft-list-btn" href="#">
                             <i class="fas fa-trash"></i> Delete Draft{{ data_loaded.forms_count|pluralize }}

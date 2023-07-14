@@ -67,23 +67,23 @@
                         <a class="dropdown-item download-{{data.document}}-btn" href="{{ object.download_url }}">
                             <i class="fas fa-download"></i> Download
                         </a>
-                        {% if data.share_pid_button %}
-                            <a id="pid-sharing" class="share-btn dropdown-item" href="#">
-                                <i class="fas fa-link"></i> Share PID
-                            </a>
-                        {% endif %}
+
+                        <a id="pid-sharing" class="share-btn dropdown-item {% if not data.share_pid_button %}disabled{% endif %}" href="#">
+                            <i class="fas fa-link"></i> Share PID
+                        </a>
+
                         <div class="dropdown-divider"></div>
-                        {% if object.can_change_workspace %}
-                            <a class="dropdown-item assign-workspace-record-btn" href="#">
-                                <i class="fas fa-folder"></i> Change workspace
-                            </a>
-                        {% endif %}
-                        {% if object.is_owner %}
-                            <a class="dropdown-item change-owner-btn" href="#">
-                                <i class="fas fa-folder"></i> Change Owner
-                            </a>
-                        {% endif %}
+
+                        <a class="dropdown-item assign-workspace-record-btn {% if not object.can_change_workspace %}disabled{% endif %}" href="#">
+                            <i class="fas fa-folder"></i> Change workspace
+                        </a>
+
+                        <a class="dropdown-item change-owner-btn {% if not object.is_owner %} disabled{% endif %}" href="#">
+                            <i class="fas fa-folder"></i> Change Owner
+                        </a>
+
                         <div class="dropdown-divider"></div>
+
                         <a class="dropdown-item delete-document-btn" objectid="{{ object.file.id }}" href="#">
                             <i class="fas fa-trash"></i> Delete
                         </a>
