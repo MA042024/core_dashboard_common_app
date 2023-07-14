@@ -23,7 +23,10 @@ from core_explore_common_app.components.abstract_persistent_query.models import 
     AbstractPersistentQuery,
 )
 from core_main_app.access_control.exceptions import AccessControlError
-from core_main_app.commons.exceptions import DoesNotExist, ModelError
+from core_main_app.commons.exceptions import (
+    DoesNotExist,
+    NotUniqueError,
+)
 from core_main_app.components.blob import api as blob_api
 from core_main_app.components.lock import api as lock_api
 from core_main_app.components.workspace import api as workspace_api
@@ -633,7 +636,7 @@ def edit_record(request):
             curate_data_structure = curate_data_structure_api.upsert(
                 curate_data_structure, request.user
             )
-        except ModelError:
+        except NotUniqueError:
             message = Message(
                 messages.ERROR,
                 f"Unable to edit the {get_data_label()}. Please check that a {get_form_label()}"
@@ -643,6 +646,16 @@ def edit_record(request):
                 json.dumps({"message": message.message, "tags": message.tags}),
                 content_type="application/json",
             )
+        except Exception:
+            message = Message(
+                messages.ERROR,
+                f"An unexpected error occurred. Unable to edit the {get_data_label()}.",
+            )
+            return HttpResponseBadRequest(
+                json.dumps({"message": message.message, "tags": message.tags}),
+                content_type="application/json",
+            )
+
     except Exception:
         message = Message(messages.ERROR, "A problem occurred while editing.")
         return HttpResponseBadRequest(

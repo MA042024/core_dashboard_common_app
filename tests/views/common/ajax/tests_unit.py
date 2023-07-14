@@ -1,14 +1,14 @@
 """ Unit tests for views.common.ajax file
 """
 from unittest import TestCase
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
 
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from core_dashboard_common_app.views.common import ajax as common_ajax
 from core_main_app.access_control.exceptions import AccessControlError
+from core_main_app.commons.exceptions import DoesNotExist, NotUniqueError
 from core_main_app.utils.tests_tools.MockUser import create_mock_user
-
 from tests.mocks import MockRequest
 
 
@@ -618,3 +618,76 @@ class TestDeleteQuery(TestCase):
         response = common_ajax._delete_query(**self.kwargs)
 
         self.assertIsInstance(response, HttpResponse)
+
+
+class TestEditRecord(TestCase):
+    def setUp(self) -> None:
+        """setUp"""
+        mock_request = MockRequest()
+        mock_request.user = create_mock_user(1)
+        mock_request.POST = {"id": "1"}
+        self.kwargs = {"request": mock_request}
+
+    @patch(
+        "core_curate_app.components.curate_data_structure.models.CurateDataStructure.__init__"
+    )
+    @patch.object(common_ajax, "template_api")
+    @patch.object(common_ajax, "curate_data_structure_api")
+    @patch.object(common_ajax, "messages")
+    @patch.object(common_ajax, "data_api")
+    @patch.object(common_ajax, "lock_api")
+    def test_edit_record_not_unique_error_return_http_bad_response(
+        self,
+        mock_lock_api,
+        mock_data_api,
+        mock_messages,
+        mock_curate_data_structure_api,
+        mock_template_api,
+        mock_cds,
+    ):
+        """test_edit_record_not_unique_error_return_http_bad_response"""
+        mock_lock_api.is_object_locked.return_value = False
+        mock_data_api.get_by_id.return_value = MagicMock()
+        mock_curate_data_structure_api.get_by_data_id_and_user.side_effect = (
+            DoesNotExist("error")
+        )
+        mock_template_api.get_by_id.return_value = MagicMock()
+        mock_cds.return_value = None
+
+        mock_curate_data_structure_api.upsert.side_effect = NotUniqueError(
+            "error"
+        )
+        response = common_ajax.edit_record(**self.kwargs)
+
+        self.assertTrue(isinstance(response, HttpResponseBadRequest))
+
+    @patch(
+        "core_curate_app.components.curate_data_structure.models.CurateDataStructure.__init__"
+    )
+    @patch.object(common_ajax, "template_api")
+    @patch.object(common_ajax, "curate_data_structure_api")
+    @patch.object(common_ajax, "messages")
+    @patch.object(common_ajax, "data_api")
+    @patch.object(common_ajax, "lock_api")
+    def test_edit_record_exception_return_http_bad_response(
+        self,
+        mock_lock_api,
+        mock_data_api,
+        mock_messages,
+        mock_curate_data_structure_api,
+        mock_template_api,
+        mock_cds,
+    ):
+        """test_edit_record_exception_return_http_bad_response"""
+        mock_lock_api.is_object_locked.return_value = False
+        mock_data_api.get_by_id.return_value = MagicMock()
+        mock_curate_data_structure_api.get_by_data_id_and_user.side_effect = (
+            DoesNotExist("error")
+        )
+        mock_template_api.get_by_id.return_value = MagicMock()
+        mock_cds.return_value = None
+
+        mock_curate_data_structure_api.upsert.side_effect = Exception("")
+        response = common_ajax.edit_record(**self.kwargs)
+
+        self.assertTrue(isinstance(response, HttpResponseBadRequest))
