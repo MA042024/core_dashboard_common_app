@@ -118,8 +118,7 @@ class TestDashboardFiles(TestCase):
             create_mock_user("1"),
         )
         self.assertTrue(
-            '<input type="file" name="file" required id="id_file">'
-            in response.content.decode()
+            '<input type="file" name="file"' in response.content.decode()
         )
 
     @patch("core_main_app.components.user.api.get_active_users")

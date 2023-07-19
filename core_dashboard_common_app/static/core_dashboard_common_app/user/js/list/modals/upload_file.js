@@ -24,8 +24,13 @@ upload_file = function(){
             location.reload(true);
 	    },
         error:function(data){
-            var error_message = JSON.parse(data.responseText);
-            $.notify(error_message.message, "danger");
+            var error_message;
+            try{
+                error_message = JSON.parse(data.responseText).message;
+            } catch (e) {
+                error_message = "Unable to upload this file."
+            }
+            $.notify(error_message, "danger");
         }
     });
 };
