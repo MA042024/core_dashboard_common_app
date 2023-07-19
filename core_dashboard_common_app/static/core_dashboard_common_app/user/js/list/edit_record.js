@@ -4,7 +4,8 @@
 openEditRecord = function() {
     var $registryRow = $(this).closest('tr');
     var objectID = $registryRow.attr("objectid");
-    var icon = $(this).find( "i" ).attr("class");
+    var editBtn = $(this).find( "i" )
+    var icon = $(editBtn).attr("class");
 
     // Show loading spinner
     showSpinner($(this).find("i"))
@@ -24,7 +25,7 @@ openEditRecord = function() {
         }
     }).always(function() {
         // get old button icon
-        hideSpinner($(this).find("i"), icon)
+        hideSpinner(editBtn, icon)
     });
 };
 
