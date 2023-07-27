@@ -64,7 +64,7 @@
     </tbody>
 </table>
 {% if not come_from_admin %}
-    <button  class="btn btn-success mt-3 {% if BOOTSTRAP_VERSION|first == "4" %}float-right{% elif BOOTSTRAP_VERSION|first == "5" %}float-end{% endif %} save-order"  disabled>
+    <button  class="btn btn-primary mt-3 {% if BOOTSTRAP_VERSION|first == "4" %}float-right{% elif BOOTSTRAP_VERSION|first == "5" %}float-end{% endif %} save-order"  disabled>
         <i class="fas fa-save"></i> Save ordering
     </button>
 {% endif %}
