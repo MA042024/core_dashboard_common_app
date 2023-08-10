@@ -33,6 +33,7 @@ delete_document = function(){
             location.reload();
 	    },
         error:function(data){
+            $("#delete-result-modal").modal("hide");
             let error_message = JSON.parse(data.responseText);
             $.notify(error_message.message, "danger");
         }
