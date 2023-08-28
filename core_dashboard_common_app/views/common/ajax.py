@@ -627,7 +627,7 @@ def edit_record(request):
             user=str(request.user.id),
             template=template,
             name=data.title,
-            form_string=data.xml_content,
+            form_string=data.content,
             data=data,
         )
         try:
