@@ -843,7 +843,6 @@ class DashboardForms(CommonView):
         )
 
     def _get_detailed_forms(self, forms):
-
         detailed_forms = []
         for form in forms:
             detailed_forms.append({"form": form})
@@ -1342,6 +1341,10 @@ class DashboardWorkspaceRecords(CommonView):
                 {"path": dashboard_constants.JS_EDIT_RECORD, "is_raw": False},
                 {"path": dashboard_constants.JS_VIEW_RECORD, "is_raw": False},
                 {
+                    "path": dashboard_constants.JS_OPEN_DOCUMENT,
+                    "is_raw": False,
+                },
+                {
                     "path": "core_dashboard_common_app/user/js/init.raw.js",
                     "is_raw": True,
                 },
@@ -1355,6 +1358,14 @@ class DashboardWorkspaceRecords(CommonView):
                 },
                 {
                     "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
+                    "is_raw": False,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/list/open_record.raw.js",
+                    "is_raw": True,
+                },
+                {
+                    "path": "core_dashboard_common_app/common/js/list/delete_data_draft.js",
                     "is_raw": False,
                 },
             ],

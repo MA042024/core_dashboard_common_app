@@ -162,7 +162,6 @@ def _get_data(data_ids, user):
     data_table = []
     try:
         for data_id in data_ids:
-
             # Get the data
             data = data_api.get_by_id(data_id, user)
 
@@ -199,7 +198,6 @@ def _get_query(query_type, query_ids, user):
     query_table = []
     try:
         for query_id in query_ids:
-
             # Get the persistent query
             query = persistent_query_api.get_by_id(query_type, query_id, user)
 
