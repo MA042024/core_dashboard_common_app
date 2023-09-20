@@ -29,6 +29,7 @@ from core_main_app.commons.exceptions import (
 )
 from core_main_app.components.blob import api as blob_api
 from core_main_app.components.lock import api as lock_api
+from core_main_app.components.template.models import Template
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.labels import get_data_label, get_form_label
@@ -599,6 +600,17 @@ def edit_record(request):
         return HttpResponseBadRequest(
             json.dumps({"message": message.message, "tags": message.tags}),
             content_type="application/json",
+        )
+
+    # Check if json format data
+    if data.template.format == Template.JSON:
+        return HttpResponse(
+            json.dumps(
+                {
+                    "url": f"{reverse('core_main_app_json_text_editor_view')}?id={data.id}"
+                }
+            ),
+            content_type="application/javascript",
         )
 
     try:

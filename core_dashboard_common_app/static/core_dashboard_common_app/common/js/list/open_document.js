@@ -2,8 +2,12 @@
  * Open document for text editor.
  */
 
-$(".open-record-btn").on('click',function() {
-    redirectToTextEditor(openRecordUrl,$(this),"id")
+$(".open-xml-record-btn").on('click',function() {
+    redirectToTextEditor(openXMLRecordUrl,$(this),"id")
+});
+
+$(".open-json-record-btn").on('click',function() {
+    redirectToTextEditor(openJSONRecordUrl,$(this),"id")
 });
 
 $(".open-record-draft-btn").on('click',function() {
