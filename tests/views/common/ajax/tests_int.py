@@ -60,10 +60,10 @@ class TestEditRecord(TestCase):
         "core_curate_app.components.curate_data_structure.api.get_by_data_id_and_user"
     )
     @patch("core_main_app.components.data.api.get_by_id")
-    def test_edit_json_record_redirects_to_text_editor(
+    def test_edit_json_record_returns_http_response_bad_request(
         self, mock_data_get_by_id, mock_get_by_data_id_and_user, mock_upsert
     ):
-        """test_edit_json_record_redirects_to_text_editor
+        """test_edit_json_record_returns_http_response_bad_request
 
 
         Returns:
@@ -84,4 +84,4 @@ class TestEditRecord(TestCase):
         response = edit_record(request)
 
         self.assertTrue(isinstance(response, HttpResponse))
-        self.assertTrue("json-editor/data" in response.content.decode("utf-8"))
+        self.assertTrue("Unable to edit" in response.content.decode("utf-8"))

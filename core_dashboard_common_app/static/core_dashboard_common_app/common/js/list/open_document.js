@@ -10,12 +10,11 @@ $(".open-json-record-btn").on('click',function() {
     redirectToTextEditor(openJSONRecordUrl,$(this),"id")
 });
 
-$(".open-record-draft-btn").on('click',function() {
-    redirectToTextEditor(openFormUrl,$(this),"data_id")
+$(".open-xml-form-btn").on('click',function() {
+    redirectToTextEditor(openXMLFormUrl,$(this),"id")
 });
-
-$(".open-form-btn").on('click',function() {
-    redirectToTextEditor(openFormUrl,$(this),"id")
+$(".open-json-form-btn").on('click',function() {
+    redirectToTextEditor(openJSONFormUrl,$(this),"id")
 });
 
 redirectToTextEditor = function(openUrl, selector, param) {

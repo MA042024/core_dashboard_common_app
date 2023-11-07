@@ -601,18 +601,16 @@ def edit_record(request):
             json.dumps({"message": message.message, "tags": message.tags}),
             content_type="application/json",
         )
-
-    # Check if json format data
-    if data.template.format == Template.JSON:
-        return HttpResponse(
-            json.dumps(
-                {
-                    "url": f"{reverse('core_main_app_json_text_editor_view')}?id={data.id}"
-                }
-            ),
-            content_type="application/javascript",
+    # Check if XSD format data
+    if data.template.format != Template.XSD:
+        message = Message(
+            messages.ERROR,
+            f"Unable to edit  {get_data_label()}. This feature is only available for XML {get_data_label()} ",
         )
-
+        return HttpResponseBadRequest(
+            json.dumps({"message": message.message, "tags": message.tags}),
+            content_type="application/json",
+        )
     try:
         # Check if a curate data structure already exists
         curate_data_structure = (
