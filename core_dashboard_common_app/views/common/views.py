@@ -475,6 +475,7 @@ class DashboardFiles(CommonView):
 
         Returns:
         """
+        reverse_url = "core-admin:core_main_app_blob_detail"
         if self.administration:
             try:
                 files = blob_api.get_all(request.user)
@@ -482,6 +483,7 @@ class DashboardFiles(CommonView):
             except AccessControlError:
                 files = blob_api.get_none()
         else:
+            reverse_url = "core_main_app_blob_detail"
             files = blob_api.get_all_by_user(request.user)
 
         # Paginator
@@ -500,7 +502,7 @@ class DashboardFiles(CommonView):
                     "user": username,
                     "date": file.creation_date,
                     "file": file,
-                    "url": f"{reverse('core_main_app_blob_detail')}?id={file.id}",
+                    "url": f"{reverse(reverse_url)}?id={file.id}",
                     "download_url": blob_utils.get_blob_download_uri(
                         file, request
                     ),
