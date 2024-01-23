@@ -395,6 +395,10 @@ class DashboardRecords(CommonView):
                     "path": dashboard_constants.JS_COMMON_FUNCTION_DELETE,
                     "is_raw": False,
                 },
+                {
+                    "path": "core_main_app/common/js/tooltip.js",
+                    "is_raw": False,
+                },
             ],
         }
 
