@@ -32,7 +32,7 @@ class TestEditRecord(TestCase):
         "core_curate_app.components.curate_data_structure.api.get_by_data_id_and_user"
     )
     @patch("core_main_app.components.data.api.get_by_id")
-    def test_edit_record_returns_http_response(
+    def test_edit_xml_record_returns_http_response(
         self, mock_data_get_by_id, mock_get_by_data_id_and_user, mock_upsert
     ):
         """test_edit_record_returns_http_response
@@ -60,10 +60,10 @@ class TestEditRecord(TestCase):
         "core_curate_app.components.curate_data_structure.api.get_by_data_id_and_user"
     )
     @patch("core_main_app.components.data.api.get_by_id")
-    def test_edit_json_record_returns_http_response_bad_request(
+    def test_edit_json_record_returns_http_response(
         self, mock_data_get_by_id, mock_get_by_data_id_and_user, mock_upsert
     ):
-        """test_edit_json_record_returns_http_response_bad_request
+        """test_edit_json_record_returns_http_response
 
 
         Returns:
@@ -72,6 +72,36 @@ class TestEditRecord(TestCase):
         """
         mock_data_get_by_id.return_value = Data(
             template=Template(format=Template.JSON)
+        )
+        mock_get_by_data_id_and_user.return_value = CurateDataStructure()
+        mock_upsert.return_value = None
+        data = {
+            "id": "1",
+        }
+        request = self.factory.post("core_dashboard_edit_record", data)
+
+        request.user = self.user1
+        response = edit_record(request)
+
+        self.assertTrue(isinstance(response, HttpResponse))
+
+    @patch("core_curate_app.components.curate_data_structure.api.upsert")
+    @patch(
+        "core_curate_app.components.curate_data_structure.api.get_by_data_id_and_user"
+    )
+    @patch("core_main_app.components.data.api.get_by_id")
+    def test_edit_other_format_record_returns_http_response_bad_request(
+        self, mock_data_get_by_id, mock_get_by_data_id_and_user, mock_upsert
+    ):
+        """test_edit_other_format_record_returns_http_response_bad_request
+
+
+        Returns:
+
+
+        """
+        mock_data_get_by_id.return_value = Data(
+            template=Template(format="BAD_FORMAT")
         )
         mock_get_by_data_id_and_user.return_value = CurateDataStructure()
         mock_upsert.return_value = None

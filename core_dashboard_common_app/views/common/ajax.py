@@ -601,11 +601,11 @@ def edit_record(request):
             json.dumps({"message": message.message, "tags": message.tags}),
             content_type="application/json",
         )
-    # Check if XSD format data
-    if data.template.format != Template.XSD:
+    # Check if XSD or JSON format data
+    if data.template.format not in [Template.XSD, Template.JSON]:
         message = Message(
             messages.ERROR,
-            f"Unable to edit  {get_data_label()}. This feature is only available for XML {get_data_label()} ",
+            f"Unable to edit  {get_data_label()}. This feature is only available for XML and JSON {get_data_label()} ",
         )
         return HttpResponseBadRequest(
             json.dumps({"message": message.message, "tags": message.tags}),

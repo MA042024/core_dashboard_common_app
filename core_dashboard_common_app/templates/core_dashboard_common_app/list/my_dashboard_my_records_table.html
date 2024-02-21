@@ -80,10 +80,10 @@
                         <i class="fas fa-link"></i> Share PID
                     </a>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item edit-record-btn {% if not data_loaded.can_write %} disabled {% endif %}" href="#" >
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                     {% if data_loaded.data.template.format == "XSD" %}
-                        <a class="dropdown-item edit-record-btn {% if not data_loaded.can_write %} disabled {% endif %}" href="#" >
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
                         {% if data_loaded.form_id %}
                         <a class="dropdown-item {% if not data_loaded.can_write %} disabled {% endif %}"
                            href="{% url 'core_curate_app_xml_text_editor_view'%}?id={{ data_loaded.form_id }}">
