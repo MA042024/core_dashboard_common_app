@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         {% for object in objects %}
-            <tr object-id="{{object.template_version.id}}" draggable="true" ondragstart="start()"  ondragover="dragover()">
+            <tr object-id="{{object.template_version.id}}" {% if not come_from_admin %} draggable="true" ondragstart="start()"  ondragover="dragover()" {% endif %}>
                 <td>{{ object.title }}</td>
                 <td>{{ object.template.filename }}</td>
                 {% if come_from_admin %}
