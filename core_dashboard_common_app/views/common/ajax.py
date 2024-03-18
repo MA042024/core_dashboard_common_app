@@ -300,9 +300,7 @@ def _delete_file(request, blob_ids):
     try:
         for blob in list_blob:
             blob_api.delete(blob, request.user)
-        messages.add_message(
-            request, messages.SUCCESS, "File deleted with success."
-        )
+        messages.add_message(request, messages.SUCCESS, "File deleted.")
     except Exception:
         messages.add_message(
             request, messages.ERROR, "A problem occurred while deleting."
@@ -334,7 +332,7 @@ def _delete_form(request, form_ids):
         messages.add_message(
             request,
             messages.SUCCESS,
-            get_form_label().capitalize() + " deleted with success.",
+            get_form_label().capitalize() + " deleted.",
         )
     except Exception:
         messages.add_message(
@@ -381,7 +379,7 @@ def _delete_record(request, data_ids):
         messages.add_message(
             request,
             messages.SUCCESS,
-            get_data_label().capitalize() + " deleted with success.",
+            get_data_label().capitalize() + " deleted.",
         )
     except Exception:
         messages.add_message(
@@ -433,7 +431,7 @@ def _delete_query(request, query_ids):
         messages.add_message(
             request,
             messages.SUCCESS,
-            " Query deleted with success.",
+            " Query deleted.",
         )
     except Exception:
         messages.add_message(
