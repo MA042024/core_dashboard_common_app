@@ -675,11 +675,13 @@ def edit_record(request):
             content_type="application/json",
         )
     
-    data_id = 1
-    data_content = "example content"
-    data_title = "Example Title"
-    edit = True
 
+    data_id = data.id
+    data_content = data.content
+    data_title = data.title
+
+    data_content = format_content_xml(data_content)
+    
     # Store data in session
     request.session['data_id'] = data_id
     request.session['data_content'] = data_content
@@ -687,9 +689,10 @@ def edit_record(request):
     request.session['edit'] = edit
 
     # Render 'gensel.html' template with data
-    return render(request, 'gensel.html', {
-        'data_id': data_id,
+    return JsonResponse({
+        'url': '/gensel',
+        'data_id': data['id'],
         'data_content': data_content,
-        'data_title': data_title,
-        'edit': edit,
+        'data_title': data['title'],
+        'edit': True,
     })
