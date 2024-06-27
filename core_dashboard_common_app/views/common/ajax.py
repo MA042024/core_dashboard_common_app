@@ -33,6 +33,7 @@ from core_main_app.components.template.models import Template
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.labels import get_data_label, get_form_label
+from core_main_app.utils.xml import get_content_by_xpath, format_content_xml
 
 if "core_curate_app" in INSTALLED_APPS:
     from core_curate_app.components.curate_data_structure.models import (
