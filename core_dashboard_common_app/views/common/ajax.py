@@ -686,6 +686,10 @@ def edit_record(request):
                 request.session['data_content'] = data_content
                 request.session['data_title'] = data_title
 
+    print(f'Data_id: {data_id}')
+    print(f"Content: {data_content}")
+    print(f"Title: {data_title}")
+
     return HttpResponse(
         json.dumps(
             {
