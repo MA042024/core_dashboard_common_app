@@ -687,11 +687,4 @@ def edit_record(request):
     request.session['data_content'] = data_content
     request.session['data_title'] = data_title
 
-    # Render 'gensel.html' template with data
-    return JsonResponse({
-        'url': '/gensel',
-        'data_id': data_id,
-        'data_content': data_content,
-        'data_title': data_title,
-        'edit': True,
-    })
+    return redirect('/gensel/edit')
