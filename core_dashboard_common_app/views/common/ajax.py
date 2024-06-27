@@ -690,8 +690,8 @@ def edit_record(request):
     # Render 'gensel.html' template with data
     return JsonResponse({
         'url': '/gensel',
-        'data_id': data['id'],
+        'data_id': data_id,
         'data_content': data_content,
-        'data_title': data['title'],
+        'data_title': data_title,
         'edit': True,
     })
