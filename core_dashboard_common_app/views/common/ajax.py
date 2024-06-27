@@ -675,16 +675,16 @@ def edit_record(request):
     print("This far")
     
     data_id = data.id
-                data_content = data.content
-                data_title = data.title
-                
-                # Optionally format content if needed
-                data_content = format_content_xml(data_content)
+    data_content = data.content
+    data_title = data.title
+    
+    # Optionally format content if needed
+    data_content = format_content_xml(data_content)
 
-                # Store the data in the session
-                request.session['data_id'] = data_id
-                request.session['data_content'] = data_content
-                request.session['data_title'] = data_title
+    # Store the data in the session
+    request.session['data_id'] = data_id
+    request.session['data_content'] = data_content
+    request.session['data_title'] = data_title
 
     print(f'Data_id: {data_id}')
     print(f"Content: {data_content}")
