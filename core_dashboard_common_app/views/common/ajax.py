@@ -674,23 +674,22 @@ def edit_record(request):
             json.dumps({"message": message.message, "tags": message.tags}),
             content_type="application/json",
         )
+    
+        data_id = 1
+        data_content = "example content"
+        data_title = "Example Title"
+        edit = True
 
+        # Store data in session
+        request.session['data_id'] = data_id
+        request.session['data_content'] = data_content
+        request.session['data_title'] = data_title
+        request.session['edit'] = edit
 
-    data_id = data.id
-    data_content = data.content
-    data_title = data.title
-    edit = True
-
-    data_content = format_content_xml(data_content)
-
-    js_code = f"""
-        <script>
-            localStorage.setItem('data_id', '{data_id}');
-            localStorage.setItem('data_content', '{data_content}');
-            localStorage.setItem('data_title', '{data_title}');
-            localStorage.setItem('edit', '{edit}');
-            window.location.href = '/gensel';
-        </script>
-    """
-
-    return JsonResponse({'js_code': js_code})
+        # Render 'gensel.html' template with data
+        return render(request, 'gensel.html', {
+            'data_id': data_id,
+            'data_content': data_content,
+            'data_title': data_title,
+            'edit': edit,
+        })
