@@ -694,7 +694,7 @@ def edit_record(request):
     return HttpResponse(
         json.dumps(
             {
-                "url": "/gensel/",
+                "url": "/gensel",
                 "data_id": data_id,
                 "data_content": data_content,
                 "data_title": data_title,
