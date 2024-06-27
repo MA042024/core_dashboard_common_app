@@ -1,6 +1,8 @@
 """ Ajax API
 """
 import json
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -33,6 +35,7 @@ from core_main_app.components.template.models import Template
 from core_main_app.components.workspace import api as workspace_api
 from core_main_app.settings import INSTALLED_APPS
 from core_main_app.utils.labels import get_data_label, get_form_label
+from core_main_app.utils.xml import get_content_by_xpath, format_content_xml
 
 if "core_curate_app" in INSTALLED_APPS:
     from core_curate_app.components.curate_data_structure.models import (
@@ -589,6 +592,9 @@ def edit_record(request):
             content_type="application/json",
         )
 
+    print(f'Data_id: {request.POST["id"]}')
+    print(f"Request: {request}")
+    
     # Check if the data is locked
     if lock_api.is_object_locked(data.id, request.user):
         message = Message(
@@ -668,14 +674,26 @@ def edit_record(request):
             json.dumps({"message": message.message, "tags": message.tags}),
             content_type="application/json",
         )
+    
 
-    return HttpResponse(
-        json.dumps(
-            {
-                "url": reverse(
-                    "core_curate_enter_data", args=(curate_data_structure.id,)
-                )
-            }
-        ),
-        content_type="application/javascript",
-    )
+    data_id = data.id
+    data_content = data.content
+    data_title = data.title
+    data_template = data.template_id
+    
+    print(data_template)
+    
+    data_content = format_content_xml(data_content)
+
+    # Store data in session
+    request.session['edit_record_data'] = {
+        'data_id': data_id,
+        'data_content': data_content,
+        'data_title': data_title,
+        'test_id' :  data_template,
+        'edit': True
+    }
+
+    return JsonResponse({
+        'url': '/gensel/edit'
+    })
