@@ -672,6 +672,8 @@ def edit_record(request):
             content_type="application/json",
         )
 
+    print("This far")
+    
     return HttpResponse(
         json.dumps(
             {
