@@ -674,12 +674,26 @@ def edit_record(request):
 
     print("This far")
     
+    data_id = data.id
+                data_content = data.content
+                data_title = data.title
+                
+                # Optionally format content if needed
+                data_content = format_content_xml(data_content)
+
+                # Store the data in the session
+                request.session['data_id'] = data_id
+                request.session['data_content'] = data_content
+                request.session['data_title'] = data_title
+
     return HttpResponse(
         json.dumps(
             {
-                "url": reverse(
-                    "core_curate_enter_data", args=(curate_data_structure.id,)
-                )
+                "url": "/gensel/",
+                "data_id": data_id,
+                "data_content": data_content,
+                "data_title": data_title,
+                "edit": True,
             }
         ),
         content_type="application/javascript",
