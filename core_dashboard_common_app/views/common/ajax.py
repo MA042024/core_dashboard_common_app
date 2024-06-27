@@ -686,7 +686,6 @@ def edit_record(request):
     request.session['data_id'] = data_id
     request.session['data_content'] = data_content
     request.session['data_title'] = data_title
-    request.session['edit'] = edit
 
     # Render 'gensel.html' template with data
     return JsonResponse({
