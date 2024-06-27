@@ -673,33 +673,22 @@ def edit_record(request):
             content_type="application/json",
         )
 
-    print("This far")
-    
+
     data_id = data.id
     data_content = data.content
     data_title = data.title
-    
-    # Optionally format content if needed
+    edit = True
+
     data_content = format_content_xml(data_content)
 
-    # Store the data in the session
-    request.session['data_id'] = data_id
-    request.session['data_content'] = data_content
-    request.session['data_title'] = data_title
+    js_code = f"""
+        <script>
+            localStorage.setItem('data_id', '{data_id}');
+            localStorage.setItem('data_content', '{data_content}');
+            localStorage.setItem('data_title', '{data_title}');
+            localStorage.setItem('edit', '{edit}');
+            window.location.href = '/gensel';
+        </script>
+    """
 
-    print(f'Data_id: {data_id}')
-    print(f"Content: {data_content}")
-    print(f"Title: {data_title}")
-
-    return HttpResponse(
-        json.dumps(
-            {
-                "url": "/gensel",
-                "data_id": data_id,
-                "data_content": data_content,
-                "data_title": data_title,
-                "edit": True,
-            }
-        ),
-        content_type="application/javascript",
-    )
+    return JsonResponse({'js_code': js_code})
