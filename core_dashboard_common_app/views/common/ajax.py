@@ -589,7 +589,7 @@ def edit_record(request):
             content_type="application/json",
         )
 
-    print(f"Data_id: {request.POST["id"]}")
+    print(f'Data_id: {request.POST["id"]}')
     print(f"Request: {request}")
     
     # Check if the data is locked
