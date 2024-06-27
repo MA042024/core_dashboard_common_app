@@ -589,6 +589,9 @@ def edit_record(request):
             content_type="application/json",
         )
 
+    print(f"Data_id: {request.POST["id"]}")
+    print(f"Request: {request}")
+    
     # Check if the data is locked
     if lock_api.is_object_locked(data.id, request.user):
         message = Message(
