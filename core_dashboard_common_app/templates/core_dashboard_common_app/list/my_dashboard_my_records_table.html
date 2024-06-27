@@ -12,7 +12,7 @@
             </th>
         {% endif %}
         <th>Name</th>
-        <th>Template
+        <th>Test
         <i class="btn fas fa-circle-question"
        {% if BOOTSTRAP_VERSION|first == "4" %}data-toggle{% elif BOOTSTRAP_VERSION|first == "5"  %}data-bs-toggle{% endif %}="tooltip"
         title="JSON Schema support can be enabled in the project settings."></i>
@@ -76,14 +76,14 @@
                     <a class="dropdown-item view-record-btn {% if not data_loaded.can_read %} disabled {% endif %}" href="#">
                         <i class="fas fa-file-alt"></i> View
                     </a>
-                    <a type="button"  id="pid-sharing" class="share-btn dropdown-item {% if not data.share_pid_button %} disabled {% endif %}">
+                    <!--<a type="button"  id="pid-sharing" class="share-btn dropdown-item {% if not data.share_pid_button %} disabled {% endif %}">
                         <i class="fas fa-link"></i> Share PID
-                    </a>
+                    </a>-->
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item edit-record-btn {% if not data_loaded.can_write %} disabled {% endif %}" href="#" >
                         <i class="fas fa-edit"></i> Edit
                     </a>
-                    {% if data_loaded.data.template.format == "XSD" %}
+                    <!--{% if data_loaded.data.template.format == "XSD" %}
                         {% if data_loaded.form_id %}
                         <a class="dropdown-item {% if not data_loaded.can_write %} disabled {% endif %}"
                            href="{% url 'core_curate_app_xml_text_editor_view'%}?id={{ data_loaded.form_id }}">
@@ -93,7 +93,7 @@
                         <a class="dropdown-item open-xml-record-btn {% if not data_loaded.can_write %} disabled {% endif %}" href="#">
                             <i class="fas fa-code"></i> Open
                         </a>
-                        {% endif %}
+                        {% endif %}-->
                     {% elif data_loaded.data.template.format == "JSON" %}
                         {% if data_loaded.form_id %}
                         <a class="dropdown-item {% if not data_loaded.can_write %} disabled {% endif %}"
