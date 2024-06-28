@@ -676,7 +676,7 @@ def edit_record(request):
         )
     
 
-   data_id = data.id
+    data_id = data.id
     data_content = data.content
     data_title = data.title
 
