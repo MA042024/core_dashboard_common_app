@@ -691,5 +691,5 @@ def edit_record(request):
     }
 
     return JsonResponse({
-        'url': '/gensel'
+        'url': '/gensel/edit'
     })
