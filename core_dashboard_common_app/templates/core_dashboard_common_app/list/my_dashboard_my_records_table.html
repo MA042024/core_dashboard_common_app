@@ -37,12 +37,12 @@
             {% endif %}
             <td>
 
-                {{ data_loaded.data.title }}
+                <!--{{ data_loaded.data.title }}
                 {% if data.administration and data_loaded.forms_count > 0  %}
                     ,<text class="text-danger"> Draft{{ data_loaded.forms_count|pluralize }} </text>
                 {% elif data_loaded.form_id %}
                     ,<text class="text-danger"> Draft </text>
-                {% endif %}
+                {% endif %}-->
 
             </td>
             <td>
@@ -117,14 +117,14 @@
                     <a class="dropdown-item delete-document-btn {% if not data_loaded.is_owner %} disabled {% endif %}" href="#">
                             <i class="fas fa-trash"></i> Delete
                     </a>
-                    {% if data.administration and  data_loaded.forms_count > 0 %}
+                    <!--{% if data.administration and  data_loaded.forms_count > 0 %}
                         <a objectid="{{data_loaded.data.id}}" class="dropdown-item delete-data-draft-list-btn" href="#">
                             <i class="fas fa-trash"></i> Delete Draft{{ data_loaded.forms_count|pluralize }}
                         </a>
                     {% elif data_loaded.form_id %}
                         <a objectid="{{data_loaded.form_id}}" class="dropdown-item  delete-draft-btn" href="#">
                             <i class="fas fa-trash"></i> Delete Draft
-                        </a>
+                        </a>-->
                     {% endif %}
 
                 </div>
