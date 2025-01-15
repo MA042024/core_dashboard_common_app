@@ -303,7 +303,7 @@ class DashboardRecords(CommonView):
             ]
 
         # Set page title
-        context.update({"page_title": "Dashboard"})
+        context.update({"page_title": "My Data"})
 
         return self.common_render(
             request,
@@ -677,7 +677,7 @@ class DashboardFiles(CommonView):
             )
 
         # Set page title
-        context.update({"page_title": "Dashboard"})
+        context.update({"page_title": "Files"})
 
         return self.common_render(
             request,
@@ -1201,7 +1201,7 @@ class DashboardWorkspaces(CommonView):
             )
 
         # Set page title
-        context.update({"page_title": "Dashboard"})
+        context.update({"page_title": "Shared Workspaces"})
 
         return self.common_render(
             request,
@@ -1295,7 +1295,7 @@ class DashboardWorkspaceRecords(CommonView):
             )
 
         # Set page title
-        context.update({"page_title": "Dashboard"})
+        context.update({"page_title": "Workspace"})
 
         return self.common_render(
             request,
